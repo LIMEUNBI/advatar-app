@@ -3,6 +3,8 @@ package com.epopcon.advatar.controller.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,10 +36,10 @@ import java.util.List;
 public class BrandChoiceActivity extends BaseActivity {
 
     ArrayList<BrandRepo> mBrandList = null;
+    ArrayList<BrandRepo> mBrandListCopy = null;
 
     private EditText mEditSearch = null;
-    private Button mBtnSearch = null;
-    private TextView mChoicedBrand = null;
+    private TextView mChoiceBrand = null;
 
     private GridView mGridView = null;
     private GridAdapter mAdapter = null;
@@ -57,38 +59,28 @@ public class BrandChoiceActivity extends BaseActivity {
         actionBar.setDisplayShowTitleEnabled(false);
 
         mBrandList = new ArrayList<>();
+        mBrandListCopy = new ArrayList<>();
 
-        mChoicedBrand = (TextView) findViewById(R.id.choice_brand);
+        mChoiceBrand = (TextView) findViewById(R.id.choice_brand);
 
-        mChoicedBrand.setText(getBrandNameList());
+        mChoiceBrand.setText(getBrandNameList());
 
         mEditSearch = (EditText) findViewById(R.id.edit_search);
-        mBtnSearch = (Button) findViewById(R.id.btn_search);
 
-        mBtnSearch.setOnClickListener(new View.OnClickListener() {
+        mEditSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View view) {
-                for (int i = 0 ; i < mBrandList.size() ; i++) {
-                    if (mBrandList.get(i).brandName.equals(mEditSearch.getText().toString())) {
-                        mBrandList.get(i).setMyBrandYn(true);
-                        if (getBrandCodeList().equals("")) {
-                            putBrandCodeList(mBrandList.get(i).brandCode + ",");
-                        } else {
-                            putBrandCodeList(getBrandCodeList() + mBrandList.get(i).brandCode + ",");
-                        }
-                        if (getBrandNameList().equals("")) {
-                            putBrandCodeList(mBrandList.get(i).brandName + ", ");
-                        } else {
-                            if (!getBrandNameList().contains(mBrandList.get(i).brandName)) {
-                                putBrandNameList(getBrandNameList() + mBrandList.get(i).brandName + ", ");
-                            }
-                        }
-                        mChoicedBrand.setText(getBrandNameList());
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                        Collections.sort(mBrandList, brandComparator);
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                search(mEditSearch.getText().toString());
             }
         });
 
@@ -118,6 +110,25 @@ public class BrandChoiceActivity extends BaseActivity {
         mGridView.setAdapter(mAdapter);
     }
 
+    private void search(String searchKeyword) {
+
+        if (mBrandListCopy.size() == 0) {
+            mBrandListCopy.addAll(mBrandList);
+        }
+        mBrandList.clear();
+
+        if (searchKeyword.length() == 0) {
+            mBrandList.addAll(mBrandListCopy);
+        } else {
+            for (int i = 0 ; i < mBrandListCopy.size() ; i++) {
+                if (mBrandListCopy.get(i).brandName.toLowerCase().contains(searchKeyword)) {
+                    mBrandList.add(mBrandListCopy.get(i));
+                }
+            }
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -129,7 +140,7 @@ public class BrandChoiceActivity extends BaseActivity {
         mBrandList.clear();
 
         try {
-            RestAdvatarProtocol.getInstance().getBrandList(20, new RequestListener() {
+            RestAdvatarProtocol.getInstance().getBrandList(30, new RequestListener() {
                 @Override
                 public void onRequestSuccess(int requestCode, Object result) {
                     mBrandList.addAll((List<BrandRepo>) result);
@@ -160,7 +171,15 @@ public class BrandChoiceActivity extends BaseActivity {
     private final static Comparator<BrandRepo> brandComparator = new Comparator<BrandRepo>() {
         @Override
         public int compare(BrandRepo brandRepo1, BrandRepo brandRepo2) {
-            return brandRepo1.isMyBrandYn() && brandRepo2.isMyBrandYn() ? 0 : brandRepo1.isMyBrandYn() && !brandRepo2.isMyBrandYn() ? -1 : 1;
+            if (brandRepo1.isMyBrandYn() && brandRepo2.isMyBrandYn()) {
+                return 0;
+            } else if (brandRepo1.isMyBrandYn() && !brandRepo2.isMyBrandYn()) {
+                return -1;
+            } else if (!brandRepo1.isMyBrandYn() && brandRepo2.isMyBrandYn()) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
     };
 
@@ -263,8 +282,8 @@ public class BrandChoiceActivity extends BaseActivity {
                         putBrandNameList(reChoice);
                     }
 
-                    Collections.sort(mBrandList, brandComparator);
-                    mChoicedBrand.setText(getBrandNameList());
+//                    Collections.sort(mBrandList, brandComparator);
+                    mChoiceBrand.setText(getBrandNameList());
                 }
             });
 
