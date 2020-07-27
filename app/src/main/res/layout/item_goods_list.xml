@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="16dp">
+
+        <RelativeLayout
+            android:id="@+id/img_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:id="@+id/img_goods"
+                android:layout_width="80dp"
+                android:layout_height="80dp"/>
+
+            <TextView
+                android:id="@+id/brand_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_goods"
+                android:layout_marginTop="8dp"
+                android:text="브랜드명"
+                android:textColor="@color/blue_002080"
+                android:textSize="12dp"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/img_layout"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/site_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="사이트"
+                android:textColor="@color/text_484848"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/goods_cate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="카테고리"
+                android:textColor="@color/text_484848"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/goods_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/goods_cate"
+                android:layout_marginTop="4dp"
+                android:text="상품명"
+                android:textColor="@color/text_484848"
+                android:textSize="14dp"/>
+
+            <TextView
+                android:id="@+id/option_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/goods_name"
+                android:layout_marginTop="4dp"
+                android:text="옵션명"
+                android:textColor="@color/text_5d5d5d"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/goods_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/option_name"
+                android:layout_marginTop="4dp"
+                android:text="가격"
+                android:textColor="@color/text_484848"
+                android:textSize="14dp" />
+
+            <ImageView
+                android:id="@+id/img_shop"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="5dp"
+                android:layout_below="@+id/option_name"
+                android:src="@drawable/icon_shop"
+                android:layout_alignParentRight="true"/>
+
+            <TextView
+                android:id="@+id/sell_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/goods_price"
+                android:layout_marginTop="4dp"
+                android:text="판매량"
+                android:textColor="@color/text_5d5d5d"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/avgPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/goods_price"
+                android:layout_marginTop="4dp"
+                android:text="평점"
+                android:textColor="@color/text_5d5d5d"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/delivery_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sell_amount"
+                android:layout_marginTop="4dp"
+                android:text="베송요금"
+                android:textColor="@color/text_5d5d5d"
+                android:textSize="10dp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/layout"
+            android:layout_toRightOf="@+id/img_goods"
+            android:layout_marginRight="16dp"
+            android:background="@color/blue_002080"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

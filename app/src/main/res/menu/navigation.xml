@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_one"
+        android:icon="@drawable/icon_contents"
+        android:title="컨텐츠" />
+    <item
+        android:id="@+id/action_two"
+        android:icon="@drawable/icon_goods"
+        android:title="상품" />
+    <item
+        android:id="@+id/action_three"
+        android:icon="@drawable/icon_review"
+        android:title="평가" />
+    <item
+        android:id="@+id/action_four"
+        android:icon="@drawable/icon_mypage"
+        android:title="MY PAGE" />
+</menu>
