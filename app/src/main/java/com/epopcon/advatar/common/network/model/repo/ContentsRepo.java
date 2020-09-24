@@ -11,6 +11,8 @@ public class ContentsRepo {
     public @SerializedName("contentsText")
     String contentsText;
 
+    public String contentsUrl;
+
     public long getContentsNum() {
         return contentsNum;
     }
@@ -33,5 +35,13 @@ public class ContentsRepo {
 
     public void setContentsText(String contentsText) {
         this.contentsText = contentsText;
+    }
+
+    public String getContentsUrl() {
+        return contentsUrl;
+    }
+
+    public void setContentUrl(String contentsUrl) {
+        this.contentsUrl = contentsUrl;
     }
 }

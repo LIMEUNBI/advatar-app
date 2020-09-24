@@ -7,14 +7,25 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
+    <color name="main_color">#a366ff</color>
+
     <color name="blue_b3d9ff">#b3d9ff</color>
     <color name="blue_99c2ff">#99c2ff</color>
     <color name="blue_002080">#002080</color>
 
+    <color name="logo_facebook">#355D8D</color>
+    <color name="logo_naver">#00C035</color>
+    <color name="logo_instagram">#E1132A</color>
+
     <color name="line_f2f2f2">#F2F2F2</color>
 
+    <color name="text_e6e6e6">#E6E6E6</color>
+    <color name="text_bfbfbf">#BFBFBF</color>
+    <color name="text_a6a6a6">#A6A6A6</color>
     <color name="text_b5b5b5">#B5B5B5</color>
     <color name="text_acacac">#ACACAC</color>
     <color name="text_5d5d5d">#5D5D5D</color>
     <color name="text_484848">#484848</color>
+
+    <color name="pink_300">#F06292</color>
 </resources>

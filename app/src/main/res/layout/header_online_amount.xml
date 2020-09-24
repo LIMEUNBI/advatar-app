@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/amount_layout"
+        android:layout_width="match_parent"
+        android:layout_height="68dp">
+
+        <RelativeLayout
+            android:id="@+id/amount_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/blue_002080"
+                android:textSize="24dp" />
+
+            <TextView
+                android:id="@+id/amount_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/amount"
+                android:layout_toEndOf="@+id/amount"
+                android:layout_toRightOf="@+id/amount"
+                android:layout_marginBottom="5dp"
+                android:text=" 원"
+                android:textColor="@color/blue_99c2ff"
+                android:textSize="12dp" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/sync_image"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="13dp"
+            android:layout_toEndOf="@+id/amount_holder"
+            android:layout_toRightOf="@+id/amount_holder"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_refresh_grey"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/amount_layout"
+        android:background="@color/line_f2f2f2"/>
+
+</RelativeLayout>

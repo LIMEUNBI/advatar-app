@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE properties SYSTEM
+    "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>SQL</comment>
+
+    <entry key="select.online_store.order_detail">
+        <![CDATA[
+        SELECT * FROM online_store A WHERE enc_user_id = '%s'
+        AND EXISTS (
+            SELECT 1 FROM online_store_mapping B
+            WHERE A.id = B.online_store_id AND B.origin_code = %s AND B.origin_id = %s
+        )
+        ]]>
+    </entry>
+
+    <entry key="select.online_store.mapping.online_store.step.1">
+        <![CDATA[
+        SELECT id, order_date_time,
+            pay_amount, refund_amount
+        FROM online_store A
+        WHERE name = '{{storeName}}'
+        AND enc_user_id = '{{encUserId}}'
+        AND order_date_time >= {{orderDateTime}}
+        [[selection]]
+        ORDER BY order_date_time DESC
+        ]]>
+    </entry>
+
+    <entry key="select.online_store.mapping.online_store.step.2">
+        <![CDATA[
+        SELECT origin_code, origin_id, org_date_time, amount
+        FROM credit_card A
+        WHERE company_id IN (SELECT company_id FROM profiles WHERE biz_type = '{{storeName}}')
+        AND NOT EXISTS (SELECT 1 FROM online_store_mapping B WHERE A.origin_code = B.origin_code AND A.origin_id = B.origin_id AND B.enc_user_id = '{{encUserId}}')
+        AND org_date_time BETWEEN {{startDateTime}} AND {{endDateTime}}
+        ORDER BY origin_code, org_date_time DESC
+        ]]>
+    </entry>
+
+    <entry key="select.online_store.mapping.not_ref_online_store.step.1">
+        <![CDATA[
+        SELECT IFNULL(MIN(A.org_date_time), 0) AS org_date_time
+        FROM credit_card A INNER JOIN online_store_mapping B
+        ON A.origin_code = B.origin_code AND A.origin_id = B.origin_id AND B.enc_user_id = '{{encUserId}}'
+        WHERE company_id IN (SELECT company_id FROM profiles WHERE biz_type = '{{storeName}}')
+        ]]>
+    </entry>
+
+    <entry key="select.online_store.mapping.not_ref_online_store.step.2">
+        <![CDATA[
+        SELECT A.id,
+            MAX(A.order_date_time) AS order_date_time,
+            MAX(A.pay_amount) AS pay_amount,
+            MAX(A.refund_amount) AS refund_amount,
+            IFNULL(MIN(B.main_yn), -1) AS main_yn
+        FROM online_store A
+        LEFT OUTER JOIN online_store_mapping B
+        ON A.id = B.online_store_id
+        WHERE A.name = '{{storeName}}'
+        AND A.enc_user_id = '{{encUserId}}'
+        AND A.order_date_time >= {{orgDateTime}}
+        AND A.order_date_time < {{lastOrgDateTime}}
+        GROUP BY A.id
+        HAVING MIN(B.main_yn) IS NULL
+        OR (MIN(CASE B.origin_code WHEN 0 THEN B.main_yn END) = 1 AND MAX(A.refund_amount) > 0)
+        OR (MIN(CASE B.origin_code WHEN 1 THEN B.main_yn END) = 1 AND MAX(A.refund_amount) > 0)
+        OR (MIN(CASE B.origin_code WHEN 2 THEN B.main_yn END) = 1 AND MAX(A.refund_amount) > 0)
+        ORDER BY A.order_date_time DESC
+        ]]>
+    </entry>
+
+    <entry key="select.online_store.mapping.not_ref_online_store.step.3">
+        <![CDATA[
+        SELECT origin_code, origin_id, org_date_time, amount
+        FROM credit_card A
+        WHERE company_id IN (SELECT company_id FROM profiles WHERE biz_type = '{{storeName}}')
+        AND NOT EXISTS (SELECT 1 FROM online_store_mapping B WHERE A.origin_code = B.origin_code AND A.origin_id = B.origin_id AND B.enc_user_id = '{{encUserId}}')
+        AND org_date_time BETWEEN {{startDateTime}} AND {{endDateTime}}
+        AND amount <> 0 AND amount IN ({{payAmount}}, {{refundAmount}})
+        ORDER BY origin_code, org_date_time DESC
+        ]]>
+    </entry>
+
+    <entry key="select.online_store.mapping.partial_cancel_online_store.step.1">
+        <![CDATA[
+        SELECT A.id,
+            MAX(A.order_date_time) AS order_date_time,
+            MAX(A.pay_amount) AS pay_amount,
+            MAX(A.refund_amount) AS refund_amount,
+            IFNULL(MIN(B.main_yn), -1) AS main_yn
+        FROM online_store A
+        LEFT OUTER JOIN online_store_mapping B
+        ON A.id = B.online_store_id
+        WHERE A.name = '{{storeName}}'
+        AND A.enc_user_id = '{{encUserId}}'
+        AND A.cancel_yn = 1
+        GROUP BY A.id
+        HAVING MIN(B.main_yn) IS NULL
+        OR (MIN(CASE B.origin_code WHEN 0 THEN B.main_yn END) = 1 AND MAX(A.refund_amount) > 0)
+        OR (MIN(CASE B.origin_code WHEN 1 THEN B.main_yn END) = 1 AND MAX(A.refund_amount) > 0)
+        OR (MIN(CASE B.origin_code WHEN 2 THEN B.main_yn END) = 1 AND MAX(A.refund_amount) > 0)
+        ORDER BY A.order_date_time
+        ]]>
+    </entry>
+
+    <entry key="select.online_store.mapping.partial_cancel_online_store.step.2">
+        <![CDATA[
+        SELECT origin_code
+            ,MIN(org_date_time) AS org_date_time
+            ,SUM(amount) AS amount
+            ,GROUP_CONCAT(origin_id, ',') AS origin_id_list
+            ,GROUP_CONCAT(ABS(amount), ',') AS amount_list
+        FROM credit_card A
+        WHERE company_id IN (SELECT company_id FROM profiles WHERE biz_type = '{{storeName}}')
+        AND NOT EXISTS (SELECT 1 FROM online_store_mapping B WHERE A.origin_code = B.origin_code AND A.origin_id = B.origin_id AND B.enc_user_id = '{{encUserId}}')
+        AND org_date_time > {{lastOrgDateTime}}
+        AND amount < 0
+        GROUP BY origin_code, org_date_time / 60000
+        ORDER BY origin_code, org_date_time
+        ]]>
+    </entry>
+
+    <entry key="select.online_store.report">
+        <![CDATA[
+        SELECT A.*, IFNULL(B.company_id, -1) AS company_id
+        FROM online_store A
+        LEFT OUTER JOIN (
+            SELECT biz_type, MAX(name) AS name, MAX(company_id) AS company_id
+            FROM profiles WHERE biz_type > ' ' AND company_id > -1
+            GROUP BY biz_type
+        ) B
+        ON A.name = B.biz_type
+        WHERE A.report_yn = 0 AND A.pay_amount > 0
+        AND IFNULL(A.report_fail_count, 0) <= 5
+        ]]>
+    </entry>
+
+    <entry key="select.online_store.last_order_date">
+        <![CDATA[
+        SELECT IFNULL(MAX(order_date_time), -1) AS order_date_time FROM online_store WHERE name = '%s' AND enc_user_id = '%s'
+        ]]>
+    </entry>
+
+    <entry key="select.online_store_product.tracking_query_string">
+        <![CDATA[
+        SELECT B.tracking_query_string
+            ,MAX(B.name) AS product_name
+            ,COUNT(*) AS cnt
+        FROM online_store A
+        INNER JOIN online_store_product B
+        WHERE A.order_number = B.order_number
+        AND A.name = B.store_name
+        AND A.name = '{{storeName}}'
+        AND A.order_date_time >= {{timestamp}}
+        AND B.tracking_query_string > ' '
+        AND B.parcel_code IS NULL
+        GROUP BY B.tracking_query_string
+        ]]>
+    </entry>
+
+    <entry key="select.online_store_product.count">
+        <![CDATA[
+        SELECT COUNT(*) AS cnt
+        FROM online_store_product
+        WHERE store_name = '%s'
+        AND order_number = '%s'
+        ]]>
+    </entry>
+
+
+    <entry key="update.credit_card_usage.merchant_id">
+        <![CDATA[
+        UPDATE credit_card_usage
+        SET merchant_id = (
+            SELECT A.id FROM credit_card_merchant A
+            WHERE A.card_pcode = {{cardCode}} AND A.merchant_number = credit_card_usage.merchant_number
+            LIMIT 1
+        )
+        WHERE merchant_id IS NULL AND card_pcode = {{cardCode}} AND enc_user_id = '{{encUserId}}'
+        ]]>
+    </entry>
+
+    <entry key="select.credit_card_usage.credit_card_id">
+        <![CDATA[
+        SELECT * FROM credit_card WHERE origin_code = {{originCode}}
+        AND code = {{cardCode}} AND amount = {{amount}}
+        AND ((p_code = 6 AND {{cardCode}} = 8) OR p_code = {{cardCode}})
+        AND (org_date_time / (60 * 1000)) BETWEEN ({{timestamp}} / (60 * 1000)) AND ({{timestamp}} / (60 * 1000) + 1)
+        ORDER BY org_date_time
+        LIMIT 1
+        ]]>
+    </entry>
+
+    <!-- credit_card_usage 테이블의 credit_card_id 업데이트(우리카드의 경우 BC 카드와 맵핑) : 승인시간에 시분초가 존재 할 경우 -->
+    <entry key="update.credit_card_usage.credit_card_id.default">
+        <![CDATA[
+        UPDATE credit_card_usage
+        SET credit_card_id = (
+            SELECT _id FROM credit_card WHERE origin_code = {{originCode}}
+            AND code = credit_card_usage.card_code
+            AND ((p_code = 6 AND {{cardCode}} = 8) OR p_code = credit_card_usage.card_pcode)
+            AND amount = credit_card_usage.pay_amount
+            AND (org_date_time / (60 * 1000)) BETWEEN (credit_card_usage.usage_timestamp / (60 * 1000)) AND (credit_card_usage.usage_timestamp / (60 * 1000) + 1)
+            ORDER BY org_date_time
+            LIMIT 1
+        )
+        WHERE card_pcode = {{cardCode}}
+        AND enc_user_id = '{{encUserId}}'
+        AND credit_card_id IS NULL
+        ]]>
+    </entry>
+
+    <!-- credit_card_usage 테이블의 credit_card_id 업데이트: 승인시간에 시분초가 존재 안 할 경우 -->
+    <entry key="update.credit_card_usage.credit_card_id.case-1">
+        <![CDATA[
+            UPDATE credit_card_usage SET credit_card_id = {{creditCardId}} WHERE id = {{id}}
+        ]]>
+    </entry>
+
+    <entry key="select.credit_card_usage.not.mapping">
+        <![CDATA[
+        SELECT id
+            ,card_code
+            ,SUBSTR(usage_date, 1, 8) AS usage_date
+            ,usage_desc
+            ,pay_amount
+        FROM credit_card_usage
+        WHERE card_pcode = {{cardCode}}
+        AND enc_user_id = '{{encUserId}}'
+        AND credit_card_id IS NULL
+        ORDER BY usage_timestamp
+            ,id DESC
+        ]]>
+    </entry>
+
+    <entry key="select.credit_card.not.mapping._id">
+        <![CDATA[
+        SELECT _id FROM credit_card A
+        WHERE origin_code = {{originCode}} AND code = {{code}} AND p_code = {{cardCode}} AND amount = {{payAmount}}
+        AND STRFTIME('%Y%m%d%H%M%S', DATETIME(date_time / 1000,'unixepoch')) LIKE '{{usageDate}}%'
+        AND INSTR('{{usageDesc}}', store_name) > 0 AND _id > {{creditCardId}}
+        ORDER BY _id
+        LIMIT 1
+        ]]>
+    </entry>
+
+    <entry key="update.credit_card_usage.company_id">
+        <![CDATA[
+        UPDATE credit_card_usage
+        SET company_id  = (
+            SELECT company_id FROM credit_card_merchant
+            WHERE id = credit_card_usage.merchant_id
+            AND pg_yn = 0
+        )
+        WHERE card_pcode = {{cardCode}}
+        AND enc_user_id = '{{encUserId}}'
+        AND company_id IS NULL
+        [[condition]]
+        ]]>
+    </entry>
+
+    <entry key="update.credit_card.display_yn">
+        <![CDATA[
+        UPDATE credit_card SET display_yn = 0
+        WHERE ((p_code = 6 AND {{cardCode}} = 8) OR p_code = {{cardCode}})
+        AND origin_code = {{originCode}}
+        AND display_yn = 1
+        AND EXISTS (
+            SELECT 1 FROM credit_card_usage A
+            INNER JOIN credit_card B ON A.credit_card_id = B._id AND B.origin_code = {{originCode}}
+            WHERE A.card_pcode = {{cardCode}} AND A.enc_user_id = '{{encUserId}}' [[condition]]
+            GROUP BY A.card_name
+		        ,B.card
+            HAVING B.card = credit_card.card AND MIN(B.org_date_time) <= credit_card.org_date_time
+        )
+        ]]>
+    </entry>
+
+    <entry key="insert.credit_card.from.credit_card_usage">
+        <![CDATA[
+        INSERT INTO credit_card (
+             msg_table_id, hash_id, code, p_code, card_id, my_card_name, card, card_type,
+             edit_category, biz_type, cate1, cate2, cate3, closeYn, company_id,
+             store_name, poi_name, memo, latitude, longitude, amount, org_amount, payment_plan, total_amount,
+             approval_type, date_time, org_date_time, currency, reserved1, reserved2, reserved3, status,
+             origin_code, origin_id, accept_number, display_yn, edit_yn
+        )SELECT
+             0 AS msg_table_id, 0 AS hash_id, A.card_code AS code, A.card_pcode AS p_code, 0 AS card_id
+             ,NULL AS my_card_name, A.card_name AS card, CASE WHEN card_type IN (10, 11) THEN 0 WHEN card_type = 12 THEN 16 WHEN card_type = 20 THEN 1 END AS card_type
+             ,NULL AS edit_category, IFNULL(C.cate1, '기타') AS biz_type, IFNULL(C.cate1, '기타') AS cate1, IFNULL(C.cate2, '기타') AS cate2, IFNULL(C.cate3, '기타') AS cate3
+             ,IFNULL(C.closeYn, 0) AS closeYn, IFNULL(A.company_id, -1) AS company_id
+             ,A.usage_desc AS store_name, IFNULL(C.name,  A.usage_desc) AS poi_name, NULL AS memo, B.latitude AS latitude, B.longitude AS longitude
+             ,CASE D.cancel_yn WHEN 1 THEN -1 ELSE 1 END * A.pay_amount AS amount
+             ,CASE D.cancel_yn WHEN 1 THEN -1 ELSE 1 END * A.pay_amount AS org_amount
+             ,A.payment_plan AS payment_plan, A.pay_amount AS total_amount
+             ,CASE D.cancel_yn WHEN 1 THEN 512 ELSE 256 END AS approval_type
+             ,CASE D.cancel_yn WHEN 1 THEN A.usage_timestamp + 999 ELSE A.usage_timestamp END AS date_time
+             ,CASE D.cancel_yn WHEN 1 THEN A.usage_timestamp + 999 ELSE A.usage_timestamp END AS org_date_time
+             ,A.currency AS currency, '0' AS reserved1, CASE WHEN A.payment_plan <> 1 THEN '1' END AS reserved2, NULL AS reserved3, CASE WHEN A.company_id IS NULL THEN 1 ELSE 0 END AS status
+             ,1 AS origin_code, A.id AS origin_id, A.accept_number AS accept_number, 1 AS display_yn, 0 AS edit_yn
+        FROM credit_card_usage A
+        LEFT OUTER JOIN credit_card_merchant B ON A.card_pcode = B.card_pcode AND A.merchant_number = B.merchant_number AND B.pg_yn = 0
+        LEFT OUTER JOIN profiles C ON A.company_id = C.company_id AND C.company_id > -1
+        INNER JOIN (
+             SELECT 0 AS cancel_yn
+             UNION ALL
+             SELECT 1 AS cancel_yn
+        ) D ON D.cancel_yn <= A.cancel_yn
+        WHERE A.card_pcode = {{cardCode}}
+        AND A.enc_user_id = '{{encUserId}}'
+        AND NOT EXISTS (
+            SELECT 1 FROM credit_card M WHERE M.origin_code = {{originCode}} AND M.origin_id = A.id
+        )
+        [[condition]]
+        ]]>
+    </entry>
+
+    <entry key="insert.credit_card.from.credit_card_usage.cancel">
+        <![CDATA[
+        INSERT INTO credit_card (
+             msg_table_id, hash_id, code, p_code, card_id, my_card_name, card, card_type,
+             edit_category, biz_type, cate1, cate2, cate3, closeYn, company_id,
+             store_name, poi_name, memo, latitude, longitude, amount, org_amount, payment_plan, total_amount,
+             approval_type, date_time, org_date_time, currency, reserved1, reserved2, reserved3, status,
+             origin_code, origin_id, accept_number, display_yn, edit_yn
+        )SELECT
+             0 AS msg_table_id, 0 AS hash_id, A.card_code AS code, A.card_pcode AS p_code, 0 AS card_id
+             ,NULL AS my_card_name, A.card_name AS card, CASE WHEN card_type IN (10, 11) THEN 0 WHEN card_type = 12 THEN 16 WHEN card_type = 20 THEN 1 END AS card_type
+             ,NULL AS edit_category, IFNULL(C.cate1, '기타') AS biz_type, IFNULL(C.cate1, '기타') AS cate1, IFNULL(C.cate2, '기타') AS cate2, IFNULL(C.cate3, '기타') AS cate3
+             ,IFNULL(C.closeYn, 0) AS closeYn, IFNULL(A.company_id, -1) AS company_id
+             ,A.usage_desc AS store_name, IFNULL(C.name,  A.usage_desc) AS poi_name, NULL AS memo, B.latitude AS latitude, B.longitude AS longitude
+             ,-1 * A.pay_amount AS amount, -1 * A.pay_amount AS org_amount, A.payment_plan, A.pay_amount AS total_amount
+             ,512 AS approval_type, A.usage_timestamp + 999 AS date_time, A.usage_timestamp + 999 AS org_date_time
+             ,A.currency AS currency, '0' AS reserved1, CASE WHEN A.payment_plan > 1 THEN '1' END AS reserved2, NULL AS reserved3, CASE WHEN A.company_id IS NULL THEN 1 ELSE 0 END AS status
+             ,1 AS origin_code, A.id AS origin_id, A.accept_number AS accept_number, 1 AS display_yn, 0 AS edit_yn
+        FROM credit_card_usage A
+        LEFT OUTER JOIN credit_card_merchant B ON A.card_pcode = B.card_pcode AND A.merchant_number = B.merchant_number AND B.pg_yn = 0
+        LEFT OUTER JOIN profiles C ON A.company_id = C.company_id AND C.company_id > -1
+        WHERE A.cancel_yn = 1 AND A.card_pcode = {{cardCode}} AND A.enc_user_id = '{{encUserId}}'
+        AND NOT EXISTS (
+            SELECT 1 FROM credit_card M WHERE M.origin_code = {{originCode}} AND M.origin_id = A.id AND M.approval_type = 512
+        )
+        [[condition]]
+        ]]>
+    </entry>
+
+    <entry key="select.credit_card_usage.my_cards">
+        <![CDATA[
+        SELECT A.card_code
+            ,A.card_name
+            ,B.card
+            ,MAX(B.org_date_time) AS org_date_time
+        FROM credit_card_usage A
+        LEFT OUTER JOIN credit_card B
+        ON A.credit_card_id = B._id AND B.origin_code = {{originCode}}
+        WHERE A.card_pcode = {{cardCode}}
+        AND A.enc_user_id = '{{encUserId}}'
+        GROUP BY A.card_code, A.card_name
+        ORDER BY card_name, org_date_time DESC
+        ]]>
+    </entry>
+
+    <entry key="update.credit_card.card">
+        <![CDATA[
+        UPDATE credit_card
+        SET card = '{{mappingCardName}}'
+        WHERE ((p_code = 6 AND {{cardCode}} = 8) OR p_code = {{cardCode}})
+        AND card = '{{cardName}}' AND origin_code = {{originCode}}
+        ]]>
+    </entry>
+
+    <entry key="update.credit_card.payment.plan">
+        <![CDATA[
+        UPDATE credit_card
+        SET payment_plan = IFNULL((
+                SELECT B.payment_plan
+                FROM credit_card_usage  A
+                INNER JOIN credit_card B
+                ON A.credit_card_id = B._id
+                AND credit_card.origin_id = A.id)
+            , payment_plan)
+        WHERE ((p_code = 6 AND {{cardCode}} = 8) OR p_code = {{cardCode}}) AND origin_code = {{originCode}}
+        AND payment_plan = 0
+        ]]>
+    </entry>
+
+    <entry key="insert.credit_card.monthly.payment">
+        <![CDATA[
+        INSERT INTO credit_card (
+             msg_table_id, hash_id, code, p_code, card_id, my_card_name, card, card_type,
+             edit_category, biz_type, cate1, cate2, cate3, closeYn, company_id,
+             store_name, poi_name, memo, latitude, longitude, amount, org_amount, payment_plan, total_amount,
+             approval_type, date_time, org_date_time, currency, reserved1, reserved2, reserved3, status,
+             origin_code, origin_id, accept_number, display_yn, edit_yn
+        )SELECT * FROM (
+             SELECT msg_table_id, hash_id, code, p_code, card_id, my_card_name, card, card_type,
+                  edit_category, biz_type, cate1, cate2, cate3, closeYn, company_id,
+                  store_name, poi_name, memo, latitude, longitude, amount, org_amount, payment_plan, total_amount, approval_type,
+                  STRFTIME('%s', MIN(DATE(DATETIME(org_date_time / 1000,'unixepoch'), '+'||(B.id-1)||' month'),
+                    DATE(DATETIME(org_date_time / 1000,'unixepoch'),'start of month','+'||(B.id)||' month','-1 day')) ) * 1000  + org_date_time%(24 * 60 * 60 * 1000) AS date_time,
+                  org_date_time, currency, reserved1, B.id AS reserved2, reserved3, status,
+                  origin_code, origin_id, accept_number, display_yn, edit_yn
+             FROM credit_card A INNER JOIN dual B
+             ON A.payment_plan >= B.id  AND B.id > 1 AND reserved2 = '1'
+             WHERE A.payment_plan > 1 AND A.origin_code = {{originCode}}
+        )  A
+        WHERE NOT EXISTS (
+            SELECT 1 FROM credit_card C
+            WHERE A.origin_code = C.origin_code AND A.origin_id = C.origin_id AND A.reserved2 = C.reserved2 AND C.origin_code = {{originCode}}
+        )
+        ]]>
+    </entry>
+
+    <entry key="update.credit_card.missing_monthly.payment">
+        <![CDATA[
+        UPDATE credit_card
+        SET display_yn = 1
+        WHERE origin_id IN (
+            SELECT origin_id
+            FROM credit_card
+            WHERE payment_plan > 1
+            AND origin_code = {{originCode}}
+            AND org_date_time >= (
+                SELECT MIN(usage_timestamp) FROM credit_card_usage
+                WHERE card_pcode = {{cardCode}} AND enc_user_id = '{{encUserId}}'
+            )
+            GROUP BY origin_id
+            HAVING MIN(CAST(reserved2 AS INTEGER)) > 1
+        )
+        AND display_yn = 0
+        AND origin_code = {{originCode}}
+        ]]>
+    </entry>
+
+    <entry key="select.credit_card_usage.report">
+        <![CDATA[
+         SELECT A.card_pcode
+             ,A.accept_number
+             ,A.card_type
+             ,A.usage_desc
+             ,A.card_name
+             ,A.usage_timestamp
+             ,A.merchant_number
+             ,IFNULL(A.company_id, -1) AS card_company_id
+             ,B.name AS merchant_name
+             ,B.address AS merchant_address
+             ,B.business_type
+             ,B.representatives
+             ,B.phone_number
+             ,B.registration_number
+             ,IFNULL(C.company_id, -1) AS sms_company_id
+             ,IFNULL(C.store_name, '') AS store_name
+        FROM credit_card_usage A
+        INNER JOIN credit_card_merchant B ON A.merchant_id = B.id AND A.merchant_number NOT LIKE 'dummy_%%'
+        LEFT OUTER JOIN credit_card C ON A.credit_card_id = C._id
+        WHERE A.card_pcode = %s AND A.enc_user_id = '%s' AND A.report_yn = 0
+        ]]>
+    </entry>
+
+    <entry key="select.profiles.online_store.biz_type">
+        <![CDATA[
+        SELECT DISTINCT biz_type FROM profiles A
+        WHERE category = '온라인쇼핑' AND biz_type > ' '
+        AND (
+            EXISTS (
+                SELECT 1 FROM credit_card_usage B
+                WHERE A.company_id = B.company_id AND B.reg_timestamp = %s AND B.credit_card_id IS NULL
+            ) OR
+            EXISTS (
+                SELECT 1 FROM credit_card_usage B
+                INNER JOIN credit_card C
+                ON B.credit_card_id = C._id
+                WHERE A.company_id = C.company_id AND B.reg_timestamp = %s AND B.credit_card_id IS NULL
+            )
+        )
+        ]]>
+    </entry>
+
+    <entry key="select.credit_card_list">
+        <![CDATA[
+        SELECT card
+        FROM credit_card
+        GROUP BY card
+        ]]>
+    </entry>
+
+    <entry key="select.credit_card.origin_code">
+        <![CDATA[
+        SELECT COUNT(*)
+        FROM credit_card
+        WHERE card = '%s'
+        AND origin_code = %s
+        ]]>
+    </entry>
+
+    <entry key="select.credit_card_usage.card_issuer">
+        <![CDATA[
+        SELECT card_code
+	        ,card_name
+        FROM credit_card_usage
+        WHERE card_pcode = %s
+        AND enc_user_id = '%s'
+        GROUP BY card_code
+	        ,card_name
+        ]]>
+    </entry>
+
+    <entry key="select.event_logs">
+        <![CDATA[
+        SELECT id
+            ,event_code
+            ,event_type
+            ,event_param
+        FROM event_log
+        WHERE status = 0 AND event_param IS NOT NULL
+        AND start_time >= %s
+        AND event_type IN (
+            'IMPORT_ONLINE_STORE', 'REQUEST_ONLINE_STORE', 'REQUEST_ONLINE_STORE_PARCEL',
+            'IMPORT_CARD_USAGE', 'REQUEST_CARD_USAGE'
+        )
+        ORDER BY id
+        LIMIT %s
+        ]]>
+    </entry>
+
+
+    <entry key="delete.event_logs">
+        <![CDATA[
+        DELETE FROM event_log WHERE id < (
+            SELECT MIN(id) FROM (
+                SELECT id FROM event_log ORDER BY id DESC
+                LIMIT %s
+            ) A
+        )
+        ]]>
+    </entry>
+
+    <!--==================================================-->
+    <!--=================== SmartPick ====================-->
+    <!--==================================================-->
+    <entry key="select.credit_card.smart_pick.today">
+        <![CDATA[
+		SELECT
+		    C.latitude
+			,C.longitude
+            ,C.company_id
+            ,C.name
+			,COUNT(*) AS CNT
+        FROM
+            credit_card_view RH
+            INNER JOIN profiles C
+            ON RH.COMPANY_ID = C.COMPANY_ID
+            AND C.category = '{{category}}'
+            AND C.LATITUDE > 0
+            AND C.LONGITUDE > 0
+			AND datetime(RH.date_time/1000, 'unixepoch', 'localtime') >= datetime('now','start of day')
+			AND datetime(RH.date_time/1000, 'unixepoch', 'localtime') < datetime('now','start of day','+1 day')
+			{{excludeCardList}}
+		GROUP BY C.name
+        ORDER BY CNT DESC
+        ]]>
+    </entry>
+
+    <entry key="select.credit_card.smart_pick.last_week">
+        <![CDATA[
+		SELECT
+            C.latitude
+			,C.longitude
+            ,C.company_id
+            ,C.name
+            ,RH.amount
+			,datetime(RH.date_time/1000, 'unixepoch', 'localtime')
+        FROM
+            credit_card_view RH
+            INNER JOIN profiles C
+            ON RH.COMPANY_ID = C.COMPANY_ID
+            AND C.category = '{{category}}'
+            AND C.LATITUDE > 0
+            AND C.LONGITUDE > 0
+			AND datetime(RH.date_time/1000, 'unixepoch', 'localtime') >= datetime('now','start of day','-7 day')
+			AND datetime(RH.date_time/1000, 'unixepoch', 'localtime') < datetime('now','start of day','-6 day')
+			{{excludeCardList}}
+		GROUP BY C.name
+        HAVING MAX(RH.date_time)
+        ]]>
+    </entry>
+
+    <entry key="select.credit_card.smart_pick.low_price">
+        <![CDATA[
+		SELECT
+            C.latitude
+			,C.longitude
+            ,C.company_id
+            ,C.name
+			,MIN(RH.amount)
+			,MAX(RH.date_time)
+			,COUNT(*) AS CNT
+        FROM
+            credit_card_view RH
+            INNER JOIN profiles C
+            ON RH.COMPANY_ID = C.COMPANY_ID
+            AND C.category = '{{category}}'
+            AND C.LATITUDE > 0
+            AND C.LONGITUDE > 0
+            AND RH.amount > 0
+            AND RH.amount <= 6000
+            AND datetime(RH.date_time/1000, 'unixepoch', 'localtime') > date('now','-3 month')
+			{{excludeCardList}}
+		GROUP BY C.name
+        HAVING MAX(RH.date_time)
+		ORDER BY RH.amount asc
+		LIMIT 10
+        ]]>
+    </entry>
+
+    <entry key="select.credit_card.smart_pick_revisit">
+        <![CDATA[
+		SELECT
+            C.latitude
+			,C.longitude
+            ,C.company_id
+            ,C.name
+            ,RH.amount
+			,COUNT(*) AS CNT
+        FROM
+            credit_card_view RH
+            INNER JOIN profiles C
+            ON RH.COMPANY_ID = C.COMPANY_ID
+            AND C.category = '{{category}}'
+            AND C.LATITUDE > 0
+            AND C.LONGITUDE > 0
+			AND datetime(RH.date_time/1000, 'unixepoch', 'localtime') > date('now','-1 month')
+			{{excludeCardList}}
+		GROUP BY C.name
+        HAVING MAX(RH.date_time)
+        ORDER BY CNT DESC
+		LIMIT 10
+        ]]>
+    </entry>
+
+    <entry key="select.credit_card.smart_pick_not_revisit">
+        <![CDATA[
+		SELECT
+            C.latitude
+			,C.longitude
+            ,C.company_id
+            ,C.name
+			,datetime(RH.date_time/1000, 'unixepoch', 'localtime')
+			,(strftime('%s','now') - strftime('%s',datetime(RH.date_time/1000, 'unixepoch', 'localtime'))) / 60 / 60 / 24  AS DAY
+			,COUNT(*) CNT
+        FROM
+            credit_card_view RH
+            INNER JOIN profiles C
+            ON RH.COMPANY_ID = C.COMPANY_ID
+            AND C.category = '{{category}}'
+            AND C.LATITUDE > 0
+            AND C.LONGITUDE > 0
+			AND datetime(RH.date_time/1000, 'unixepoch', 'localtime') > date('now','-60 day')
+			AND RH.company_id NOT IN (SELECT company_id FROM credit_card_view WHERE datetime(date_time/1000, 'unixepoch', 'localtime') > date('now','-14 day'))
+			{{excludeCardList}}
+		GROUP BY RH.company_id
+		HAVING MAX(RH.date_time)
+        ORDER BY DAY DESC
+        ]]>
+    </entry>
+
+    <entry key="select.card_login_lifezone_search_list">
+        <![CDATA[
+            SELECT
+              C.org_date_time
+              ,C.company_id
+              ,P.latitude
+              ,P.longitude
+            FROM
+              credit_card_view C
+              LEFT JOIN profiles P
+              ON C.company_id = P.company_id
+            WHERE
+              C.company_id > 0
+              AND C.approval_type = 256
+              OR C.reserved2 = null
+              OR C.reserved2 = 1
+              AND P.latitude > 0
+              AND P.longitude > 0
+            ORDER BY C.org_date_time DESC
+        ]]>
+    </entry>
+
+</properties>

@@ -12,7 +12,7 @@
     <item
         android:id="@+id/action_three"
         android:icon="@drawable/icon_review"
-        android:title="평가" />
+        android:title="쇼핑몰" />
     <item
         android:id="@+id/action_four"
         android:icon="@drawable/icon_mypage"

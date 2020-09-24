@@ -27,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_centerInParent="true"
+                android:background="@color/main_color"
                 app:contentInsetStart="0dp"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
@@ -47,7 +48,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Home"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
                             android:textSize="16dp" />
 
                     </RelativeLayout>
@@ -65,6 +67,14 @@
                             android:layout_height="40dp"
                             android:padding="5dp"
                             android:src="@drawable/ic_settings" />
+
+                        <ImageView
+                            android:id="@+id/img_online_option"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_settings"
+                            android:visibility="gone"/>
 
                     </RelativeLayout>
 

@@ -1,6 +1,5 @@
 package com.epopcon.advatar.controller.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -17,12 +16,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.epopcon.advatar.R;
+import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
+import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
+import com.epopcon.advatar.controller.activity.online.OnlineLoginActivity;
 import com.epopcon.advatar.controller.fragment.ContentsFragment;
 import com.epopcon.advatar.controller.fragment.GoodsFragment;
 import com.epopcon.advatar.controller.fragment.MyPageFragment;
-import com.epopcon.advatar.controller.fragment.ReviewFragment;
+import com.epopcon.advatar.controller.fragment.OnlineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
+
+import org.mozilla.javascript.tools.jsc.Main;
 
 public class MainActivity extends BaseActivity {
 
@@ -31,6 +35,7 @@ public class MainActivity extends BaseActivity {
 
     private TextView toolbarTitle;
     private ImageView imgOption;
+    private ImageView imgOnlineOption;
 
     private long backPressedTime;
 
@@ -57,6 +62,16 @@ public class MainActivity extends BaseActivity {
                 Intent intent = new Intent(MainActivity.this, BrandChoiceActivity.class);
                 startActivityForResult(intent, 0);
                 finish();
+            }
+        });
+
+        imgOnlineOption = (ImageView) findViewById(R.id.img_online_option);
+
+        imgOnlineOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, OnlineListActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -92,21 +107,29 @@ public class MainActivity extends BaseActivity {
                     case R.id.action_one:
                         toolbarTitle.setText("브랜드 컨텐츠");
                         selectedFragment = ContentsFragment.getInstance();
+                        imgOption.setVisibility(View.VISIBLE);
+                        imgOnlineOption.setVisibility(View.GONE);
                         break;
 
                     case R.id.action_two:
                         toolbarTitle.setText("브랜드 상품");
                         selectedFragment = GoodsFragment.getInstance();
+                        imgOption.setVisibility(View.VISIBLE);
+                        imgOnlineOption.setVisibility(View.GONE);
                         break;
 
                     case R.id.action_three:
-                        toolbarTitle.setText("브랜드 평가");
-                        selectedFragment = ReviewFragment.getInstance();
+                        toolbarTitle.setText("쇼핑몰 구매내역");
+                        selectedFragment = OnlineFragment.getInstance();
+                        imgOption.setVisibility(View.GONE);
+                        imgOnlineOption.setVisibility(View.VISIBLE);
                         break;
 
                     case R.id.action_four:
-                        toolbarTitle.setText("구매 내역");
+                        toolbarTitle.setText("마이 페이지");
                         selectedFragment = MyPageFragment.getInstance();
+                        imgOption.setVisibility(View.GONE);
+                        imgOnlineOption.setVisibility(View.GONE);
                         break;
                 }
 

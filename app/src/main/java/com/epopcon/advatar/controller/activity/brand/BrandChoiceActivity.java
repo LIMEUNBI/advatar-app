@@ -1,4 +1,4 @@
-package com.epopcon.advatar.controller.activity;
+package com.epopcon.advatar.controller.activity.brand;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,12 +26,19 @@ import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
 import com.epopcon.advatar.common.network.model.repo.BrandRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
+import com.epopcon.advatar.controller.activity.BaseActivity;
+import com.epopcon.advatar.controller.activity.MainActivity;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static com.epopcon.advatar.common.util.MyBrandUtil.getBrandCodeList;
+import static com.epopcon.advatar.common.util.MyBrandUtil.getBrandNameList;
+import static com.epopcon.advatar.common.util.MyBrandUtil.putBrandCodeList;
+import static com.epopcon.advatar.common.util.MyBrandUtil.putBrandNameList;
 
 public class BrandChoiceActivity extends BaseActivity {
 
@@ -99,9 +106,23 @@ public class BrandChoiceActivity extends BaseActivity {
                 if (getBrandCodeList().isEmpty()) {
                     Toast.makeText(getApplicationContext(), "브랜드를 선택하세요.", Toast.LENGTH_LONG).show();
                 } else {
-                    Intent intent = new Intent(BrandChoiceActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+
+                    try {
+                        RestAdvatarProtocol.getInstance().userFavoriteBrands(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, ""), getBrandCodeList(), new RequestListener() {
+                            @Override
+                            public void onRequestSuccess(int requestCode, Object result) {
+                                finish();
+
+                            }
+
+                            @Override
+                            public void onRequestFailure(Throwable t) {
+                                Toast.makeText(getApplicationContext(), "통신 오류입니다. 버튼을 다시 눌러주세요.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -159,7 +180,7 @@ public class BrandChoiceActivity extends BaseActivity {
 
                 @Override
                 public void onRequestFailure(Throwable t) {
-
+//                    refresh();
                 }
             });
         } catch (Exception e) {
@@ -193,22 +214,6 @@ public class BrandChoiceActivity extends BaseActivity {
         }
 
         return super.onKeyDown(keyCode, event);
-    }
-
-    private void putBrandCodeList(String brandCode) {
-        SharedPreferenceBase.putPrefString(getApplicationContext(), Config.MY_BRAND_LIST, brandCode);
-    }
-
-    private void putBrandNameList(String brandName) {
-        SharedPreferenceBase.putPrefString(getApplicationContext(), Config.MY_BRAND_NAME, brandName);
-    }
-
-    private String getBrandCodeList() {
-        return SharedPreferenceBase.getPrefString(getApplicationContext(), Config.MY_BRAND_LIST, "");
-    }
-
-    private String getBrandNameList() {
-        return SharedPreferenceBase.getPrefString(getApplicationContext(), Config.MY_BRAND_NAME, "");
     }
 
     private class GridAdapter extends ArrayAdapter<BrandRepo> {
@@ -282,7 +287,6 @@ public class BrandChoiceActivity extends BaseActivity {
                         putBrandNameList(reChoice);
                     }
 
-//                    Collections.sort(mBrandList, brandComparator);
                     mChoiceBrand.setText(getBrandNameList());
                 }
             });
