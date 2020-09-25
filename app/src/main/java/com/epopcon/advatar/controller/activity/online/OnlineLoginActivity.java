@@ -3,16 +3,20 @@ package com.epopcon.advatar.controller.activity.online;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.model.OnlineBizType;
@@ -22,6 +26,7 @@ import com.epopcon.advatar.common.util.event.EventTrigger;
 import com.epopcon.advatar.controller.activity.BaseActivity;
 import com.epopcon.extra.ExtraClassLoader;
 import com.epopcon.extra.common.exception.PException;
+import com.epopcon.extra.common.utils.ExecutorPool;
 import com.epopcon.extra.online.OnlineConstant;
 import com.epopcon.extra.online.OnlineDeliveryInquiry;
 import com.epopcon.extra.online.OnlineDeliveryInquiryHandler;
@@ -35,6 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class OnlineLoginActivity extends BaseActivity {
 
     private final String TAG = OnlineLoginActivity.class.getSimpleName();
+    private final String METHOD_REGISTER_DEVICE = "registerDevice";
 
     private OnlineBizType bizType = null;
     private OnlineConstant type;
@@ -101,6 +107,7 @@ public class OnlineLoginActivity extends BaseActivity {
                                 Map<String, List<String>> form = this.getObject("form", Collections.EMPTY_MAP);
 
                                 if (loginAndDeviceAdd) {
+                                    registerDevice(form);
                                     synchronized (lock) {
                                         try {
                                             lock.wait();
@@ -149,6 +156,92 @@ public class OnlineLoginActivity extends BaseActivity {
             Log.e(TAG, e.getMessage(), e);
             Toast.makeText(this, "오류가 발생하였습니다.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * 로그인 시 디바이스 등록 제한일 걸려 있을 경우 디바이스 등록 수행
+     *
+     * @param form
+     */
+    private void registerDevice(final Map<String, List<String>> form) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(OnlineLoginActivity.this);
+
+                LayoutInflater inflater = getLayoutInflater();
+                View view = inflater.inflate(R.layout.dialog_default, null);
+
+                TextView title = (TextView) view.findViewById(R.id.alert_title);
+                TextView content = (TextView) view.findViewById(R.id.alert_content);
+
+                TextView cancel = (TextView) view.findViewById(R.id.btn_cancel);
+                TextView confirm = (TextView) view.findViewById(R.id.btn_confirm);
+
+                title.setText(R.string.dialog_online_login_register_device_title);
+                content.setText(R.string.dialog_online_login_register_device_content);
+
+                cancel.setText(R.string.string_cancel);
+                confirm.setText(R.string.string_confirm);
+
+                builder.setView(view);
+
+                final AlertDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        synchronized (lock) {
+                            lock.set(false);
+                            lock.notify();
+                        }
+                    }
+                });
+
+                confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+
+                        showProgress(getString(R.string.wait_message));
+                        ExecutorPool.execute(new AsyncTask<Void, Void, Void>() {
+                            private boolean success = true;
+
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                try {
+                                    inquiry.executeMethod(METHOD_REGISTER_DEVICE, form);
+                                } catch (Throwable e) {
+                                    Log.e(TAG, e.getMessage(), e);
+                                    success = false;
+                                } finally {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            hideProgress();
+
+                                            if (success)
+                                                Toast.makeText(OnlineLoginActivity.this, R.string.settings_online_store_login_on_success, Toast.LENGTH_SHORT).show();
+                                            else
+                                                Toast.makeText(OnlineLoginActivity.this, R.string.settings_online_store_login_on_fail, Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                                    synchronized (lock) {
+                                        lock.set(success);
+                                        lock.notify();
+                                    }
+                                }
+                                return null;
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 
     public void tryLogin(View v) {

@@ -9,6 +9,11 @@
     <string name="score" formatted="false">%d점</string>
     <string name="count" formatted="false">%d건</string>
     <string name="count2" formatted="false">(%d건)</string>
+    <string name="string_cancel">취소</string>
+    <string name="string_confirm">확인</string>
+
+    <string name="online_payment_sync_start" formatted="false">%s에서 최근 구매한 상품정보 동기화를 시작합니다.</string>
+    <string name="online_payment_sync_end" formatted="false">온라인 쇼핑몰 상품정보 동기화를 완료하였습니다.</string>
     
     <string name="personal_information_usage"> -정보통신망 이용촉진 및 정보보호 등에 관한 법률\n제30조의2(개인정보 이용내역의 통지)\n\n① 정보통신서비스 제공자등으로서 대통령령으로 정하는 기준에 해당하는 자는 제22조 및 제23조제1항 단서에 따라 수집한 이용자 개인정보의 이용내역(제24조의2에 따른 제공 및 제25조에 따른 개인정보 처리위탁을 포함한다)을 주기적으로 이용자에게 통지하여야 한다. 다만, 연락처 등 이용자에게 통지할 수 있는 개인정보를 수집하지 아니한 경우에는 그러하지 아니하다.
 \n\n -정보통신망 이용촉진 및 정보보호 등에 관한 법률 시행령\n제17조(개인정보 이용내역의 통지)\n\n① 법 제30조의2제1항 본문에서 "대통령령으로 정하는 기준에 해당하는 자"란 전년도 말 기준 직전 3개월간 그 개인정보가 저장·관리되고 있는 이용자 수가 일일평균 100만명 이상이거나 정보통신서비스 부문 전년도(법인인 경우에는 전 사업연도를 말한다) 매출액이 100억원 이상인 정보통신서비스 제공자등을 말한다.\n② 법 제30조의2제1항에 따라 이용자에게 통지하여야 하는 정보의 종류는 다음 각 호와 같다.
@@ -22,14 +27,12 @@
     <string name="dialog_logout_online_confirm">해제하기</string>
     <string name="dialog_button_cancel">취소</string>
 
-
-    <string name="settings_online_store_login_off_success">로그아웃에 성공하였습니다.</string>
-    <string name="settings_online_store_login_off_fail">로그아웃에 실패하였습니다.</string>
-
     <string name="settings_online_store_login_info3_1">아이디/비밀번호는 스마트폰 내부에만 안전하게 암호화하여 저장합니다. 아이디/비밀번호 찾기는 해당 온라인쇼핑몰에서 확인하실 수 있습니다.</string>
     <string name="settings_online_store_login_valid">아이디와 비밀번호를 입력해 주시기 바랍니다.</string>
     <string name="settings_online_store_login_on_success">로그인에 성공하였습니다.</string>
     <string name="settings_online_store_login_on_fail">로그인에 실패하였습니다.</string>
+    <string name="dialog_online_login_register_device_title">디바이스 등록 필요</string>
+    <string name="dialog_online_login_register_device_content">새로운 디바이스로 로그인 하였습니다.\n디바이스를 등록 하시겠습니까?</string>
     <string name="error_result_save">저장에 실패하였습니다.</string>
     <string name="wait_message">잠시만 기다려주십시요.</string>
 

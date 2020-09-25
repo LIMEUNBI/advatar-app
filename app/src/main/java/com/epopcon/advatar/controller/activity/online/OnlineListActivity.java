@@ -159,7 +159,7 @@ public class OnlineListActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(OnlineListActivity.this, R.string.settings_online_store_login_off_success, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OnlineListActivity.this, R.string.settings_online_store_login_on_success, Toast.LENGTH_SHORT).show();
                         }
                     });
                 } catch (Exception e) {
@@ -167,7 +167,7 @@ public class OnlineListActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(OnlineListActivity.this, R.string.settings_online_store_login_off_fail, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OnlineListActivity.this, R.string.settings_online_store_login_on_fail, Toast.LENGTH_SHORT).show();
                         }
                     });
                 } finally {

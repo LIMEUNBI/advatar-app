@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.epopcon.advatar.common.util.event.handler.OnlineStoreImportHandler;
 import com.epopcon.advatar.common.util.event.handler.OnlineStoreReportHandler;
+import com.epopcon.advatar.common.util.event.handler.OnlineStoreRequestHandler;
 
 
 public class EventHandlerFactory {
@@ -18,6 +19,8 @@ public class EventHandlerFactory {
         switch (type) {
             case IMPORT_ONLINE_STORE:
                 return new OnlineStoreImportHandler(context);
+            case REQUEST_ONLINE_STORE:
+                return new OnlineStoreRequestHandler(context);
             case REPORT_ONLINE_STORE:
                 return new OnlineStoreReportHandler(context);
         }

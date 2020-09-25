@@ -30,6 +30,7 @@ import com.epopcon.advatar.common.model.OnlineBizDetail;
 import com.epopcon.advatar.common.model.OnlineBizType;
 import com.epopcon.advatar.common.model.OnlineProductInfo;
 import com.epopcon.advatar.common.util.event.Event;
+import com.epopcon.advatar.common.util.event.EventHandler;
 import com.epopcon.advatar.common.util.event.EventTrigger;
 import com.epopcon.advatar.controller.activity.online.OnlineLoginActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineStoreWebActivity;
@@ -153,6 +154,63 @@ public class OnlineFragment extends BaseFragment {
         });
 
         mSyncImg1 = (ImageView) mView.findViewById(R.id.sync_image1);
+
+        EventTrigger.getInstance(activity).register(this, Event.Type.ON_ONLINE_STORE_UPDATE, new EventHandler() {
+            @Override
+            public void onEvent(Event event) {
+                String driven = event.getObject("driven", Event.Type.IMPORT_ONLINE_STORE.toString());
+
+                if (driven.equals(Event.Type.IMPORT_ONLINE_STORE.toString())) {
+                    boolean success = event.getObject("success", false);
+                    int action = event.getObject("action", OnlineConstant.ACTION_QUERY_PAYMENT_DETAILS);
+                    int status = event.getObject("status", 1);
+                    final String NAME = event.getObject("name", "");
+
+                    switch (status) {
+                        case Config.EVENT_STATUS_STEP_START:
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(activity, String.format(getContext().getResources().getString(R.string.online_payment_sync_start), NAME), Toast.LENGTH_SHORT).show();
+                                    mSyncImg.startAnimation(rotateAnimation);
+                                    mSyncImg1.startAnimation(rotateAnimation);
+                                }
+                            });
+                            break;
+                        case Config.EVENT_STATUS_STEP_PROGRESS:
+                        case Config.EVENT_STATUS_STEP_END:
+                            if (action == OnlineConstant.ACTION_QUERY_PAYMENT_DETAILS) {
+                                activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(activity, String.format(getContext().getResources().getString(R.string.online_payment_sync_end)), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+
+                            if (success) {
+                                activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        refresh();
+                                    }
+                                });
+                            }
+                            break;
+                        case Config.EVENT_STATUS_ALL_END:
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(activity, String.format(getContext().getResources().getString(R.string.online_payment_sync_end)), Toast.LENGTH_SHORT).show();
+                                    mSyncImg.clearAnimation();
+                                    mSyncImg1.clearAnimation();
+                                }
+                            });
+                            break;
+                    }
+                }
+            }
+        });
 
         return mView;
     }

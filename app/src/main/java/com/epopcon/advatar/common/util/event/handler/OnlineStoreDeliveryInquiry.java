@@ -16,7 +16,6 @@ import com.epopcon.extra.online.OnlineDeliveryInquiryHandler;
 import com.epopcon.extra.online.OnlineDeliveryInquiryHelper;
 import com.epopcon.extra.online.model.OrderDetail;
 import com.epopcon.extra.online.model.ProductDetail;
-import com.epopcon.extra.online.model.TrackingShipment;
 
 import java.util.ArrayList;
 import java.util.HashMap;

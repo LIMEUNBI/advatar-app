@@ -114,13 +114,12 @@ public class OnlineStoreImportHandler extends EventHandler {
                 OnlineStoreDeliveryInquiry inquiry = null;
 
                 try {
-                    if(OnlineDeliveryInquiryHelper.getStatus(context, constant) != OnlineConstant.ONLINE_STORE_PROCESS_STATUS_IMPORT){
+                    if (OnlineDeliveryInquiryHelper.getStatus(context, constant) != OnlineConstant.ONLINE_STORE_PROCESS_STATUS_IMPORT){
                         inquiry = new OnlineStoreDeliveryInquiry(context, constant, deferred, true, -1L);
-                    }else{
+                    } else {
                         inquiry = new OnlineStoreDeliveryInquiry(context, constant, deferred, false, lastOrderDateTime);
                     }
                     inquiry.queryOrderDetails(OnlineConstant.PERIOD_MAX);
-
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
                 } finally {
@@ -138,7 +137,6 @@ public class OnlineStoreImportHandler extends EventHandler {
             try {
                 inquiry = new OnlineStoreDeliveryInquiry(context, type, deferred, firstRun, lastOrderDateTime);
                 inquiry.queryOrderDetails(OnlineConstant.PERIOD_MAX);
-
                 // 서버에 결과를 전송
                 EventTrigger.getInstance(context).triggerService(new Event(Event.Type.REPORT_ONLINE_STORE));
             } catch (Exception e) {
