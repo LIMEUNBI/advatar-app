@@ -458,6 +458,7 @@ public class MessageDao extends Observable {
 
             List<ProductDetail> productDetails = orderDetail.getProductDetails();
 
+            int i = 1;
             if (productDetails.size() > 0) {
 
                 database.delete(DBHelper.DBOnlineStoreProduct.TABLE_ONLINE_STORE_PRODUCT, String.format("%s = '%s' AND %s = '%s'",
@@ -470,6 +471,7 @@ public class MessageDao extends Observable {
 
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_STORE_NAME, storeName);
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_ORDER_NUMBER, orderNumber);
+                    values.put(DBHelper.DBOnlineStoreProduct.COLUMN_SEQ, i++);
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_URL, productDetail.getProductUrl());
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_NO_IMAGE_URL, productDetail.getNoImageUrl());
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_IMAGE_URL, productDetail.getProductImageUrl());

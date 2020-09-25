@@ -54,6 +54,7 @@ public class DBHelper extends SQLiteOpenHelper {
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_STORE_NAME = "store_name";
         public static final String COLUMN_ORDER_NUMBER = "order_number";
+        public static final String COLUMN_SEQ = "seq";
         public static final String COLUMN_CATEGORY = "category";
         public static final String COLUMN_URL = "url";
         public static final String COLUMN_NO_IMAGE_URL = "no_image_url";
@@ -90,6 +91,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 DBOnlineStoreProduct.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 DBOnlineStoreProduct.COLUMN_STORE_NAME + " TEXT NOT NULL, " +
                 DBOnlineStoreProduct.COLUMN_ORDER_NUMBER + " TEXT NOT NULL, " +
+                DBOnlineStoreProduct.COLUMN_SEQ + " INTEGER NOT NULL, " +
                 DBOnlineStoreProduct.COLUMN_CATEGORY + " TEXT, " +
                 DBOnlineStoreProduct.COLUMN_URL + " TEXT NOT NULL, " +
                 DBOnlineStoreProduct.COLUMN_NO_IMAGE_URL + " TEXT, " +
@@ -100,7 +102,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 DBOnlineStoreProduct.COLUMN_QUANTITY + " INTEGER NOT NULL, " +
                 DBOnlineStoreProduct.COLUMN_SELLER + " TEXT NOT NULL, " +
                 DBOnlineStoreProduct.COLUMN_STATUS + " TEXT NOT NULL, " +
-                "UNIQUE (" + DBOnlineStoreProduct.COLUMN_STORE_NAME + ", " + DBOnlineStoreProduct.COLUMN_ORDER_NUMBER + ") ON CONFLICT REPLACE " +
+                "UNIQUE (" + DBOnlineStoreProduct.COLUMN_STORE_NAME + ", " + DBOnlineStoreProduct.COLUMN_ORDER_NUMBER + ", " + DBOnlineStoreProduct.COLUMN_SEQ + ") ON CONFLICT REPLACE " +
                 ");");
     }
 
