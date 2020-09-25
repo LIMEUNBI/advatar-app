@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.epopcon.advatar.R;
+import com.epopcon.advatar.application.AdvatarApplication;
 import com.epopcon.advatar.common.db.MessageDao;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
 import com.epopcon.advatar.controller.activity.common.WebViewActivity;
@@ -15,8 +16,10 @@ import com.epopcon.advatar.controller.activity.user.FindPwActivity;
 import com.epopcon.advatar.controller.activity.user.JoinActivity;
 import com.epopcon.advatar.controller.activity.user.LoginActivity;
 import com.epopcon.advatar.controller.activity.user.UpdatePwActivity;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public class BaseActivity extends AppCompatActivity {
+    private static final String TAG = BaseActivity.class.getSimpleName();
 
     protected MessageDao mMessageDao = MessageDao.getInstance();
     public static final int SLIDE_DEFAULT = 0;
@@ -24,9 +27,22 @@ public class BaseActivity extends AppCompatActivity {
     public static final int SLIDE_RIGHT_IN_LEFT_OUT = 2;
     protected int mActivityAnimationType = SLIDE_DEFAULT;
 
+    protected AdvatarApplication mApplication;
+    protected DisplayImageOptions mImageLoaderOptions;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mApplication = (AdvatarApplication) getApplication();
+
+        mImageLoaderOptions = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_loading)
+                .showImageForEmptyUri(R.drawable.ic_default_image)
+                .showImageOnFail(R.drawable.ic_default_image)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .considerExifParams(true)
+                .build();
 
         setActivityAnimationType();
         startActivityAnimation();

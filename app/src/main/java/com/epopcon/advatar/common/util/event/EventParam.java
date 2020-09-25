@@ -30,7 +30,7 @@ public class EventParam implements Serializable {
         return retry;
     }
 
-    public void increseRetry() {
+    public void increaseRetry() {
         retry++;
     }
 }

@@ -17,7 +17,7 @@ import java.util.Observer;
 
 public class EventTrigger extends Observable {
 
-    private final static String SERVICE_NAME = "com.epopcon.common.util.event.EventService";
+    private final static String SERVICE_NAME = "com.epopcon.advatar.common.util.event.EventService";
 
     private EventRepository repository;
     private EventHandlerFactory factory;
@@ -58,6 +58,7 @@ public class EventTrigger extends Observable {
         if (param == null)
             return false;
         if (event.isAllowConcurrency() || addOrWaitRunning(param, MAX_WAIT_TIME)) {
+
             try {
                 notifyObservers(event, EventDetail.STEP_RUNNING);
                 for (EventHandler handler : param.getEventHandlers())

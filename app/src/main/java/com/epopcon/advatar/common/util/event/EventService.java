@@ -17,12 +17,6 @@ public class EventService extends Service {
 
     private final static String TAG = EventService.class.getSimpleName();
 
-    public final static int STATUS_RUNNING = 0;
-    public final static int STATUS_FAIL = 1;
-    public final static int STATUS_SUCCESS = 2;
-    public final static int STATUS_RESTART_SUCCESS = 3;
-    public final static int STATUS_RESTART_FAIL = 4;
-
     private final int POOL_SIZE = 2;
     public final int MAX_WAIT_TIME = 10000;
 
@@ -81,7 +75,7 @@ public class EventService extends Service {
                                 if (item.getRetry() >= 3) {
                                     Log.e(TAG, "Drop the event -> " + event.getType());
                                 } else {
-                                    item.increseRetry();
+                                    item.increaseRetry();
                                     items.add(item);
                                 }
                                 continue;

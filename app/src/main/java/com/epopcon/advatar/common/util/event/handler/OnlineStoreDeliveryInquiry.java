@@ -19,7 +19,6 @@ import com.epopcon.extra.online.model.ProductDetail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,12 +30,11 @@ public class OnlineStoreDeliveryInquiry extends OnlineDeliveryInquiryHandler {
     private Context context;
 
     private OnlineConstant constant;
-    private String encUserId = null;
-    private String storeName = null;
+    private String encUserId;
+    private String storeName;
 
     private Map<String, Set<String>> removedOrders;
 
-    private long lastOrgDateTime = Long.MAX_VALUE;
     private long minTimeStamp = 0L;
     private final long ONE_DAY = (long) 24 * 60 * 60 * 1000 - 1;
 
@@ -140,7 +138,6 @@ public class OnlineStoreDeliveryInquiry extends OnlineDeliveryInquiryHandler {
 
         if (success) {
             List<String> orderNumbers = new ArrayList<>();
-            Set<String> originIds = new HashSet<>();
 
             for (OrderDetail orderDetail : list) {
                 Log.d(TAG, orderDetail.toString());
@@ -155,7 +152,6 @@ public class OnlineStoreDeliveryInquiry extends OnlineDeliveryInquiryHandler {
                     MessageDao.getInstance().insertOnlineStore(storeName, encUserId, orderDetail);
                     orderNumbers.add(orderDetail.getOrderNumber());
                 } else {
-                    page = -1;
                     keepGoing = false;
                     break;
                 }

@@ -6,12 +6,14 @@ import android.util.Log;
 
 import com.epopcon.advatar.common.CommonLibrary;
 
+import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
@@ -102,6 +104,21 @@ public class Utils {
         cal.set(year, month - 1, day, hour, minute, second);
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTimeInMillis();
+    }
+
+    public static Object deserialize(byte[] bytes) {
+        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        ObjectInput in = null;
+        try {
+            in = new ObjectInputStream(bis);
+            return in.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeQuietly(bis);
+            closeQuietly(in);
+        }
+        return null;
     }
 
     public static void closeQuietly(Object c) {

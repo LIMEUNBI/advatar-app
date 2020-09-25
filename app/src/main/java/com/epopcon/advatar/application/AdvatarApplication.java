@@ -56,7 +56,6 @@ public class AdvatarApplication extends Application {
                 .denyCacheImageMultipleSizesInMemory()
                 .discCacheFileNameGenerator(new Md5FileNameGenerator())
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
-                //.writeDebugLogs() // Remove for release app
                 .build();
         ImageLoader.getInstance().init(imageLoaderConfig);
     }

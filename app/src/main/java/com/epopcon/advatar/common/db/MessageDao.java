@@ -7,9 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.epopcon.advatar.common.CommonLibrary;
 import com.epopcon.advatar.common.model.OnlineBizDetail;
-import com.epopcon.advatar.common.model.OnlineBizType;
 import com.epopcon.advatar.common.model.OnlineProductInfo;
-import com.epopcon.advatar.common.util.SharedPreferenceBase;
 import com.epopcon.advatar.common.util.Utils;
 import com.epopcon.extra.online.OnlineConstant;
 import com.epopcon.extra.online.model.OrderDetail;
@@ -22,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
-import static com.epopcon.advatar.common.db.DBHelper.DBOnlineStoreMapping.COLUMN_ONLINE_STORE_ID;
-
 public class MessageDao extends Observable {
     private static final String TAG = MessageDao.class.getSimpleName();
 
@@ -34,8 +30,6 @@ public class MessageDao extends Observable {
     public SQLiteDatabase db() {
         return database;
     }
-
-    private Map<String, Integer> cacheCreditCardId = new HashMap<String, Integer>();
 
     private MessageDao() {
         dbHelper = DBHelper.getInstance(CommonLibrary.getContext());
@@ -57,32 +51,6 @@ public class MessageDao extends Observable {
     }
 
     /**
-     * DB 리소스를 닫고 새로 인스턴스를 생성한다.
-     */
-    public static synchronized MessageDao newInstance() {
-        if (instance == null)
-            return null;
-
-        if (instance.database != null) {
-            instance.database.close();
-            instance.database = null;
-        }
-
-        instance = null;
-
-        return getInstance();
-    }
-
-    /**
-     * database 객체를 반환
-     *
-     * @return
-     */
-    public SQLiteDatabase getDatabase() {
-        return database;
-    }
-
-    /**
      * 온라인 상점의 구매 데이터를 반환한다.
      *
      * @param context
@@ -90,14 +58,12 @@ public class MessageDao extends Observable {
      */
     public Map<OnlineConstant, List<OrderDetail>> getReportOnlineStoreOrderDetails(Context context) {
 
-        Map<OnlineConstant, Long> companyIds = new HashMap<>();
         Map<OnlineConstant, List<OrderDetail>> map = new HashMap<>();
-        OnlineBizType onlineBizType = new OnlineBizType(context);
 
         Cursor cursor = database.rawQuery(SqlBuilder.getInstance().getQueryString("select.online_store.report"), null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                OnlineConstant type = OnlineConstant.valueOf(cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_NAME)));
+                OnlineConstant type = OnlineConstant.valueOf(cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_STORE_NAME)));
 
                 List<OrderDetail> orderDetails = map.get(type);
 
@@ -116,18 +82,16 @@ public class MessageDao extends Observable {
 
     private OrderDetail getOnlineStoreOrderDetail(Cursor cursor, OrderDetail orderDetail) {
 
-        String storeName = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_NAME));
+        String storeName = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_STORE_NAME));
         String orderNumber = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_ORDER_NUMBER));
         String orderDate = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_ORDER_DATE));
         int payAmount = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_PAY_AMOUNT));
         int refundAmount = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_REFUND_AMOUNT));
-        String cardName = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_CARD_NAME));
         int cancel = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_CANCEL_YN));
         String paymentQueryString = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_PAYMENT_QUERY_STRING));
 
         orderDetail.setOrderNumber(orderNumber);
         orderDetail.setOrderDate(orderDate);
-        orderDetail.setCardName(cardName);
         orderDetail.setPayAmount(payAmount);
         orderDetail.setRefundAmount(refundAmount);
         orderDetail.setCancel(cancel == 1);
@@ -183,8 +147,8 @@ public class MessageDao extends Observable {
                 String productUrl = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_URL));
                 String noImageUrl = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_NO_IMAGE_URL));
                 String productImageUrl = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_IMAGE_URL));
-                String productName = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_NAME));
-                String productOption = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_OPTION));
+                String productName = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_PRODUCT_NAME));
+                String productOption = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_PRODUCT_OPTION));
                 String category = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_CATEGORY));
                 int price = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_PRICE));
                 int totalAmount = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_TOTAL_AMOUNT));
@@ -192,7 +156,6 @@ public class MessageDao extends Observable {
                 int quantity = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_QUANTITY));
                 String seller = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_SELLER));
                 String status = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_STATUS));
-                String trackingQueryString = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_TRACKING_QUERY_STRING));
 
                 onlineProductInfo.setId(id);
                 onlineProductInfo.setOrderNumber(cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_ORDER_NUMBER)));
@@ -214,7 +177,6 @@ public class MessageDao extends Observable {
                 onlineProductInfo.setQuantity(quantity);
                 onlineProductInfo.setSeller(seller);
                 onlineProductInfo.setStatus(status);
-                onlineProductInfo.setTrackingQueryString(trackingQueryString);
 
                 onlineProductInfoList.add(onlineProductInfo);
             }
@@ -310,14 +272,13 @@ public class MessageDao extends Observable {
                 String productUrl = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_URL));
                 String noImageUrl = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_NO_IMAGE_URL));
                 String productImageUrl = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_IMAGE_URL));
-                String productName = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_NAME));
-                String productOption = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_OPTION));
+                String productName = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_PRODUCT_NAME));
+                String productOption = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_PRODUCT_OPTION));
                 String category = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_CATEGORY));
                 int price = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_PRICE));
                 int quantity = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_QUANTITY));
                 String seller = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_SELLER));
                 String status = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_STATUS));
-                String trackingQueryString = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_TRACKING_QUERY_STRING));
 
                 productDetail.setProductUrl(productUrl);
                 productDetail.setNoImageUrl(noImageUrl);
@@ -329,7 +290,6 @@ public class MessageDao extends Observable {
                 productDetail.setQuantity(quantity);
                 productDetail.setSeller(seller);
                 productDetail.setStatus(status);
-                productDetail.setTrackingQueryString(trackingQueryString);
 
                 productDetails.add(productDetail);
             }
@@ -433,7 +393,6 @@ public class MessageDao extends Observable {
         Long id = null;
         String orderNumber = orderDetail.getOrderNumber();
         String orderDate = orderDetail.getOrderDate();
-        String cardName = orderDetail.getCardName();
         int payAmount = orderDetail.getPayAmount();
         int refundAmount = orderDetail.getRefundAmount();
         int totalAmount = payAmount - refundAmount;
@@ -454,7 +413,7 @@ public class MessageDao extends Observable {
 
         Cursor cursor = database.rawQuery(String.format("SELECT %s FROM %s WHERE %s = '%s' AND %s = '%s'",
                 DBHelper.DBOnlineStore.COLUMN_ID, DBHelper.DBOnlineStore.TABLE_ONLINE_STORE,
-                DBHelper.DBOnlineStore.COLUMN_NAME, storeName,
+                DBHelper.DBOnlineStore.COLUMN_STORE_NAME, storeName,
                 DBHelper.DBOnlineStore.COLUMN_ORDER_NUMBER, orderNumber), null);
 
         if (cursor != null) {
@@ -472,8 +431,6 @@ public class MessageDao extends Observable {
                 return;
             } else {
                 values.put(DBHelper.DBOnlineStore.COLUMN_CANCEL_YN, cancel);
-                values.put(DBHelper.DBOnlineStore.COLUMN_REPORT_YN, false);
-                values.put(DBHelper.DBOnlineStore.COLUMN_REPORT_FAIL_COUNT, 0);
 
                 database.update(DBHelper.DBOnlineStore.TABLE_ONLINE_STORE, values, String.format("%s = %s", DBHelper.DBOnlineStore.COLUMN_ID, id), null);
                 return;
@@ -482,19 +439,16 @@ public class MessageDao extends Observable {
             values.put(DBHelper.DBOnlineStore.COLUMN_ENC_USER_ID, encUserId);
             values.put(DBHelper.DBOnlineStore.COLUMN_ORDER_DATE, orderDate);
             values.put(DBHelper.DBOnlineStore.COLUMN_ORDER_DATETIME, Utils.parseDate(orderDate));
-            values.put(DBHelper.DBOnlineStore.COLUMN_CARD_NAME, cardName);
             values.put(DBHelper.DBOnlineStore.COLUMN_TOTAL_AMOUNT, totalAmount);
             values.put(DBHelper.DBOnlineStore.COLUMN_PAY_AMOUNT, payAmount);
             values.put(DBHelper.DBOnlineStore.COLUMN_REFUND_AMOUNT, refundAmount);
             values.put(DBHelper.DBOnlineStore.COLUMN_CANCEL_YN, cancel);
-            values.put(DBHelper.DBOnlineStore.COLUMN_REPORT_YN, false);
-            values.put(DBHelper.DBOnlineStore.COLUMN_REPORT_FAIL_COUNT, 0);
             values.put(DBHelper.DBOnlineStore.COLUMN_PAYMENT_QUERY_STRING, paymentQueryString);
             values.put(DBHelper.DBOnlineStore.COLUMN_DISCOUNT_DETAIL,discountDetail);
             values.put(DBHelper.DBOnlineStore.COLUMN_DELIVERY_COST,deliveryCost);
 
             if (insert) {
-                values.put(DBHelper.DBOnlineStore.COLUMN_NAME, storeName);
+                values.put(DBHelper.DBOnlineStore.COLUMN_STORE_NAME, storeName);
                 values.put(DBHelper.DBOnlineStore.COLUMN_ORDER_NUMBER, orderNumber);
 
                 id = database.insert(DBHelper.DBOnlineStore.TABLE_ONLINE_STORE, null, values);
@@ -505,102 +459,31 @@ public class MessageDao extends Observable {
             List<ProductDetail> productDetails = orderDetail.getProductDetails();
 
             if (productDetails.size() > 0) {
-                String selection = String.format("%s = '%s' AND %s = '%s'", DBHelper.DBOnlineStoreProduct.COLUMN_STORE_NAME, storeName, DBHelper.DBOnlineStoreProduct.COLUMN_ORDER_NUMBER, orderNumber);
-                cursor = database.query(DBHelper.DBOnlineStoreProduct.TABLE_ONLINE_STORE_PRODUCT, null, selection, null, null, null, null);
-
-                Map<String, String[]> map = new HashMap<>();
-
-                if (cursor != null) {
-                    while (cursor.moveToNext()) {
-                        String trackingQueryString = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_TRACKING_QUERY_STRING));
-                        int parcelCode = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_PARCEL_CODE));
-                        String invoiceNumber = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreProduct.COLUMN_INVOICE));
-
-                        map.put(trackingQueryString, new String[]{String.valueOf(parcelCode), invoiceNumber});
-                    }
-                    cursor.close();
-                }
 
                 database.delete(DBHelper.DBOnlineStoreProduct.TABLE_ONLINE_STORE_PRODUCT, String.format("%s = '%s' AND %s = '%s'",
                         DBHelper.DBOnlineStoreProduct.COLUMN_STORE_NAME, storeName,
                         DBHelper.DBOnlineStoreProduct.COLUMN_ORDER_NUMBER, orderNumber), null);
 
-                int i = 1;
                 for (ProductDetail productDetail : productDetails) {
 
                     values = new ContentValues();
 
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_STORE_NAME, storeName);
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_ORDER_NUMBER, orderNumber);
-                    values.put(DBHelper.DBOnlineStoreProduct.COLUMN_SEQ, i++);
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_URL, productDetail.getProductUrl());
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_NO_IMAGE_URL, productDetail.getNoImageUrl());
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_IMAGE_URL, productDetail.getProductImageUrl());
-                    values.put(DBHelper.DBOnlineStoreProduct.COLUMN_NAME, productDetail.getProductName());
-                    values.put(DBHelper.DBOnlineStoreProduct.COLUMN_OPTION, productDetail.getProductOption());
+                    values.put(DBHelper.DBOnlineStoreProduct.COLUMN_PRODUCT_NAME, productDetail.getProductName());
+                    values.put(DBHelper.DBOnlineStoreProduct.COLUMN_PRODUCT_OPTION, productDetail.getProductOption());
+                    values.put(DBHelper.DBOnlineStoreProduct.COLUMN_CATEGORY, productDetail.getCategory());
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_PRICE, productDetail.getPrice());
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_QUANTITY, productDetail.getQuantity());
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_SELLER, productDetail.getSeller());
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_STATUS, productDetail.getStatus());
-                    values.put(DBHelper.DBOnlineStoreProduct.COLUMN_TRACKING_QUERY_STRING, productDetail.getTrackingQueryString());
-
-                    if (map.containsKey(productDetail.getTrackingQueryString())) {
-                        String[] value = map.get(productDetail.getTrackingQueryString());
-                        int parcelCode = Integer.parseInt(value[0]);
-                        String invoiceNumber = value[1];
-
-                        values.put(DBHelper.DBOnlineStoreProduct.COLUMN_PARCEL_CODE, parcelCode);
-                        values.put(DBHelper.DBOnlineStoreProduct.COLUMN_INVOICE, invoiceNumber);
-                    }
 
                     database.insert(DBHelper.DBOnlineStoreProduct.TABLE_ONLINE_STORE_PRODUCT, null, values);
                 }
             }
-
-
-            if (originCode > -1 && originId != null)
-                mergeOnlineStoreMapping(id, originCode, originId, encUserId, totalAmount, true);
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    public void mergeOnlineStoreMapping(String storeName, String orderNumber, int originCode, Long originId, String encUserId, int totalAmount) {
-
-        String query = String.format("SELECT id FROM online_store WHERE name = '%s' AND order_number = '%'", storeName, orderNumber);
-
-        Cursor cursor = database.rawQuery(query, null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                Long onlineStoreId = cursor.getLong(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_ID));
-                mergeOnlineStoreMapping(onlineStoreId, originCode, originId, encUserId, totalAmount, true);
-            }
-        }
-    }
-
-    private void mergeOnlineStoreMapping(Long onlineStoreId, int originCode, Long originId, String encUserId, int totalAmount, boolean main) {
-
-        ContentValues values = new ContentValues();
-
-        values.put(COLUMN_ONLINE_STORE_ID, onlineStoreId);
-        values.put(DBHelper.DBOnlineStoreMapping.COLUMN_ORIGIN_CODE, originCode);
-        values.put(DBHelper.DBOnlineStoreMapping.COLUMN_ORIGIN_ID, originId);
-        values.put(DBHelper.DBOnlineStoreMapping.COLUMN_ENC_USER_ID, encUserId);
-        values.put(DBHelper.DBOnlineStoreMapping.COLUMN_MAIN_YN, main);
-        values.put(DBHelper.DBOnlineStoreMapping.COLUMN_TOTAL_AMOUNT, totalAmount);
-
-        database.insert(DBHelper.DBOnlineStoreMapping.TABLE_ONLINE_STORE_MAPPING, null, values);
-
-        if (main) {
-            values.clear();
-            values.put(DBHelper.DBOnlineStoreMapping.COLUMN_MAIN_YN, false);
-
-            String whereClause = String.format("%s = %s AND %s = %s AND %s <> %s AND %s = 1",
-                    COLUMN_ONLINE_STORE_ID, onlineStoreId,
-                    DBHelper.DBOnlineStoreMapping.COLUMN_ORIGIN_CODE, originCode,
-                    DBHelper.DBOnlineStoreMapping.COLUMN_ORIGIN_ID, originId, DBHelper.DBOnlineStoreMapping.COLUMN_MAIN_YN);
-            database.update(DBHelper.DBOnlineStoreMapping.TABLE_ONLINE_STORE_MAPPING, values, whereClause, null);
         }
     }
 
@@ -610,7 +493,7 @@ public class MessageDao extends Observable {
      */
     public void deleteOnlineStore(String storeName) {
 
-        String where = DBHelper.DBOnlineStore.COLUMN_NAME + " = '" + storeName + "'";
+        String where = DBHelper.DBOnlineStore.COLUMN_STORE_NAME + " = '" + storeName + "'";
         String productWhere = DBHelper.DBOnlineStoreProduct.COLUMN_STORE_NAME + " = '" + storeName + "'";
         database.delete(DBHelper.DBOnlineStoreProduct.TABLE_ONLINE_STORE_PRODUCT, productWhere, null);
         database.delete(DBHelper.DBOnlineStore.TABLE_ONLINE_STORE, where, null);
