@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.epopcon.advatar.common.CommonLibrary;
 import com.epopcon.advatar.common.model.OnlineBizDetail;
 import com.epopcon.advatar.common.model.OnlineProductInfo;
+import com.epopcon.advatar.common.network.RequestListener;
+import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.Utils;
 import com.epopcon.extra.online.OnlineConstant;
 import com.epopcon.extra.online.model.OrderDetail;
@@ -88,14 +90,12 @@ public class MessageDao extends Observable {
         int payAmount = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_PAY_AMOUNT));
         int refundAmount = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_REFUND_AMOUNT));
         int cancel = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_CANCEL_YN));
-        String paymentQueryString = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStore.COLUMN_PAYMENT_QUERY_STRING));
 
         orderDetail.setOrderNumber(orderNumber);
         orderDetail.setOrderDate(orderDate);
         orderDetail.setPayAmount(payAmount);
         orderDetail.setRefundAmount(refundAmount);
         orderDetail.setCancel(cancel == 1);
-        orderDetail.setPaymentQueryString(paymentQueryString);
 
         for (ProductDetail productDetail : getOnlineStoreProductDetails(storeName, orderNumber)) {
             orderDetail.addProductDetails(productDetail);
@@ -126,11 +126,11 @@ public class MessageDao extends Observable {
                 "INNER JOIN " +
                 "online_store_product P " +
                 "ON s.order_number = P.order_number " +
-                "AND S.name = P.store_name " +
+                "AND S.store_name = P.store_name " +
                 "WHERE " +
                 "S.enc_user_id in (" + encUserIdList + ") " +
                 whereDateStr +
-                "GROUP BY S.order_number, P.name, P.price, P.status " +
+                "GROUP BY S.order_number, P.store_name, P.price, P.status " +
                 "ORDER BY S.order_date DESC, P.id DESC ";
 
         if (limitCnt > 0)
@@ -374,19 +374,6 @@ public class MessageDao extends Observable {
      * @param orderDetail
      */
     public void insertOnlineStore(String storeName, String encUserId, OrderDetail orderDetail) {
-        insertOnlineStore(storeName, encUserId, -1, null, orderDetail);
-    }
-
-    /**
-     * 온라인 상점정보를 DB 에 저장한다.
-     *
-     * @param storeName
-     * @param encUserId
-     * @param originCode
-     * @param originId
-     * @param orderDetail
-     */
-    public void insertOnlineStore(String storeName, String encUserId, int originCode, Long originId, OrderDetail orderDetail) {
 
         ContentValues values;
 
@@ -397,18 +384,41 @@ public class MessageDao extends Observable {
         int refundAmount = orderDetail.getRefundAmount();
         int totalAmount = payAmount - refundAmount;
         boolean cancel = orderDetail.isCancel();
-        String paymentQueryString = orderDetail.getPaymentQueryString();
+
+        String cancelYn;
+        if (cancel) {
+            cancelYn = "Y";
+        } else {
+            cancelYn = "N";
+        }
 
         // 할인내역, 배송비 추가
         String discountDetail = "";
         int deliveryCost = -1;
 
-        if(orderDetail.getDiscountDetail()!=null && !orderDetail.getDiscountDetail().equals("")){ // 할인내역 유무 체크
+        if (orderDetail.getDiscountDetail()!=null && !orderDetail.getDiscountDetail().equals("")) { // 할인내역 유무 체크
             discountDetail = orderDetail.getDiscountDetail();
         }
 
-        if(orderDetail.getDeliveryCost() != -1){ // 배송비 유무 체크
+        if (orderDetail.getDeliveryCost() != -1) { // 배송비 유무 체크
             deliveryCost = orderDetail.getDeliveryCost();
+        }
+
+        try {
+            RestAdvatarProtocol.getInstance().onlineStorePurchaseList(storeName, orderNumber, orderDate, Utils.parseDate(orderDate), totalAmount,
+                    payAmount, refundAmount, cancelYn, discountDetail, deliveryCost, new RequestListener() {
+                        @Override
+                        public void onRequestSuccess(int requestCode, Object result) {
+
+                        }
+
+                        @Override
+                        public void onRequestFailure(Throwable t) {
+
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         Cursor cursor = database.rawQuery(String.format("SELECT %s FROM %s WHERE %s = '%s' AND %s = '%s'",
@@ -427,11 +437,8 @@ public class MessageDao extends Observable {
 
         // 취소건이 제대로 표시되지 않은 온라인 상점의 경우
         if (cancel || payAmount == -1) {
-            if (insert) {
-                return;
-            } else {
+            if (!insert) {
                 values.put(DBHelper.DBOnlineStore.COLUMN_CANCEL_YN, cancel);
-
                 database.update(DBHelper.DBOnlineStore.TABLE_ONLINE_STORE, values, String.format("%s = %s", DBHelper.DBOnlineStore.COLUMN_ID, id), null);
                 return;
             }
@@ -443,7 +450,6 @@ public class MessageDao extends Observable {
             values.put(DBHelper.DBOnlineStore.COLUMN_PAY_AMOUNT, payAmount);
             values.put(DBHelper.DBOnlineStore.COLUMN_REFUND_AMOUNT, refundAmount);
             values.put(DBHelper.DBOnlineStore.COLUMN_CANCEL_YN, cancel);
-            values.put(DBHelper.DBOnlineStore.COLUMN_PAYMENT_QUERY_STRING, paymentQueryString);
             values.put(DBHelper.DBOnlineStore.COLUMN_DISCOUNT_DETAIL,discountDetail);
             values.put(DBHelper.DBOnlineStore.COLUMN_DELIVERY_COST,deliveryCost);
 
@@ -482,6 +488,24 @@ public class MessageDao extends Observable {
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_QUANTITY, productDetail.getQuantity());
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_SELLER, productDetail.getSeller());
                     values.put(DBHelper.DBOnlineStoreProduct.COLUMN_STATUS, productDetail.getStatus());
+
+                    try {
+                        RestAdvatarProtocol.getInstance().onlineStoreProductList(storeName, orderNumber, productDetail.getCategory(), productDetail.getProductName(),
+                                productDetail.getProductOption(), productDetail.getPrice(), productDetail.getQuantity(), productDetail.getProductUrl(),
+                                productDetail.getProductImageUrl(), productDetail.getNoImageUrl(), productDetail.getSeller(), productDetail.getStatus(), new RequestListener() {
+                                    @Override
+                                    public void onRequestSuccess(int requestCode, Object result) {
+
+                                    }
+
+                                    @Override
+                                    public void onRequestFailure(Throwable t) {
+
+                                    }
+                                });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     database.insert(DBHelper.DBOnlineStoreProduct.TABLE_ONLINE_STORE_PRODUCT, null, values);
                 }

@@ -9,6 +9,8 @@ import com.epopcon.advatar.common.network.model.param.AppVersionParam;
 import com.epopcon.advatar.common.network.model.param.BrandGoodsParam;
 import com.epopcon.advatar.common.network.model.param.BrandParam;
 import com.epopcon.advatar.common.network.model.param.CommonParam;
+import com.epopcon.advatar.common.network.model.param.OnlineStoreProductParam;
+import com.epopcon.advatar.common.network.model.param.OnlineStorePurchaseParam;
 import com.epopcon.advatar.common.network.model.param.UserParam;
 import com.epopcon.advatar.common.network.model.repo.AppVersionRepo;
 import com.epopcon.advatar.common.network.model.repo.BrandGoodsRepo;
@@ -49,6 +51,9 @@ public class RestAdvatarProtocol {
 
     public static final int PROTOCOL_GET_BRAND_LIST = 0x201;
     public static final int PROTOCOL_GET_BRAND_GOODS_LIST = 0x202;
+
+    public static final int PROTOCOL_ONLINE_STORE_PURCHASE_LIST = 0x301;
+    public static final int PROTOCOL_ONLINE_STORE_PRODUCT_LIST = 0x302;
 
     public static synchronized RestAdvatarProtocol getInstance() {
         if (instance == null) {
@@ -599,6 +604,100 @@ public class RestAdvatarProtocol {
 
             RestAdvatarService.api(host, timeout).getBrandGoodsList(brandGoodsParam).enqueue(callback);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onlineStorePurchaseList(String storeName, String orderNumber, String orderDate, long orderDateTime, int totalAmount, int payAmount,
+                                        int refundAmount, String cancelYn, String discountDetail, int deliveryCost, final RequestListener requestListener) throws Exception {
+
+        final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
+        if (TextUtils.isEmpty(licenseKey)) {
+            return;
+        }
+
+        try {
+            final OnlineStorePurchaseParam onlineStorePurchaseParam = new OnlineStorePurchaseParam();
+            onlineStorePurchaseParam.storeName = storeName;
+            onlineStorePurchaseParam.orderNumber = orderNumber;
+            onlineStorePurchaseParam.orderDate = orderDate;
+            onlineStorePurchaseParam.orderDateTime = orderDateTime;
+            onlineStorePurchaseParam.totalAmount = totalAmount;
+            onlineStorePurchaseParam.payAmount = payAmount;
+            onlineStorePurchaseParam.refundAmount = refundAmount;
+            onlineStorePurchaseParam.cancelYn = cancelYn;
+            onlineStorePurchaseParam.discountDetail = discountDetail;
+            onlineStorePurchaseParam.deliveryCost = deliveryCost;
+
+            Callback<ResultRepo> callback = new Callback<ResultRepo>() {
+                @Override
+                public void onResponse(Call<ResultRepo> call, Response<ResultRepo> response) {
+                    if (response != null && response.isSuccessful() && response.body() != null) {
+                        if (response.code() != 200) {
+                            requestListener.onRequestFailure(new Throwable(response.message()));
+                            return;
+                        }
+
+                        ResultRepo result = response.body();
+                        requestListener.onRequestSuccess(PROTOCOL_ONLINE_STORE_PURCHASE_LIST, result.result);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultRepo> call, Throwable t) {
+                    requestListener.onRequestFailure(t);
+                }
+            };
+            RestAdvatarService.api(host, timeout).onlineStorePurchaseList(onlineStorePurchaseParam).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onlineStoreProductList(String storeName, String orderNumber, String category, String productName, String productOption, int price, int quantity,
+                                       String url, String imageUrl, String blankImageUrl, String seller, String status, final RequestListener requestListener) throws Exception {
+
+        final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
+        if (TextUtils.isEmpty(licenseKey)) {
+            return;
+        }
+
+        try {
+            final OnlineStoreProductParam onlineStoreProductParam = new OnlineStoreProductParam();
+            onlineStoreProductParam.storeName = storeName;
+            onlineStoreProductParam.orderNumber = orderNumber;
+            onlineStoreProductParam.category = category;
+            onlineStoreProductParam.productName = productName;
+            onlineStoreProductParam.productOption = productOption;
+            onlineStoreProductParam.price = price;
+            onlineStoreProductParam.quantity = quantity;
+            onlineStoreProductParam.url = url;
+            onlineStoreProductParam.imageUrl = imageUrl;
+            onlineStoreProductParam.blankImageUrl = blankImageUrl;
+            onlineStoreProductParam.seller = seller;
+            onlineStoreProductParam.status = status;
+
+            Callback<ResultRepo> callback = new Callback<ResultRepo>() {
+                @Override
+                public void onResponse(Call<ResultRepo> call, Response<ResultRepo> response) {
+                    if (response != null && response.isSuccessful() && response.body() != null) {
+                        if (response.code() != 200) {
+                            requestListener.onRequestFailure(new Throwable(response.message()));
+                            return;
+                        }
+
+                        ResultRepo result = response.body();
+                        requestListener.onRequestSuccess(PROTOCOL_ONLINE_STORE_PRODUCT_LIST, result.result);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultRepo> call, Throwable t) {
+                    requestListener.onRequestFailure(t);
+                }
+            };
+            RestAdvatarService.api(host, timeout).onlineStoreProductList(onlineStoreProductParam).enqueue(callback);
         } catch (Exception e) {
             e.printStackTrace();
         }

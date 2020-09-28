@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,7 +48,6 @@ public class OnlineLoginActivity extends BaseActivity {
     private EditText mEditId;
     private EditText mEditPw;
 
-    private Button mBtnLogin;
     private ProgressDialog progressDialog;
 
     private AtomicBoolean lock = new AtomicBoolean(false);
@@ -72,8 +70,6 @@ public class OnlineLoginActivity extends BaseActivity {
                 return true;
             }
         });
-
-        mBtnLogin = (Button) findViewById(R.id.btn_online_login);
 
         try {
             bizType = new OnlineBizType(this);

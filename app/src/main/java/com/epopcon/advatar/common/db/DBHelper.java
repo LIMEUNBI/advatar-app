@@ -33,7 +33,7 @@ public class DBHelper extends SQLiteOpenHelper {
         public static final String TABLE_ONLINE_STORE = "online_store";
 
         public static final String COLUMN_ID = "id";
-        public static final String COLUMN_STORE_NAME = "name";
+        public static final String COLUMN_STORE_NAME = "store_name";
         public static final String COLUMN_ENC_USER_ID = "enc_user_id";
         public static final String COLUMN_ORDER_NUMBER = "order_number";
         public static final String COLUMN_ORDER_DATE = "order_date";
@@ -42,7 +42,6 @@ public class DBHelper extends SQLiteOpenHelper {
         public static final String COLUMN_PAY_AMOUNT = "pay_amount";
         public static final String COLUMN_REFUND_AMOUNT = "refund_amount";
         public static final String COLUMN_CANCEL_YN = "cancel_yn";
-        public static final String COLUMN_PAYMENT_QUERY_STRING = "payment_query_string";
         public static final String COLUMN_DISCOUNT_DETAIL = "discount_detail";
         public static final String COLUMN_DELIVERY_COST = "delivery_cost";
     }
@@ -79,7 +78,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 DBOnlineStore.COLUMN_PAY_AMOUNT + " INTEGER NOT NULL, " +
                 DBOnlineStore.COLUMN_REFUND_AMOUNT + " INTEGER NOT NULL, " +
                 DBOnlineStore.COLUMN_CANCEL_YN + " INTEGER NOT NULL, " +
-                DBOnlineStore.COLUMN_PAYMENT_QUERY_STRING + " TEXT, " +
                 DBOnlineStore.COLUMN_DISCOUNT_DETAIL + " TEXT, " +
                 DBOnlineStore.COLUMN_DELIVERY_COST + " INTEGER, " +
                 "UNIQUE (" + DBOnlineStore.COLUMN_STORE_NAME + ", " + DBOnlineStore.COLUMN_ORDER_NUMBER + ") ON CONFLICT REPLACE " +

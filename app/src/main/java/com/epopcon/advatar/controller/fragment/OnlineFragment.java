@@ -1,6 +1,5 @@
 package com.epopcon.advatar.controller.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,28 +9,25 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.epopcon.advatar.R;
-import com.epopcon.advatar.application.AdvatarApplication;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.db.MessageDao;
 import com.epopcon.advatar.common.model.DateManager;
-import com.epopcon.advatar.common.model.OnlineBizDetail;
 import com.epopcon.advatar.common.model.OnlineBizType;
 import com.epopcon.advatar.common.model.OnlineProductInfo;
 import com.epopcon.advatar.common.util.event.Event;
 import com.epopcon.advatar.common.util.event.EventHandler;
 import com.epopcon.advatar.common.util.event.EventTrigger;
+import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineLoginActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineStoreWebActivity;
 import com.epopcon.advatar.custom.listview.StickyListHeadersAdapter;
@@ -68,7 +64,6 @@ public class OnlineFragment extends BaseFragment {
     private Animation rotateAnimation;
 
     // data
-    private int mOnlineCount = 0;
     private int mOnlineAmount = 0;
     private RelativeLayout mNoListHolder;
     private RelativeLayout mNoListMonthlyHolder;
@@ -76,7 +71,6 @@ public class OnlineFragment extends BaseFragment {
     private ImageView mSyncImg1;
 
     private View mView;
-    private long mRowId = -1L;
 
     protected DisplayImageOptions mImageLoaderOptions;
     protected MessageDao mMessageDao = MessageDao.getInstance();
@@ -98,7 +92,6 @@ public class OnlineFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_online, container, false);
-        mRowId = getActivity().getIntent().getLongExtra(Config.ROW_ID, -1L);
 
         monthLabel = (TextView) mView.findViewById(R.id.text_month_label);
         mListView = (StickyListHeadersListView) mView.findViewById(R.id.listview);
@@ -289,7 +282,7 @@ public class OnlineFragment extends BaseFragment {
             } else {
                 btnPreviousMonth.setEnabled(false);
             }
-            mOnlineCount = mThisMonthData.size();
+
             mOnlineAmount = totalAmount;
             setHeaderAmount(mListHeaderView);
         }
@@ -300,7 +293,7 @@ public class OnlineFragment extends BaseFragment {
             mOnlineLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), OnlineLoginActivity.class);
+                    Intent intent = new Intent(getContext(), OnlineListActivity.class);
                     startActivity(intent);
                 }
             });

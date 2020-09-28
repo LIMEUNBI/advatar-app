@@ -52,6 +52,8 @@ public class BrandChoiceActivity extends BaseActivity {
     private GridAdapter mAdapter = null;
     private Button mBtnChoice = null;
 
+    private Intent intent = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,8 @@ public class BrandChoiceActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         actionBar.setDisplayShowTitleEnabled(false);
+
+        intent = getIntent();
 
         mBrandList = new ArrayList<>();
         mBrandListCopy = new ArrayList<>();
@@ -111,8 +115,11 @@ public class BrandChoiceActivity extends BaseActivity {
                         RestAdvatarProtocol.getInstance().userFavoriteBrands(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, ""), getBrandCodeList(), new RequestListener() {
                             @Override
                             public void onRequestSuccess(int requestCode, Object result) {
+                                if (!intent.getBooleanExtra("finish", true)) {
+                                    Intent mainIntent = new Intent(BrandChoiceActivity.this, MainActivity.class);
+                                    startActivity(mainIntent);
+                                }
                                 finish();
-
                             }
 
                             @Override
@@ -180,7 +187,6 @@ public class BrandChoiceActivity extends BaseActivity {
 
                 @Override
                 public void onRequestFailure(Throwable t) {
-//                    refresh();
                 }
             });
         } catch (Exception e) {

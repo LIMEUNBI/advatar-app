@@ -5,6 +5,8 @@ import com.epopcon.advatar.common.network.model.param.AppVersionParam;
 import com.epopcon.advatar.common.network.model.param.BrandGoodsParam;
 import com.epopcon.advatar.common.network.model.param.BrandParam;
 import com.epopcon.advatar.common.network.model.param.CommonParam;
+import com.epopcon.advatar.common.network.model.param.OnlineStoreProductParam;
+import com.epopcon.advatar.common.network.model.param.OnlineStorePurchaseParam;
 import com.epopcon.advatar.common.network.model.param.UserParam;
 import com.epopcon.advatar.common.network.model.repo.AppVersionRepo;
 import com.epopcon.advatar.common.network.model.repo.BrandGoodsRepo;
@@ -75,6 +77,13 @@ public class RestAdvatarService extends BaseService {
 
         @POST("brand/getBrandGoodsList")
         Call<List<BrandGoodsRepo>> getBrandGoodsList(@Body BrandGoodsParam brandGoodsParam);
+
+        // --------------------------- online ---------------------------
+        @POST("online/onlineStorePurchaseList")
+        Call<ResultRepo> onlineStorePurchaseList(@Body OnlineStorePurchaseParam onlineStorePurchaseParam);
+
+        @POST("online/onlineStoreProductList")
+        Call<ResultRepo> onlineStoreProductList(@Body OnlineStoreProductParam onlineStoreProductParam);
 
     }
 }

@@ -218,6 +218,7 @@ public class LoginActivity extends BaseActivity {
                         Intent intent;
                         if (TextUtils.isEmpty(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.MY_BRAND_NAME, ""))) {
                             intent = new Intent(LoginActivity.this, BrandChoiceActivity.class);
+                            intent.putExtra("finish", false);
                         } else {
                             intent = new Intent(LoginActivity.this, MainActivity.class);
                         }
@@ -225,7 +226,7 @@ public class LoginActivity extends BaseActivity {
                         finish();
                     } else if (result.toString().equals("NO_USER")) {
                         Toast.makeText(getApplicationContext(), "등록되지 않은 아이디입니다. 다시 확인해주세요.", Toast.LENGTH_LONG).show();
-                    } else if (result.toString().equals("PASSWORD_ERROR")){
+                    } else if (result.toString().equals("PASSWORD_ERROR")) {
                         Toast.makeText(getApplicationContext(), "잘못된 비밀번호입니다. 비밀번호를 다시 확인해주세요.", Toast.LENGTH_LONG).show();
                     }
                 }
