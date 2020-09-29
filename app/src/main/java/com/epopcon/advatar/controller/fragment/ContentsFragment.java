@@ -284,6 +284,14 @@ public class ContentsFragment extends BaseFragment {
             ImageLoader.getInstance().displayImage(contentsRepo.contentsImg, holder.contentsImg, mImageLoaderOptions);
             holder.contentsTxt.setText(contentsRepo.contentsText);
 
+            holder.contentsLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentsRepo.contentsUrl));
+                    startActivity(intent);
+                }
+            });
+
             if (position == items.size() - 1) {
                 holder.line.setVisibility(View.GONE);
             } else {
