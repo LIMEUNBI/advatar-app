@@ -7,9 +7,7 @@ import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.db.SqlBuilder;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.VersionManager;
-import com.epopcon.extra.BuildConfig;
 import com.epopcon.extra.ExtraClassLoader;
-import com.epopcon.extra.ExtraLibHelper;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -44,9 +42,6 @@ public class AdvatarApplication extends Application {
         AppEventsLogger.activateApp(this);
 
         ExtraClassLoader.initialize(this);
-        ExtraLibHelper.setLogReport(true);
-        ExtraLibHelper.setSaveIdAndPassword(true);
-        ExtraLibHelper.setConsoleOutput(BuildConfig.DEBUG);
 
         VersionManager.getInstance(this).checkVersion();
 

@@ -57,6 +57,8 @@ dependencies {
     implementation 'com.google.api-client:google-api-client-gson:+'
     implementation 'com.facebook.android:facebook-login:[5,6)'
     implementation 'com.naver.nid:naveridlogin-android-sdk:4.2.6'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+
     implementation files('libs/extra-api.jar')
     implementation files('libs/rhino-1.7.7.1.jar')
     implementation files('libs/extra-online.jar')

@@ -21,6 +21,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
@@ -51,6 +53,7 @@ public class BrandChoiceActivity extends BaseActivity {
     private GridView mGridView = null;
     private GridAdapter mAdapter = null;
     private Button mBtnChoice = null;
+    private ImageView mImgLoading;
 
     private Intent intent = null;
 
@@ -72,12 +75,17 @@ public class BrandChoiceActivity extends BaseActivity {
         mBrandList = new ArrayList<>();
         mBrandListCopy = new ArrayList<>();
 
-        mChoiceBrand = (TextView) findViewById(R.id.choice_brand);
+        mImgLoading = (ImageView) findViewById(R.id.img_loading);
+        mGridView = (GridView) findViewById(R.id.card_grid_view);
+        mBtnChoice = (Button) findViewById(R.id.btn_end);
 
+        Glide.with(this).asGif().load(R.raw.loading).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(mImgLoading);
+        mGridView.setVisibility(View.GONE);
+
+        mChoiceBrand = (TextView) findViewById(R.id.choice_brand);
         mChoiceBrand.setText(getBrandNameList());
 
         mEditSearch = (EditText) findViewById(R.id.edit_search);
-
         mEditSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -95,16 +103,17 @@ public class BrandChoiceActivity extends BaseActivity {
             }
         });
 
-        mGridView = (GridView) findViewById(R.id.card_grid_view);
-        mBtnChoice = (Button) findViewById(R.id.btn_end);
-
         mBtnChoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                putBrandCodeList("");
                 for (int i = 0 ; i < mBrandList.size() ; i++) {
                     if (mBrandList.get(i).isMyBrandYn()) {
-                        putBrandCodeList(getBrandCodeList() + mBrandList.get(i).brandCode + ",");
+                        if (!getBrandCodeList().contains(mBrandList.get(i).brandCode)) {
+                            putBrandCodeList(getBrandCodeList() + mBrandList.get(i).brandCode + ",");
+                        }
+                        if (!getBrandNameList().contains(mBrandList.get(i).brandName)) {
+                            putBrandNameList(getBrandNameList() + mBrandList.get(i).brandName + ",");
+                        }
                     }
                 }
                 if (getBrandCodeList().isEmpty()) {
@@ -172,6 +181,8 @@ public class BrandChoiceActivity extends BaseActivity {
             RestAdvatarProtocol.getInstance().getBrandList(30, new RequestListener() {
                 @Override
                 public void onRequestSuccess(int requestCode, Object result) {
+                    mImgLoading.setVisibility(View.GONE);
+                    mGridView.setVisibility(View.VISIBLE);
                     mBrandList.addAll((List<BrandRepo>) result);
 
                     for (int i = 0 ; i < mBrandList.size() ; i++) {
@@ -193,7 +204,6 @@ public class BrandChoiceActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private final static Comparator<BrandRepo> brandComparator = new Comparator<BrandRepo>() {
@@ -283,18 +293,18 @@ public class BrandChoiceActivity extends BaseActivity {
                             putBrandCodeList(getBrandCodeList() + brandRepo.brandCode + ",");
                         }
                         if (getBrandNameList().equals("")) {
-                            putBrandNameList(brandRepo.brandName + ", ");
+                            putBrandNameList(brandRepo.brandName + ",");
                         } else {
-                            putBrandNameList(getBrandNameList() + brandRepo.brandName + ", ");
+                            putBrandNameList(getBrandNameList() + brandRepo.brandName + ",");
                         }
                         brandRepo.setMyBrandYn(true);
                     } else {
                         String reset = getBrandCodeList().replace(brandRepo.brandCode + ",", "");
                         putBrandCodeList(reset);
+                        String reChoice = getBrandNameList().replaceAll(brandRepo.brandName + ",", "");
+                        putBrandNameList(reChoice);
                         finalHolder.imgCheck.setVisibility(View.GONE);
                         brandRepo.setMyBrandYn(false);
-                        String reChoice = getBrandNameList().replaceAll(brandRepo.brandName + ", ", "");
-                        putBrandNameList(reChoice);
                     }
 
                     mChoiceBrand.setText(getBrandNameList());

@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
@@ -45,6 +47,8 @@ public class GoodsFragment extends BaseFragment {
     private ListAdapter mListAdapter = null;
     private List<BrandGoodsRepo> mGoodsList = new ArrayList<>();
 
+    private ImageView mImgLoading;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,11 @@ public class GoodsFragment extends BaseFragment {
         mView = inflater.inflate(R.layout.fragment_goods, container, false);
 
         mListView = mView.findViewById(R.id.list_view);
+        mListView.setVisibility(View.GONE);
+
+        mImgLoading = mView.findViewById(R.id.img_loading);
+
+        Glide.with(this).asGif().load(R.raw.loading).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(mImgLoading);
 
         mListAdapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.item_contents_list, mGoodsList);
         mListView.setAdapter(mListAdapter);
@@ -90,11 +99,12 @@ public class GoodsFragment extends BaseFragment {
                 public void onRequestSuccess(int requestCode, Object result) {
                     mGoodsList.addAll((List<BrandGoodsRepo>) result);
                     mListAdapter.notifyDataSetChanged();
+                    mListView.setVisibility(View.VISIBLE);
+                    mImgLoading.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onRequestFailure(Throwable t) {
-
                 }
             });
 
