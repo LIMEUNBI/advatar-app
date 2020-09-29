@@ -129,7 +129,6 @@ public class OnlineStoreImportHandler extends EventHandler {
             }
             finish();
             // 서버에 결과를 전송
-            EventTrigger.getInstance(context).triggerService(new Event(Event.Type.REPORT_ONLINE_STORE));
         } else {
             start(type);
 
@@ -138,7 +137,6 @@ public class OnlineStoreImportHandler extends EventHandler {
                 inquiry = new OnlineStoreDeliveryInquiry(context, type, deferred, firstRun, lastOrderDateTime);
                 inquiry.queryOrderDetails(OnlineConstant.PERIOD_MAX);
                 // 서버에 결과를 전송
-                EventTrigger.getInstance(context).triggerService(new Event(Event.Type.REPORT_ONLINE_STORE));
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
             } finally {

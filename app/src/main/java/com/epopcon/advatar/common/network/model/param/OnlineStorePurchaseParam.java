@@ -6,7 +6,7 @@ public class OnlineStorePurchaseParam extends CommonParam{
     public String storeName;
     public String orderNumber;
     public String orderDate;
-    public long orderDateTime;
+    public String orderDateTime;
     public Integer totalAmount;
     public Integer payAmount;
     public Integer refundAmount;

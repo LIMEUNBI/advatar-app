@@ -20,6 +20,7 @@ import com.epopcon.advatar.common.network.model.repo.OnlineStoreStatusRepo;
 import com.epopcon.advatar.common.network.model.repo.ResultRepo;
 import com.epopcon.advatar.common.network.model.repo.UserFindIdRepo;
 import com.epopcon.advatar.common.util.EncrypterUtil;
+import com.epopcon.extra.common.utils.Utils;
 
 import java.util.List;
 
@@ -609,7 +610,7 @@ public class RestAdvatarProtocol {
         }
     }
 
-    public void onlineStorePurchaseList(String storeName, String orderNumber, String orderDate, long orderDateTime, int totalAmount, int payAmount,
+    public void onlineStorePurchaseList(String userId, String storeName, String orderNumber, String orderDate, long orderDateTime, int totalAmount, int payAmount,
                                         int refundAmount, String cancelYn, String discountDetail, int deliveryCost, final RequestListener requestListener) throws Exception {
 
         final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
@@ -619,10 +620,14 @@ public class RestAdvatarProtocol {
 
         try {
             final OnlineStorePurchaseParam onlineStorePurchaseParam = new OnlineStorePurchaseParam();
+            onlineStorePurchaseParam.licenseKey = licenseKey;
+            onlineStorePurchaseParam.affiliateCode = CommonLibrary.getAffiliateCode();
+
+            onlineStorePurchaseParam.userId = userId;
             onlineStorePurchaseParam.storeName = storeName;
             onlineStorePurchaseParam.orderNumber = orderNumber;
             onlineStorePurchaseParam.orderDate = orderDate;
-            onlineStorePurchaseParam.orderDateTime = orderDateTime;
+            onlineStorePurchaseParam.orderDateTime = String.valueOf(orderDateTime);
             onlineStorePurchaseParam.totalAmount = totalAmount;
             onlineStorePurchaseParam.payAmount = payAmount;
             onlineStorePurchaseParam.refundAmount = refundAmount;
@@ -665,6 +670,9 @@ public class RestAdvatarProtocol {
 
         try {
             final OnlineStoreProductParam onlineStoreProductParam = new OnlineStoreProductParam();
+            onlineStoreProductParam.licenseKey = licenseKey;
+            onlineStoreProductParam.affiliateCode = CommonLibrary.getAffiliateCode();
+
             onlineStoreProductParam.storeName = storeName;
             onlineStoreProductParam.orderNumber = orderNumber;
             onlineStoreProductParam.category = category;

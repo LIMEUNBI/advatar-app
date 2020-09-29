@@ -44,7 +44,6 @@ import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
 import org.json.JSONObject;
 
-
 public class LoginActivity extends BaseActivity {
 
     private EditText mEditId;
