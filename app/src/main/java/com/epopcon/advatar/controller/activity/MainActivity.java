@@ -1,5 +1,6 @@
 package com.epopcon.advatar.controller.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -61,7 +62,6 @@ public class MainActivity extends BaseActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, BrandChoiceActivity.class);
                 startActivityForResult(intent, 0);
-                finish();
             }
         });
 
@@ -139,6 +139,21 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onActivityResult (int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+            case 0:
+                bottomNavigationView();
+                break;
+        }
+
     }
 
     @Override

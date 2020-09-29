@@ -462,7 +462,6 @@ public class OnlineFragment extends BaseFragment {
                 holder.bizType = (ImageView) convertView.findViewById(R.id.bizType);
                 holder.amount = (TextView) convertView.findViewById(R.id.amount);
                 holder.deliveryStatus = (TextView) convertView.findViewById(R.id.delivery_status);
-                holder.datelinePlaceHolder = (RelativeLayout) convertView.findViewById(R.id.dateChangeSpaceHolder);
                 holder.lineHolder = (RelativeLayout) convertView.findViewById(R.id.line_holder);
 
                 convertView.setTag(holder);

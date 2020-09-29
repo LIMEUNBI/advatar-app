@@ -115,11 +115,6 @@ public class BrandChoiceActivity extends BaseActivity {
                         RestAdvatarProtocol.getInstance().userFavoriteBrands(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, ""), getBrandCodeList(), new RequestListener() {
                             @Override
                             public void onRequestSuccess(int requestCode, Object result) {
-                                if (!intent.getBooleanExtra("finish", true)) {
-                                    Intent mainIntent = new Intent(BrandChoiceActivity.this, MainActivity.class);
-                                    startActivity(mainIntent);
-                                }
-                                finish();
                             }
 
                             @Override
@@ -130,6 +125,12 @@ public class BrandChoiceActivity extends BaseActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    if (!intent.getBooleanExtra("finish", true)) {
+                        Intent mainIntent = new Intent(BrandChoiceActivity.this, MainActivity.class);
+                        startActivity(mainIntent);
+                    }
+                    finish();
                 }
             }
         });
@@ -214,9 +215,12 @@ public class BrandChoiceActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Intent intent = new Intent(BrandChoiceActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            if (getBrandCodeList().isEmpty()) {
+                Toast.makeText(getApplicationContext(), "브랜드를 선택하세요.", Toast.LENGTH_LONG).show();
+                return false;
+            } else {
+                finish();
+            }
         }
 
         return super.onKeyDown(keyCode, event);

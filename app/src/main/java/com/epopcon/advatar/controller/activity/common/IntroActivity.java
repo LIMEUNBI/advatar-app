@@ -146,7 +146,7 @@ public class IntroActivity extends BaseActivity {
                                         startActivity(intent);
                                         finish();
                                     }
-                                }, 800);
+                                }, 500);
                             }
 
                             @Override

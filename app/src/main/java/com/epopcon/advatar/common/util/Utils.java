@@ -11,17 +11,19 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
+import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.util.Calendar;
 
 public class Utils {
     static final String TAG = Utils.class.getSimpleName();
-
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
     protected Utils() {
 
     }
@@ -56,6 +58,27 @@ public class Utils {
             Utils.closeQuietly(inputStream);
         }
         return null;
+    }
+
+    public synchronized static int copy(InputStream input, OutputStream output)
+            throws IOException, OutOfMemoryError {
+        long count = copyLarge(input, output);
+        if (count > Integer.MAX_VALUE) {
+            return -1;
+        }
+        return (int) count;
+    }
+
+    public synchronized static long copyLarge(InputStream input,
+                                              OutputStream output) throws IOException, OutOfMemoryError {
+        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        long count = 0;
+        int n = 0;
+        while (-1 != (n = input.read(buffer))) {
+            output.write(buffer, 0, n);
+            count += n;
+        }
+        return count;
     }
 
     /**

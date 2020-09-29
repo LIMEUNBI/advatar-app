@@ -88,44 +88,75 @@ public class ContentsFragment extends BaseFragment {
 
         contentsRepo = new ContentsRepo();
         contentsRepo.contentsNum = 1;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/07/22/PC_HM_BANNER_mamonde_2007_3w_1.jpg";
-        contentsRepo.contentsText = "마몽드 X O!Oi COMING SOON!\n2020.07.22~2020.07.26";
+        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/07/26/PC_HM_BANNER_3880_2007_4w.jpg";
+        contentsRepo.contentsText = "My Mini Mix 럭셔리 소용량 특집";
+        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=3880";
         mContentsList.add(contentsRepo);
 
         contentsRepo = new ContentsRepo();
         contentsRepo.contentsNum = 2;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/07/17/PC_HM_BANNER_3925_2007_3w111.jpg";
-        contentsRepo.contentsText = "이니스프리! 여름피부, 모공 완전 정복! 최대 60%\n2020.07.20~2020.07.31";
+        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/23/PC_HM_BANNER_EditA_0928.jpg";
+        contentsRepo.contentsText = "신상 쿠션 뭐사지?\n2020.09.28~2020.10.04";
+        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4296";
         mContentsList.add(contentsRepo);
 
         contentsRepo = new ContentsRepo();
         contentsRepo.contentsNum = 3;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/07/17/PC_HM_BANNER_soon_2007_3w.jpg";
-        contentsRepo.contentsText = "[순플러스]브랜드 위크(7월)\n2020.07.20~2020.07.26";
+        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/25/PC_HM_BANNER_4293_2009_5w.jpg";
+        contentsRepo.contentsText = "설화수 F/W 스킨케어 기획전\n2020.09.28~2020.10.11";
+        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4293";
         mContentsList.add(contentsRepo);
 
         contentsRepo = new ContentsRepo();
         contentsRepo.contentsNum = 4;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/07/17/PC_HM_BANNER_3919_2007_3w.jpg";
-        contentsRepo.contentsText = "아이오페 더 비타민 C23%\n2020.07.20~2020.07.26";
+        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/25/PC_HM_BANNER_4271_2009_5w_1.jpg";
+        contentsRepo.contentsText = "연휴 특가 ~66%+추가쿠폰!\n2020.09.28~2020.10.04";
+        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4271";
         mContentsList.add(contentsRepo);
 
         contentsRepo = new ContentsRepo();
         contentsRepo.contentsNum = 5;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/07/17/PC_HM_BANNER_3909_2007_3w_1594971807642.jpg";
-        contentsRepo.contentsText = "착한 클렌징, B.LAB 신규 입점 기념 ~10%\n2020.07.20~2020.08.02";
+        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/25/PC_HM_BANNER_4276_2009_5w_1.jpg";
+        contentsRepo.contentsText = "Brand Be Better -에어리블러 프라이밍 파우더-\n2020.09.25~2020.10.31";
+        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4276";
         mContentsList.add(contentsRepo);
 
         contentsRepo = new ContentsRepo();
         contentsRepo.contentsNum = 6;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/07/14/PC_HM_BANNER_3879_2007_2w.jpg";
-        contentsRepo.contentsText = "헤라 시그니아 7월 페이백 이벤트\n2020.07.15~2020.07.31";
+        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/18/PC_HM_BANNER_4215_2009_4w.jpg";
+        contentsRepo.contentsText = "설화수 자음생에센스&앰플 리얼 리뷰\n2020.09.21~2020.10.31";
+        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4251";
+        mContentsList.add(contentsRepo);
+
+        contentsRepo = new ContentsRepo();
+        contentsRepo.contentsNum = 7;
+        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/25/PC_HM_BANNER_4285_2009_5w.jpg";
+        contentsRepo.contentsText = "에뛰드 연휴세일 #기프티콘 증정!\n2020.09.25~2020.10.07";
+        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4285";
+        mContentsList.add(contentsRepo);
+
+        contentsRepo = new ContentsRepo();
+        contentsRepo.contentsNum = 8;
+        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/16/PC_HM_BANNER_4257_2009_3w.jpg";
+        contentsRepo.contentsText = "나홀로 시리즈 8탄 #상황별헤어케어\n2020.09.17~2020.12.31";
+        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4257";
+        mContentsList.add(contentsRepo);
+
+        contentsRepo = new ContentsRepo();
+        contentsRepo.contentsNum = 9;
+        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/16/PC_HM_BANNER_3891_2007_3w_1595225122946.jpg";
+        contentsRepo.contentsText = "나홀로 시리즈 7탄: 페스티벌 메이크업\n2020.09.17~2022.12.31";
+        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4256";
+        mContentsList.add(contentsRepo);
+
+        contentsRepo = new ContentsRepo();
+        contentsRepo.contentsNum = 10;
+        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/25/PC_HM_BANNER_4282_2009_5w.jpg";
+        contentsRepo.contentsText = "피카소 꼴레지오니 ~40%\n2020.09.28~2020.10.04";
+        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4282";
         mContentsList.add(contentsRepo);
 
         mListAdapter.notifyDataSetChanged();
-
-//        YoutubeAsyncTask task = new YoutubeAsyncTask();
-//        task.execute();
 
     }
 
@@ -241,6 +272,7 @@ public class ContentsFragment extends BaseFragment {
                 holder.contentsLayout = (RelativeLayout) convertView.findViewById(R.id.item_layout);
                 holder.contentsImg = (ImageView) convertView.findViewById(R.id.img_contents);
                 holder.contentsTxt = (TextView) convertView.findViewById(R.id.contents_text);
+                holder.line = (View) convertView.findViewById(R.id.view);
 
                 convertView.setTag(holder);
             } else {
@@ -249,16 +281,14 @@ public class ContentsFragment extends BaseFragment {
 
             final ContentsRepo contentsRepo = items.get(position);
 
-//            holder.contentsLayout.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentsRepo.contentsUrl));
-//                    startActivity(intent);
-//                }
-//            });
-
             ImageLoader.getInstance().displayImage(contentsRepo.contentsImg, holder.contentsImg, mImageLoaderOptions);
             holder.contentsTxt.setText(contentsRepo.contentsText);
+
+            if (position == items.size() - 1) {
+                holder.line.setVisibility(View.GONE);
+            } else {
+                holder.line.setVisibility(View.VISIBLE);
+            }
 
             return convertView;
         }
@@ -267,6 +297,7 @@ public class ContentsFragment extends BaseFragment {
             public RelativeLayout contentsLayout;
             public ImageView contentsImg;
             public TextView contentsTxt;
+            public View line;
         }
     }
 }

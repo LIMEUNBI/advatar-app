@@ -8,11 +8,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.epopcon.advatar.BuildConfig;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
 import com.epopcon.advatar.controller.activity.user.LoginActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
+import com.epopcon.extra.ExtraClassLoader;
 
 public class MyPageFragment extends BaseFragment {
 
@@ -31,6 +33,8 @@ public class MyPageFragment extends BaseFragment {
     private Button mBtnLogout;
 
     private Button mBtnOnline;
+
+    private TextView mTxtVersion;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,8 +55,14 @@ public class MyPageFragment extends BaseFragment {
         mTxtUserId = mView.findViewById(R.id.txt_user_id);
         mBtnLogout = mView.findViewById(R.id.btn_logout);
         mBtnOnline = mView.findViewById(R.id.btn_online);
+        mTxtVersion = mView.findViewById(R.id.txt_version_code);
 
         mTxtUserId.setText(SharedPreferenceBase.getPrefString(getContext(), Config.USER_ID, null));
+
+        String version = BuildConfig.VERSION_NAME;
+        String extraVersion = String.valueOf(ExtraClassLoader.getInstance().getVersionCode());
+
+        mTxtVersion.setText(version + "_" + extraVersion);
 
         mBtnLogout.setOnClickListener(new View.OnClickListener() {
             @Override

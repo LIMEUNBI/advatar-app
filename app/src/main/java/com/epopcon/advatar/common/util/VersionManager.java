@@ -143,13 +143,15 @@ public class VersionManager {
                     int responseCode = connection.getResponseCode();
 
                     if (responseCode == 200) {
-                        File defaultPath = new File(dexDir, "/extra-all-update.zip");
+                        File defaultPath = new File(dexDir, "/extra-online-update.zip");
 
                         if (defaultPath.exists())
                             defaultPath.delete();
 
                         inputStream = connection.getInputStream();
                         outputStream = new FileOutputStream(defaultPath);
+
+                        Utils.copy(inputStream, outputStream);
 
                         if (defaultPath.exists()) {
                             if (!TextUtils.isEmpty(md5String)) {
@@ -170,7 +172,7 @@ public class VersionManager {
 
                         if (ExtraClassLoader.getInstance().reload(context, defaultPath)) {
 
-                            File newDex = new File(dexDir, String.format("/extra-all-%s.zip", versionCode));
+                            File newDex = new File(dexDir, String.format("/extra-online-%s.zip", versionCode));
 
                             if (newDex.exists())
                                 newDex.delete();
@@ -181,8 +183,8 @@ public class VersionManager {
                                 String[] list = dexDir.list(new FilenameFilter() {
                                     @Override
                                     public boolean accept(File dir, String name) {
-                                        if (name.matches("(?i)extra-all-\\d+\\.zip")) {
-                                            String version = name.replaceAll("extra-all-(\\d+)\\.zip", "$1");
+                                        if (name.matches("(?i)extra-online-\\d+\\.zip")) {
+                                            String version = name.replaceAll("extra-online-(\\d+)\\.zip", "$1");
                                             return !TextUtils.isEmpty(version) && Integer.parseInt(version) < BEFORE_VERSION;
                                         }
                                         return false;
