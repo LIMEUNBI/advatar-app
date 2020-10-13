@@ -1,4 +1,4 @@
-package com.epopcon.advatar.common.network.model.repo;
+package com.epopcon.advatar.common.network.model.repo.brand;
 
 import com.google.gson.annotations.SerializedName;
 

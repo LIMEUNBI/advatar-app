@@ -14,6 +14,7 @@ import com.epopcon.extra.online.OnlineConstant;
 import com.epopcon.extra.online.OnlineDeliveryInquiry;
 import com.epopcon.extra.online.OnlineDeliveryInquiryHandler;
 import com.epopcon.extra.online.OnlineDeliveryInquiryHelper;
+import com.epopcon.extra.online.model.CartDetail;
 import com.epopcon.extra.online.model.OrderDetail;
 import com.epopcon.extra.online.model.ProductDetail;
 
@@ -23,9 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class OnlineStoreDeliveryInquiry extends OnlineDeliveryInquiryHandler {
+public class OnlineStoreImportInquiry extends OnlineDeliveryInquiryHandler {
 
-    private final String TAG = OnlineStoreDeliveryInquiry.class.getSimpleName();
+    private final String TAG = OnlineStoreImportInquiry.class.getSimpleName();
 
     private Context context;
 
@@ -47,7 +48,7 @@ public class OnlineStoreDeliveryInquiry extends OnlineDeliveryInquiryHandler {
 
     private Deferred deferred;
 
-    public OnlineStoreDeliveryInquiry(Context context, OnlineConstant constant, Deferred deferred, boolean firstRun, Long lastOrderDateTime) {
+    public OnlineStoreImportInquiry(Context context, OnlineConstant constant, Deferred deferred, boolean firstRun, Long lastOrderDateTime) {
         this.context = context;
         this.constant = constant;
         this.encUserId = OnlineDeliveryInquiryHelper.getStoredId(context, constant);

@@ -1,4 +1,4 @@
-package com.epopcon.advatar.common.network.model.repo;
+package com.epopcon.advatar.common.network.model.repo.brand;
 
 public class BrandGoodsRepo {
 

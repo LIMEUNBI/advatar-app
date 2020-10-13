@@ -29,15 +29,6 @@ import com.epopcon.advatar.controller.activity.BaseActivity;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
 import com.epopcon.advatar.controller.activity.MainActivity;
 import com.epopcon.advatar.network.NaverProfile;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
@@ -55,12 +46,8 @@ public class LoginActivity extends BaseActivity {
     private TextView mTxtFindId;
     private TextView mTxtFindPw;
 
-    private LoginButton btnFacebookLogin;
-    private CallbackManager callbackManager;
-
     private OAuthLoginButton mOAuthLoginButton;
 
-    private RelativeLayout loginFacebook;
     private RelativeLayout loginNaver;
 
     private String OAUTH_CLIENT_ID = "9QxeKQyEVhUsoNcFsiap";
@@ -133,57 +120,13 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
-        callbackManager = CallbackManager.Factory.create();
-
         // Naver API 초기화
         mOAuthLoginInstance = OAuthLogin.getInstance();
 
         mOAuthLoginInstance.showDevelopersLog(true);
         mOAuthLoginInstance.init(getApplicationContext(), OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_CLIENT_NAME);
 
-        btnFacebookLogin = (LoginButton) findViewById(R.id.btn_facebook_login);
-
-        loginFacebook = (RelativeLayout) findViewById(R.id.layout_facebook_login);
         loginNaver = (RelativeLayout) findViewById(R.id.layout_naver_login);
-
-        // 페이스북 로그인
-        loginFacebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                btnFacebookLogin.performClick();
-            }
-        });
-
-        // Callback registration
-        btnFacebookLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callbackManager = CallbackManager.Factory.create();
-                LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-
-                    @Override
-                    public void onError(FacebookException error) {
-
-                    }
-                });
-            }
-        });
-
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
-
-        if (isLoggedIn) {
-            getFacebookInfo(accessToken);
-        }
 
         // 네이버 로그인
         loginNaver.setOnClickListener(new View.OnClickListener() {
@@ -238,29 +181,6 @@ public class LoginActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void getFacebookInfo(AccessToken accessToken) {
-
-        GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
-            @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-
-                try {
-                    String email = object.getString("email");
-                    String name = object.getString("name");
-                    String gender = object.getString("gender");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,email,gender");
-        request.setParameters(parameters);
-        request.executeAsync();
-
     }
 
     /**
@@ -366,11 +286,14 @@ public class LoginActivity extends BaseActivity {
         }
     };
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     protected void hideSoftKeyboard(View view) {

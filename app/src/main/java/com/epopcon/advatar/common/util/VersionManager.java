@@ -1,20 +1,14 @@
 package com.epopcon.advatar.common.util;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.epopcon.advatar.BuildConfig;
-import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
-import com.epopcon.advatar.common.network.model.repo.AppVersionRepo;
-import com.epopcon.advatar.common.network.model.repo.ExtraVersionRepo;
+import com.epopcon.advatar.common.network.model.repo.common.ExtraVersionRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
-import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
 import com.epopcon.extra.ExtraClassLoader;
 import com.epopcon.extra.common.utils.ExecutorPool;
 
@@ -24,9 +18,6 @@ import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import static com.epopcon.advatar.common.util.Utils.getApplicationContext;
-import static com.epopcon.extra.common.ExtraContext.runOnUiThread;
 
 public class VersionManager {
 

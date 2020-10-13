@@ -8,8 +8,6 @@ import com.epopcon.advatar.common.db.SqlBuilder;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.VersionManager;
 import com.epopcon.extra.ExtraClassLoader;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -29,17 +27,13 @@ public class AdvatarApplication extends Application {
         CommonLibrary.setAffiliateCode(Config.AFFILIATE_CODE_ADVATAR);
         SqlBuilder.initialize(this.getApplicationContext());
 
-//        String host = "http://192.168.0.104:18091/";
-        String host = "http://dev.epopcon.com:18091/advatar-server/";
+        String host = "http://192.168.0.104:18091/";
+//        String host = "http://dev.epopcon.com:18091/advatar-server/";
         int timeout = 15;
 
         RestAdvatarProtocol.getInstance().setConnectionInfo(host, timeout);
 
         SqlBuilder.initialize(this.getApplicationContext());
-
-        // Facebook API 초기화
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
 
         ExtraClassLoader.initialize(this);
 
@@ -47,7 +41,6 @@ public class AdvatarApplication extends Application {
 
         ImageLoaderConfiguration imageLoaderConfig = new ImageLoaderConfiguration.Builder(getContext())
                 .threadPriority(Thread.NORM_PRIORITY - 2)
-
                 .denyCacheImageMultipleSizesInMemory()
                 .discCacheFileNameGenerator(new Md5FileNameGenerator())
                 .tasksProcessingOrder(QueueProcessingType.LIFO)

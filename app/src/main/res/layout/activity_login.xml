@@ -193,36 +193,10 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/layout_facebook_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/sns_login_button_facebook">
-
-            <ImageView
-                android:id="@+id/icon_facebook"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="5dp"
-                android:src="@drawable/icon_facebook" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/icon_facebook"
-                android:layout_marginLeft="16dp"
-                android:layout_centerInParent="true"
-                android:text="페이스북 아이디로 로그인"
-                android:textStyle="bold"
-                android:textColor="@color/white"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/layout_naver_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/sns_login_button_naver">
 
             <ImageView
@@ -270,15 +244,6 @@
                 android:textColor="@color/white"/>
 
         </RelativeLayout>
-
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/btn_facebook_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
-            android:visibility="gone"/>
 
         <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
             android:id="@+id/btn_naver_login"

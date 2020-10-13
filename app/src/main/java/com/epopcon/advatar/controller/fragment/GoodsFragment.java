@@ -17,7 +17,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
-import com.epopcon.advatar.common.network.model.repo.BrandGoodsRepo;
+import com.epopcon.advatar.common.network.model.repo.brand.BrandGoodsRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -80,38 +80,38 @@ public class GoodsFragment extends BaseFragment {
 
     public void refresh() {
 
-        mGoodsList.clear();
+        if (mGoodsList.isEmpty() || mGoodsList == null) {
 
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-            Calendar cal = new GregorianCalendar(Locale.KOREA);
-            cal.add(Calendar.DATE, - 2);
-            String today = simpleDateFormat.format(cal.getTime());
-            String[] brands = SharedPreferenceBase.getPrefString(getContext(), Config.MY_BRAND_LIST, "").split(",");
+            try {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+                Calendar cal = new GregorianCalendar(Locale.KOREA);
+                cal.add(Calendar.DATE, -2);
+                String today = simpleDateFormat.format(cal.getTime());
+                String[] brands = SharedPreferenceBase.getPrefString(getContext(), Config.MY_BRAND_LIST, "").split(",");
 
-            List<String> brandCodes = new ArrayList<>();
-            for (int i  = 0 ; i < brands.length ; i++) {
-                brandCodes.add(brands[i]);
+                List<String> brandCodes = new ArrayList<>();
+                for (int i = 0; i < brands.length; i++) {
+                    brandCodes.add(brands[i]);
+                }
+
+                RestAdvatarProtocol.getInstance().getBrandGoodsList(brandCodes, today, 100, new RequestListener() {
+                    @Override
+                    public void onRequestSuccess(int requestCode, Object result) {
+                        mGoodsList.addAll((List<BrandGoodsRepo>) result);
+                        mListAdapter.notifyDataSetChanged();
+                        mListView.setVisibility(View.VISIBLE);
+                        mImgLoading.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onRequestFailure(Throwable t) {
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            RestAdvatarProtocol.getInstance().getBrandGoodsList(brandCodes, today, 100, new RequestListener() {
-                @Override
-                public void onRequestSuccess(int requestCode, Object result) {
-                    mGoodsList.addAll((List<BrandGoodsRepo>) result);
-                    mListAdapter.notifyDataSetChanged();
-                    mListView.setVisibility(View.VISIBLE);
-                    mImgLoading.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onRequestFailure(Throwable t) {
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
     }
 
     private class ListAdapter extends ArrayAdapter<BrandGoodsRepo> {

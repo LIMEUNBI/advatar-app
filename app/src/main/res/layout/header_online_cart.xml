@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/cart_layout"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <RelativeLayout
+            android:id="@+id/cart_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.4">
+
+            <TextView
+                android:id="@+id/cart_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="장바구니 상품"
+                android:textSize="12dp"
+                android:textColor="@color/blue_002080"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:layout_below="@+id/cart_title">
+
+                <TextView
+                    android:id="@+id/cart_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/blue_002080"
+                    android:textSize="24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/cart_count"
+                    android:layout_toEndOf="@+id/cart_count"
+                    android:layout_toRightOf="@+id/cart_count"
+                    android:layout_marginBottom="5dp"
+                    android:text=" 개"
+                    android:textColor="@color/blue_99c2ff"
+                    android:textSize="12dp" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/line_f2f2f2"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp" />
+
+        <RelativeLayout
+            android:id="@+id/recent_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.4">
+
+            <TextView
+                android:id="@+id/recent_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="최근 본 상품"
+                android:textSize="12dp"
+                android:textColor="@color/blue_002080"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:layout_below="@+id/recent_title">
+
+                <TextView
+                    android:id="@+id/recent_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/blue_002080"
+                    android:textSize="24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/recent_count"
+                    android:layout_toEndOf="@+id/recent_count"
+                    android:layout_toRightOf="@+id/recent_count"
+                    android:layout_marginBottom="5dp"
+                    android:text=" 개"
+                    android:textColor="@color/blue_99c2ff"
+                    android:textSize="12dp" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/line_f2f2f2"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"/>
+
+        <RelativeLayout
+            android:id="@+id/icon_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_toRightOf="@+id/cart_holder"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:layout_weight="0.2">
+
+            <ImageView
+                android:id="@+id/sync_image"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="13dp"
+                android:padding="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_refresh_grey"
+                android:visibility="visible"
+                android:layout_weight="0.3"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/amount_layout"
+        android:background="@color/line_f2f2f2"/>
+
+</RelativeLayout>

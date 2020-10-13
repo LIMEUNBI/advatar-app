@@ -1,20 +1,23 @@
 package com.epopcon.advatar.common.network.rest;
 
 import com.epopcon.advatar.common.network.BaseService;
-import com.epopcon.advatar.common.network.model.param.AppVersionParam;
-import com.epopcon.advatar.common.network.model.param.BrandGoodsParam;
-import com.epopcon.advatar.common.network.model.param.BrandParam;
+import com.epopcon.advatar.common.network.model.param.brand.BrandContentsParam;
+import com.epopcon.advatar.common.network.model.param.common.AppVersionParam;
+import com.epopcon.advatar.common.network.model.param.brand.BrandGoodsParam;
+import com.epopcon.advatar.common.network.model.param.brand.BrandParam;
 import com.epopcon.advatar.common.network.model.param.CommonParam;
-import com.epopcon.advatar.common.network.model.param.OnlineStoreProductParam;
-import com.epopcon.advatar.common.network.model.param.OnlineStorePurchaseParam;
-import com.epopcon.advatar.common.network.model.param.UserParam;
-import com.epopcon.advatar.common.network.model.repo.AppVersionRepo;
-import com.epopcon.advatar.common.network.model.repo.BrandGoodsRepo;
-import com.epopcon.advatar.common.network.model.repo.BrandRepo;
-import com.epopcon.advatar.common.network.model.repo.ExtraVersionRepo;
-import com.epopcon.advatar.common.network.model.repo.OnlineStoreStatusRepo;
+import com.epopcon.advatar.common.network.model.param.online.OnlineStoreCartParam;
+import com.epopcon.advatar.common.network.model.param.online.OnlineStoreProductParam;
+import com.epopcon.advatar.common.network.model.param.online.OnlineStorePurchaseParam;
+import com.epopcon.advatar.common.network.model.param.user.UserParam;
+import com.epopcon.advatar.common.network.model.repo.brand.BrandContentsRepo;
+import com.epopcon.advatar.common.network.model.repo.common.AppVersionRepo;
+import com.epopcon.advatar.common.network.model.repo.brand.BrandGoodsRepo;
+import com.epopcon.advatar.common.network.model.repo.brand.BrandRepo;
+import com.epopcon.advatar.common.network.model.repo.common.ExtraVersionRepo;
+import com.epopcon.advatar.common.network.model.repo.common.OnlineStoreStatusRepo;
 import com.epopcon.advatar.common.network.model.repo.ResultRepo;
-import com.epopcon.advatar.common.network.model.repo.UserFindIdRepo;
+import com.epopcon.advatar.common.network.model.repo.user.UserFindIdRepo;
 
 import java.util.List;
 
@@ -78,6 +81,9 @@ public class RestAdvatarService extends BaseService {
         @POST("brand/getBrandGoodsList")
         Call<List<BrandGoodsRepo>> getBrandGoodsList(@Body BrandGoodsParam brandGoodsParam);
 
+        @POST("brand/getBrandContentsList")
+        Call<List<BrandContentsRepo>> getBrandContentsList(@Body BrandContentsParam brandContentsParam);
+
         // --------------------------- online ---------------------------
         @POST("online/onlineStorePurchaseList")
         Call<ResultRepo> onlineStorePurchaseList(@Body OnlineStorePurchaseParam onlineStorePurchaseParam);
@@ -85,5 +91,7 @@ public class RestAdvatarService extends BaseService {
         @POST("online/onlineStoreProductList")
         Call<ResultRepo> onlineStoreProductList(@Body OnlineStoreProductParam onlineStoreProductParam);
 
+        @POST("online/onlineStoreCartList")
+        Call<ResultRepo> onlineStoreCartList(@Body OnlineStoreCartParam onlineStoreCartParam);
     }
 }

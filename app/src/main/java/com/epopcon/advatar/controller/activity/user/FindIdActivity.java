@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.network.RequestListener;
-import com.epopcon.advatar.common.network.model.repo.UserFindIdRepo;
+import com.epopcon.advatar.common.network.model.repo.user.UserFindIdRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.DialogClickListener;
 import com.epopcon.advatar.common.util.DialogUtil;

@@ -11,6 +11,7 @@ import com.epopcon.advatar.common.network.RequestListener;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
 import com.epopcon.advatar.common.util.Utils;
+import com.epopcon.extra.online.model.CartDetail;
 import com.epopcon.extra.online.model.OrderDetail;
 import com.epopcon.extra.online.model.ProductDetail;
 
@@ -412,6 +413,152 @@ public class MessageDao extends Observable {
                 }
             }
         }
+    }
+
+    public List<CartDetail> getOnlineStoreCartDetails() {
+
+        String query;
+        query = "SELECT * " +
+                "FROM " +
+                "online_store_cart " +
+                "GROUP BY store_name, deal_url " +
+                "ORDER BY cart_type ASC";
+
+        Cursor cursor = database.rawQuery(query, null);
+
+        if (cursor != null) {
+            List<CartDetail> cartDetails = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                CartDetail cartDetail = new CartDetail();
+
+                String storeName = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_STORE_NAME));
+                String title = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_TITLE));
+                String dealURl = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_DEAL_URL));
+                int optionPrice = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_OPTION_PRICE));
+                String promoTitle = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_PROMOTION_TITLE));
+                String options = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_OPTIONS));
+                String imgUrl = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_IMG_URL));
+                int selectCount = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_SELECT_COUNT));
+                int discount = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_DISCOUNT));
+                int totalAmount = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_TOTAL_AMOUNT));
+                String deliveryEnd = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_EXPECTED_DELIVERY_END_DATE));
+                String deliveryPolicy = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_DELIVERY_POLICY));
+                int deliveryIfAmount = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_DELIVERY_IF_AMOUNT));
+                int deliveryAmount = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_DELIVERY_AMOUNT));
+                double avgDeliveryDays = cursor.getDouble(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_AVG_DELIVERY_DAYS));
+                String sellerUrl = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_SELLER_URL));
+                String cartType = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_CART_TYPE));
+
+                cartDetail.setStoreName(storeName);
+                cartDetail.setTitle(title);
+                cartDetail.setDealUrl(dealURl);
+                cartDetail.setOptionPrice(optionPrice);
+                cartDetail.setPromoTitle(promoTitle);
+                cartDetail.setOptions(options);
+                cartDetail.setImgUrl(imgUrl);
+                cartDetail.setSelectCount(selectCount);
+                cartDetail.setDiscount(discount);
+                cartDetail.setTotalAmount(totalAmount);
+                cartDetail.setExpectedDeliveryEndDate(deliveryEnd);
+                cartDetail.setDeliveryPolicy(deliveryPolicy);
+                cartDetail.setDeliveryIfAmount(deliveryIfAmount);
+                cartDetail.setDeliveryAmount(deliveryAmount);
+                cartDetail.setAvgDeliveryDays(avgDeliveryDays);
+                cartDetail.setSellerUrl(sellerUrl);
+                cartDetail.setCartType(cartType);
+
+                cartDetails.add(cartDetail);
+            }
+            return cartDetails;
+        }
+        return Collections.EMPTY_LIST;
+    }
+
+    public int getOnlineStoreCartCount(String type) {
+        int cartCount = 0;
+
+        String query;
+        query = "SELECT COUNT(*) AS COUNT " +
+                "FROM " +
+                "online_store_cart " +
+                "WHERE cart_type = '" + type + "'";
+
+        Cursor cursor = database.rawQuery(query, null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                cartCount = cursor.getInt(cursor.getColumnIndex("COUNT"));
+            }
+            cursor.close();
+        }
+
+        return cartCount;
+    }
+
+    public void insertOnlineCart(String storeName, CartDetail cartDetail) {
+
+        ContentValues values;
+        Long id = null;
+
+        Cursor cursor = database.rawQuery(String.format("SELECT %s FROM %s WHERE %s = '%s' AND %s = '%s'",
+                DBHelper.DBOnlineStoreCart.COLUMN_ID, DBHelper.DBOnlineStoreCart.TABLE_ONLINE_STORE_CART,
+                DBHelper.DBOnlineStoreCart.COLUMN_STORE_NAME, storeName,
+                DBHelper.DBOnlineStoreCart.COLUMN_DEAL_URL, cartDetail.getDealUrl()), null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst())
+                id = cursor.getLong(0);
+            cursor.close();
+        }
+
+        String userId = SharedPreferenceBase.getPrefString(Utils.getApplicationContext(), Config.USER_ID, "");
+        try {
+            RestAdvatarProtocol.getInstance().onlineStoreCartList(userId, storeName, cartDetail.getTitle(), cartDetail.getDealUrl(), cartDetail.getOptionPrice(), cartDetail.getPromoTitle(),
+                    cartDetail.getOptions(), cartDetail.getImgUrl(), cartDetail.getSelectCount(), cartDetail.getDiscount(), cartDetail.getTotalAmount(),
+                    cartDetail.getExpectedDeliveryEndDate(), cartDetail.getDeliveryPolicy(), cartDetail.getDeliveryIfAmount(), cartDetail.getDeliveryAmount(),
+                    cartDetail.getAvgDeliveryDays(), cartDetail.getSellerUrl(), cartDetail.getCartType(), new RequestListener() {
+                        @Override
+                        public void onRequestSuccess(int requestCode, Object result) {
+
+                        }
+
+                        @Override
+                        public void onRequestFailure(Throwable t) {
+
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        boolean insert = (id == null);
+        values = new ContentValues();
+
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_TITLE, cartDetail.getTitle());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_OPTION_PRICE, cartDetail.getOptionPrice());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_PROMOTION_TITLE, cartDetail.getPromoTitle());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_OPTIONS, cartDetail.getOptions());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_IMG_URL, cartDetail.getImgUrl());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_SELECT_COUNT, cartDetail.getSelectCount());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_DISCOUNT, cartDetail.getDiscount());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_TOTAL_AMOUNT, cartDetail.getTotalAmount());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_EXPECTED_DELIVERY_END_DATE, cartDetail.getExpectedDeliveryEndDate());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_DELIVERY_POLICY, cartDetail.getDeliveryPolicy());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_DELIVERY_IF_AMOUNT, cartDetail.getDeliveryIfAmount());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_DELIVERY_AMOUNT, cartDetail.getDeliveryAmount());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_AVG_DELIVERY_DAYS, cartDetail.getAvgDeliveryDays());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_SELLER_URL, cartDetail.getSellerUrl());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_CART_TYPE, cartDetail.getCartType());
+
+        if (insert) {
+            values.put(DBHelper.DBOnlineStoreCart.COLUMN_STORE_NAME, storeName);
+            values.put(DBHelper.DBOnlineStoreCart.COLUMN_DEAL_URL, cartDetail.getDealUrl());
+
+            database.insert(DBHelper.DBOnlineStoreCart.TABLE_ONLINE_STORE_CART, null, values);
+        } else {
+            database.update(DBHelper.DBOnlineStoreCart.TABLE_ONLINE_STORE_CART, values, String.format("%s = %s", DBHelper.DBOnlineStore.COLUMN_ID, id), null);
+        }
+
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.epopcon.advatar.common.model;
 
 import com.epopcon.advatar.common.network.RequestListener;
-import com.epopcon.advatar.common.network.model.repo.OnlineStoreStatusRepo;
+import com.epopcon.advatar.common.network.model.repo.common.OnlineStoreStatusRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
 

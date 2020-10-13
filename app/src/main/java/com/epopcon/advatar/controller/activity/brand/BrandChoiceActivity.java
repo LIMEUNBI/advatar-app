@@ -26,7 +26,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
-import com.epopcon.advatar.common.network.model.repo.BrandRepo;
+import com.epopcon.advatar.common.network.model.repo.brand.BrandRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.controller.activity.BaseActivity;
 import com.epopcon.advatar.controller.activity.MainActivity;
@@ -175,34 +175,34 @@ public class BrandChoiceActivity extends BaseActivity {
 
     private void refresh() {
 
-        mBrandList.clear();
+        if (mBrandList == null || mBrandList.isEmpty()) {
+            try {
+                RestAdvatarProtocol.getInstance().getBrandList(30, new RequestListener() {
+                    @Override
+                    public void onRequestSuccess(int requestCode, Object result) {
+                        mImgLoading.setVisibility(View.GONE);
+                        mGridView.setVisibility(View.VISIBLE);
+                        mBrandList.addAll((List<BrandRepo>) result);
 
-        try {
-            RestAdvatarProtocol.getInstance().getBrandList(30, new RequestListener() {
-                @Override
-                public void onRequestSuccess(int requestCode, Object result) {
-                    mImgLoading.setVisibility(View.GONE);
-                    mGridView.setVisibility(View.VISIBLE);
-                    mBrandList.addAll((List<BrandRepo>) result);
-
-                    for (int i = 0 ; i < mBrandList.size() ; i++) {
-                        if (getBrandCodeList().contains(mBrandList.get(i).brandCode)) {
-                            mBrandList.get(i).setMyBrandYn(true);
-                        } else {
-                            mBrandList.get(i).setMyBrandYn(false);
+                        for (int i = 0; i < mBrandList.size(); i++) {
+                            if (getBrandCodeList().contains(mBrandList.get(i).brandCode)) {
+                                mBrandList.get(i).setMyBrandYn(true);
+                            } else {
+                                mBrandList.get(i).setMyBrandYn(false);
+                            }
                         }
+
+                        Collections.sort(mBrandList, brandComparator);
+                        mAdapter.notifyDataSetChanged();
                     }
 
-                    Collections.sort(mBrandList, brandComparator);
-                    mAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onRequestFailure(Throwable t) {
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
+                    @Override
+                    public void onRequestFailure(Throwable t) {
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

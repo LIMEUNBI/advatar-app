@@ -16,7 +16,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.epopcon.advatar.R;
-import com.epopcon.advatar.common.network.model.repo.ContentsRepo;
+import com.epopcon.advatar.common.config.Config;
+import com.epopcon.advatar.common.network.RequestListener;
+import com.epopcon.advatar.common.network.model.repo.brand.BrandContentsRepo;
+import com.epopcon.advatar.common.network.model.repo.brand.BrandGoodsRepo;
+import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
+import com.epopcon.advatar.common.util.SharedPreferenceBase;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -52,7 +57,7 @@ public class ContentsFragment extends BaseFragment {
 
     private ListView mListView;
     private ListAdapter mListAdapter = null;
-    private List<ContentsRepo> mContentsList = new ArrayList<>();
+    private List<BrandContentsRepo> mContentsList = new ArrayList<>();
 
     private String YOUTUBE_API_KEY = "AIzaSyCDe-64pnK38qKnbuCHqCAIAwdJ4vwExyg";
 
@@ -82,82 +87,30 @@ public class ContentsFragment extends BaseFragment {
 
     public void refresh() {
 
-        mContentsList.clear();
+        if (mContentsList == null || mContentsList.isEmpty()) {
+            String[] brands = SharedPreferenceBase.getPrefString(getContext(), Config.MY_BRAND_LIST, "").split(",");
 
-        ContentsRepo contentsRepo;
+            List<String> brandCodes = new ArrayList<>();
+            for (int i = 0; i < brands.length; i++) {
+                brandCodes.add(brands[i]);
+            }
+            try {
+                RestAdvatarProtocol.getInstance().getBrandContentsList(brandCodes, new RequestListener() {
+                    @Override
+                    public void onRequestSuccess(int requestCode, Object result) {
+                        mContentsList.addAll((List<BrandContentsRepo>) result);
+                        mListAdapter.notifyDataSetChanged();
+                    }
 
-        contentsRepo = new ContentsRepo();
-        contentsRepo.contentsNum = 1;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/07/26/PC_HM_BANNER_3880_2007_4w.jpg";
-        contentsRepo.contentsText = "My Mini Mix 럭셔리 소용량 특집";
-        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=3880";
-        mContentsList.add(contentsRepo);
+                    @Override
+                    public void onRequestFailure(Throwable t) {
+                    }
+                });
 
-        contentsRepo = new ContentsRepo();
-        contentsRepo.contentsNum = 2;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/23/PC_HM_BANNER_EditA_0928.jpg";
-        contentsRepo.contentsText = "신상 쿠션 뭐사지?\n2020.09.28~2020.10.04";
-        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4296";
-        mContentsList.add(contentsRepo);
-
-        contentsRepo = new ContentsRepo();
-        contentsRepo.contentsNum = 3;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/25/PC_HM_BANNER_4293_2009_5w.jpg";
-        contentsRepo.contentsText = "설화수 F/W 스킨케어 기획전\n2020.09.28~2020.10.11";
-        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4293";
-        mContentsList.add(contentsRepo);
-
-        contentsRepo = new ContentsRepo();
-        contentsRepo.contentsNum = 4;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/25/PC_HM_BANNER_4271_2009_5w_1.jpg";
-        contentsRepo.contentsText = "연휴 특가 ~66%+추가쿠폰!\n2020.09.28~2020.10.04";
-        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4271";
-        mContentsList.add(contentsRepo);
-
-        contentsRepo = new ContentsRepo();
-        contentsRepo.contentsNum = 5;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/25/PC_HM_BANNER_4276_2009_5w_1.jpg";
-        contentsRepo.contentsText = "Brand Be Better -에어리블러 프라이밍 파우더-\n2020.09.25~2020.10.31";
-        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4276";
-        mContentsList.add(contentsRepo);
-
-        contentsRepo = new ContentsRepo();
-        contentsRepo.contentsNum = 6;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/18/PC_HM_BANNER_4215_2009_4w.jpg";
-        contentsRepo.contentsText = "설화수 자음생에센스&앰플 리얼 리뷰\n2020.09.21~2020.10.31";
-        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4251";
-        mContentsList.add(contentsRepo);
-
-        contentsRepo = new ContentsRepo();
-        contentsRepo.contentsNum = 7;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/25/PC_HM_BANNER_4285_2009_5w.jpg";
-        contentsRepo.contentsText = "에뛰드 연휴세일 #기프티콘 증정!\n2020.09.25~2020.10.07";
-        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4285";
-        mContentsList.add(contentsRepo);
-
-        contentsRepo = new ContentsRepo();
-        contentsRepo.contentsNum = 8;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/16/PC_HM_BANNER_4257_2009_3w.jpg";
-        contentsRepo.contentsText = "나홀로 시리즈 8탄 #상황별헤어케어\n2020.09.17~2020.12.31";
-        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4257";
-        mContentsList.add(contentsRepo);
-
-        contentsRepo = new ContentsRepo();
-        contentsRepo.contentsNum = 9;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/16/PC_HM_BANNER_3891_2007_3w_1595225122946.jpg";
-        contentsRepo.contentsText = "나홀로 시리즈 7탄: 페스티벌 메이크업\n2020.09.17~2022.12.31";
-        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4256";
-        mContentsList.add(contentsRepo);
-
-        contentsRepo = new ContentsRepo();
-        contentsRepo.contentsNum = 10;
-        contentsRepo.contentsImg = "https://images-kr.amorepacificmall.com/fileupload/plandisplay/2020/09/25/PC_HM_BANNER_4282_2009_5w.jpg";
-        contentsRepo.contentsText = "피카소 꼴레지오니 ~40%\n2020.09.28~2020.10.04";
-        contentsRepo.contentsUrl = "https://www.amorepacificmall.com/kr/ko/display/event_detail?planDisplaySn=4282";
-        mContentsList.add(contentsRepo);
-
-        mListAdapter.notifyDataSetChanged();
-
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private class YoutubeAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -236,13 +189,13 @@ public class ContentsFragment extends BaseFragment {
                 if (rId.getKind().equals("youtube#video")) {
                     String youtube = "https://youtube.com/watch?v=";
                     Thumbnail thumbnail = (Thumbnail) singleVideo.getSnippet().getThumbnails().get("default");
-                    ContentsRepo contentsRepo = new ContentsRepo();
-                    contentsRepo.contentsImg = thumbnail.getUrl();
-                    contentsRepo.contentsText = singleVideo.getSnippet().getTitle();
-                    contentsRepo.contentsUrl = youtube + singleVideo.getId().getVideoId();
+                    BrandContentsRepo brandContentsRepo = new BrandContentsRepo();
+                    brandContentsRepo.contentsImg = thumbnail.getUrl();
+                    brandContentsRepo.contentsText = singleVideo.getSnippet().getTitle();
+                    brandContentsRepo.contentsUrl = youtube + singleVideo.getId().getVideoId();
 
-                    mContentsList.add(contentsRepo);
-                    Log.d("ContentsFragment", "title : " + contentsRepo.contentsText + ", channelId : " + singleVideo.getSnippet().getChannelId());
+                    mContentsList.add(brandContentsRepo);
+                    Log.d("ContentsFragment", "title : " + brandContentsRepo.contentsText + ", channelId : " + singleVideo.getSnippet().getChannelId());
                     sb.append("ID : " + singleVideo.getSnippet().getChannelId());
                     sb.append("\n");
                 }
@@ -251,11 +204,11 @@ public class ContentsFragment extends BaseFragment {
         }
     }
 
-    private class ListAdapter extends ArrayAdapter<ContentsRepo> {
+    private class ListAdapter extends ArrayAdapter<BrandContentsRepo> {
 
-        private List<ContentsRepo> items;
+        private List<BrandContentsRepo> items;
 
-        ListAdapter(Context context, int textViewResourceId, List<ContentsRepo> items) {
+        ListAdapter(Context context, int textViewResourceId, List<BrandContentsRepo> items) {
             super(context, textViewResourceId, items);
             this.items = items;
         }
@@ -271,6 +224,9 @@ public class ContentsFragment extends BaseFragment {
 
                 holder.contentsLayout = (RelativeLayout) convertView.findViewById(R.id.item_layout);
                 holder.contentsImg = (ImageView) convertView.findViewById(R.id.img_contents);
+                holder.adsImg = (ImageView) convertView.findViewById(R.id.img_ads);
+                holder.brandName = (TextView) convertView.findViewById(R.id.brand_name);
+                holder.contentsTitle = (TextView) convertView.findViewById(R.id.contents_title);
                 holder.contentsTxt = (TextView) convertView.findViewById(R.id.contents_text);
                 holder.line = (View) convertView.findViewById(R.id.view);
 
@@ -279,15 +235,23 @@ public class ContentsFragment extends BaseFragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            final ContentsRepo contentsRepo = items.get(position);
+            final BrandContentsRepo brandContentsRepo = items.get(position);
 
-            ImageLoader.getInstance().displayImage(contentsRepo.contentsImg, holder.contentsImg, mImageLoaderOptions);
-            holder.contentsTxt.setText(contentsRepo.contentsText);
+            if (brandContentsRepo.adYn == 0) {
+                holder.adsImg.setVisibility(View.VISIBLE);
+            } else {
+                holder.adsImg.setVisibility(View.GONE);
+            }
+            ImageLoader.getInstance().displayImage(brandContentsRepo.contentsImg, holder.contentsImg, mImageLoaderOptions);
+            holder.brandName.setText(brandContentsRepo.brandName);
+
+            holder.contentsTitle.setText(brandContentsRepo.contentsTitle);
+            holder.contentsTxt.setText(brandContentsRepo.contentsText);
 
             holder.contentsLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentsRepo.contentsUrl));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(brandContentsRepo.contentsUrl));
                     startActivity(intent);
                 }
             });
@@ -304,6 +268,9 @@ public class ContentsFragment extends BaseFragment {
         private class ViewHolder {
             public RelativeLayout contentsLayout;
             public ImageView contentsImg;
+            public ImageView adsImg;
+            public TextView brandName;
+            public TextView contentsTitle;
             public TextView contentsTxt;
             public View line;
         }

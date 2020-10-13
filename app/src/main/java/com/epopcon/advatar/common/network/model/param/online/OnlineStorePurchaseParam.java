@@ -1,6 +1,8 @@
-package com.epopcon.advatar.common.network.model.param;
+package com.epopcon.advatar.common.network.model.param.online;
 
-public class OnlineStorePurchaseParam extends CommonParam{
+import com.epopcon.advatar.common.network.model.param.CommonParam;
+
+public class OnlineStorePurchaseParam extends CommonParam {
 
     public String userId;
     public String storeName;

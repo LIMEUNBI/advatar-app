@@ -66,6 +66,32 @@ public class DBHelper extends SQLiteOpenHelper {
         public static final String COLUMN_STATUS = "status";
     }
 
+    public static class DBOnlineStoreCart {
+
+        public static final String TABLE_ONLINE_STORE_CART = "online_store_cart";
+
+        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_STORE_NAME = "store_name";
+        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_DEAL_URL = "deal_url";
+        public static final String COLUMN_OPTION_PRICE = "option_price";
+        public static final String COLUMN_PROMOTION_TITLE = "promotion_title";
+        public static final String COLUMN_OPTIONS = "options";
+        public static final String COLUMN_IMG_URL = "img_url";
+        public static final String COLUMN_SELECT_COUNT = "select_count";
+        public static final String COLUMN_DISCOUNT = "discount";
+        public static final String COLUMN_TOTAL_AMOUNT = "total_amount";
+        public static final String COLUMN_EXPECTED_DELIVERY_END_DATE = "expected_delivery_end_date";
+        public static final String COLUMN_DELIVERY_POLICY = "delivery_policy";
+        public static final String COLUMN_DELIVERY_IF_AMOUNT = "delivery_if_amount";
+        public static final String COLUMN_DELIVERY_AMOUNT = "delivery_amount";
+        public static final String COLUMN_AVG_DELIVERY_DAYS = "avg_delivery_days";
+        public static final String COLUMN_SELLER_URL = "seller_url";
+        public static final String COLUMN_CART_TYPE = "cart_type";
+        public static final String COLUMN_REG_DT = "reg_dt";
+
+    }
+
     private void createOnlineStoreTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + DBOnlineStore.TABLE_ONLINE_STORE + " (" +
                 DBOnlineStore.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -104,10 +130,36 @@ public class DBHelper extends SQLiteOpenHelper {
                 ");");
     }
 
+    private void createOnlineStoreCartTable(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + DBOnlineStoreCart.TABLE_ONLINE_STORE_CART + " (" +
+                DBOnlineStoreCart.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                DBOnlineStoreCart.COLUMN_STORE_NAME + " TEXT NOT NULL, " +
+                DBOnlineStoreCart.COLUMN_TITLE + " TEXT, " +
+                DBOnlineStoreCart.COLUMN_DEAL_URL + " TEXT, " +
+                DBOnlineStoreCart.COLUMN_OPTION_PRICE + " INTEGER, " +
+                DBOnlineStoreCart.COLUMN_PROMOTION_TITLE + " TEXT, " +
+                DBOnlineStoreCart.COLUMN_OPTIONS + " TEXT, " +
+                DBOnlineStoreCart.COLUMN_IMG_URL + " TEXT NOT NULL, " +
+                DBOnlineStoreCart.COLUMN_SELECT_COUNT + " INTEGER, " +
+                DBOnlineStoreCart.COLUMN_DISCOUNT + " INTEGER, " +
+                DBOnlineStoreCart.COLUMN_TOTAL_AMOUNT + " INTEGER, " +
+                DBOnlineStoreCart.COLUMN_EXPECTED_DELIVERY_END_DATE + " TEXT, " +
+                DBOnlineStoreCart.COLUMN_DELIVERY_POLICY + " TEXT, " +
+                DBOnlineStoreCart.COLUMN_DELIVERY_IF_AMOUNT + " INTEGER, " +
+                DBOnlineStoreCart.COLUMN_DELIVERY_AMOUNT + " INTEGER, " +
+                DBOnlineStoreCart.COLUMN_AVG_DELIVERY_DAYS + " DOUBLE, " +
+                DBOnlineStoreCart.COLUMN_SELLER_URL + " TEXT, " +
+                DBOnlineStoreCart.COLUMN_CART_TYPE + " TEXT, " +
+                DBOnlineStoreCart.COLUMN_REG_DT + " datetime, " +
+                "UNIQUE (" + DBOnlineStoreCart.COLUMN_STORE_NAME + ", " + DBOnlineStoreCart.COLUMN_DEAL_URL + ") ON CONFLICT REPLACE " +
+                ");");
+    }
+
     @Override
     public void onCreate(SQLiteDatabase database) {
         createOnlineStoreTable(database);
         createOnlineStoreProductTable(database);
+        createOnlineStoreCartTable(database);
     }
 
     @Override

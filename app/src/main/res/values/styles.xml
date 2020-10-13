@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SmartTabTextOn">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SmartTabTextOff">
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>

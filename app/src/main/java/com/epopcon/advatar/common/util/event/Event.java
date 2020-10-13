@@ -124,7 +124,7 @@ public class Event implements Serializable {
     }
 
     public enum Type {
-        IMPORT_ONLINE_STORE, REQUEST_ONLINE_STORE, ON_ONLINE_STORE_UPDATE
+        IMPORT_ONLINE_STORE, IMPORT_ONLINE_STORE_CART, REQUEST_ONLINE_STORE, ON_ONLINE_STORE_UPDATE
     }
 
 }

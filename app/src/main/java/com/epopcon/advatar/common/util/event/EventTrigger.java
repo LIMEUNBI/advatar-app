@@ -188,7 +188,7 @@ public class EventTrigger extends Observable {
         repository.unregister(object);
     }
 
-    public void destoryService() {
+    public void destroyService() {
         if (isServiceRunning())
             context.stopService(new Intent(context, EventService.class));
         items.clear();

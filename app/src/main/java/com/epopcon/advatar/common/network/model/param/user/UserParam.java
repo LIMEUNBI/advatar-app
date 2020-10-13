@@ -1,6 +1,8 @@
-package com.epopcon.advatar.common.network.model.param;
+package com.epopcon.advatar.common.network.model.param.user;
 
-public class UserParam extends CommonParam{
+import com.epopcon.advatar.common.network.model.param.CommonParam;
+
+public class UserParam extends CommonParam {
 
     public String userId;
     public String userPw;
