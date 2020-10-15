@@ -251,8 +251,10 @@ public class ContentsFragment extends BaseFragment {
             holder.contentsLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(brandContentsRepo.contentsUrl));
-                    startActivity(intent);
+                    if (brandContentsRepo.contentsUrl != null) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(brandContentsRepo.contentsUrl));
+                        startActivity(intent);
+                    }
                 }
             });
 

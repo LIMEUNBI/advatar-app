@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.network.RequestListener;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
-import com.epopcon.advatar.controller.activity.BaseActivity;
+import com.epopcon.advatar.controller.activity.common.BaseActivity;
 
 public class FindPwActivity extends BaseActivity {
 

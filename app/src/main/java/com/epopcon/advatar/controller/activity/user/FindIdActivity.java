@@ -14,7 +14,7 @@ import com.epopcon.advatar.common.network.model.repo.user.UserFindIdRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.DialogClickListener;
 import com.epopcon.advatar.common.util.DialogUtil;
-import com.epopcon.advatar.controller.activity.BaseActivity;
+import com.epopcon.advatar.controller.activity.common.BaseActivity;
 
 public class FindIdActivity extends BaseActivity {
 

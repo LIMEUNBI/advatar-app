@@ -23,7 +23,7 @@ import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
-import com.epopcon.advatar.controller.activity.BaseActivity;
+import com.epopcon.advatar.controller.activity.common.BaseActivity;
 import com.epopcon.advatar.controller.activity.common.WebViewActivity;
 
 import java.text.ParseException;

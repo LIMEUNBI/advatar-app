@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import com.epopcon.advatar.R;
-import com.epopcon.advatar.controller.activity.MainActivity;
+import com.epopcon.advatar.controller.activity.common.MainActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public class BaseFragment extends Fragment {

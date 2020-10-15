@@ -28,8 +28,8 @@ import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
 import com.epopcon.advatar.common.network.model.repo.brand.BrandRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
-import com.epopcon.advatar.controller.activity.BaseActivity;
-import com.epopcon.advatar.controller.activity.MainActivity;
+import com.epopcon.advatar.controller.activity.common.BaseActivity;
+import com.epopcon.advatar.controller.activity.common.MainActivity;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
 
 import java.util.ArrayList;

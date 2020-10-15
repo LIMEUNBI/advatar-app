@@ -23,7 +23,7 @@ import com.epopcon.advatar.common.util.DialogUtil;
 import com.epopcon.advatar.common.model.OnlineBizType;
 import com.epopcon.advatar.common.model.OnlineType;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
-import com.epopcon.advatar.controller.activity.BaseActivity;
+import com.epopcon.advatar.controller.activity.common.BaseActivity;
 import com.epopcon.extra.ExtraClassLoader;
 import com.epopcon.extra.online.OnlineConstant;
 import com.epopcon.extra.online.OnlineDeliveryInquiry;

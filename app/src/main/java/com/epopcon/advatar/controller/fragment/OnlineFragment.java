@@ -13,7 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
-import com.epopcon.advatar.controller.activity.MainActivity;
+import com.epopcon.advatar.controller.activity.common.MainActivity;
 import com.epopcon.advatar.controller.fragment.online.CartFragment;
 import com.epopcon.advatar.controller.fragment.online.PaymentFragment;
 import com.epopcon.advatar.custom.customwidget.CustomViewPager;

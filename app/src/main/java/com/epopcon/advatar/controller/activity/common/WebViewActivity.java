@@ -7,7 +7,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.epopcon.advatar.R;
-import com.epopcon.advatar.controller.activity.BaseActivity;
 
 public class WebViewActivity extends BaseActivity {
 

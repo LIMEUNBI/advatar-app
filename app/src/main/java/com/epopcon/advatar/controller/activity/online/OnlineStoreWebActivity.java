@@ -16,7 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
 import com.epopcon.advatar.R;
-import com.epopcon.advatar.controller.activity.BaseActivity;
+import com.epopcon.advatar.controller.activity.common.BaseActivity;
 
 public class OnlineStoreWebActivity extends BaseActivity {
 

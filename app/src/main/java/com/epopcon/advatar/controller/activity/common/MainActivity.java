@@ -1,4 +1,4 @@
-package com.epopcon.advatar.controller.activity;
+package com.epopcon.advatar.controller.activity.common;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,15 +24,12 @@ import androidx.fragment.app.FragmentTransaction;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
-import com.epopcon.advatar.controller.activity.online.OnlineLoginActivity;
 import com.epopcon.advatar.controller.fragment.ContentsFragment;
 import com.epopcon.advatar.controller.fragment.GoodsFragment;
 import com.epopcon.advatar.controller.fragment.MyPageFragment;
 import com.epopcon.advatar.controller.fragment.OnlineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
-
-import org.mozilla.javascript.tools.jsc.Main;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".controller.activity.MainActivity"
+        <activity android:name=".controller.activity.common.MainActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".controller.activity.brand.BrandChoiceActivity"
             android:screenOrientation="portrait" />

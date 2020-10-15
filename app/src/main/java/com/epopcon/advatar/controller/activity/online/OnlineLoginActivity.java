@@ -22,7 +22,7 @@ import com.epopcon.advatar.common.model.OnlineBizType;
 import com.epopcon.advatar.common.model.OnlineType;
 import com.epopcon.advatar.common.util.event.Event;
 import com.epopcon.advatar.common.util.event.EventTrigger;
-import com.epopcon.advatar.controller.activity.BaseActivity;
+import com.epopcon.advatar.controller.activity.common.BaseActivity;
 import com.epopcon.extra.ExtraClassLoader;
 import com.epopcon.extra.common.exception.PException;
 import com.epopcon.extra.common.utils.ExecutorPool;

@@ -14,7 +14,7 @@ public class BrandContentsRepo {
     String contentsTitle;
     public @SerializedName("contentsText")
     String contentsText;
-    public @SerializedName("contentsUtl")
+    public @SerializedName("contentsUrl")
     String contentsUrl;
     public @SerializedName("adYn")
     int adYn;

@@ -14,9 +14,7 @@ import com.epopcon.advatar.common.network.model.repo.common.AppVersionRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.DialogClickListener;
 import com.epopcon.advatar.common.util.DialogUtil;
-import com.epopcon.advatar.controller.activity.BaseActivity;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
-import com.epopcon.advatar.controller.activity.MainActivity;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
 import com.epopcon.advatar.controller.activity.user.LoginActivity;
 

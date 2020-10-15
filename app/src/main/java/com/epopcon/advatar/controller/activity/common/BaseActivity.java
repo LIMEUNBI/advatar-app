@@ -1,4 +1,4 @@
-package com.epopcon.advatar.controller.activity;
+package com.epopcon.advatar.controller.activity.common;
 
 import android.os.Bundle;
 
@@ -8,7 +8,6 @@ import com.epopcon.advatar.R;
 import com.epopcon.advatar.application.AdvatarApplication;
 import com.epopcon.advatar.common.db.MessageDao;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
-import com.epopcon.advatar.controller.activity.common.WebViewActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineLoginActivity;
 import com.epopcon.advatar.controller.activity.user.FindIdActivity;
