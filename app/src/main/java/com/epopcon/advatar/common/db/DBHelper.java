@@ -86,7 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
         public static final String COLUMN_DELIVERY_IF_AMOUNT = "delivery_if_amount";
         public static final String COLUMN_DELIVERY_AMOUNT = "delivery_amount";
         public static final String COLUMN_AVG_DELIVERY_DAYS = "avg_delivery_days";
-        public static final String COLUMN_SELLER_URL = "seller_url";
+        public static final String COLUMN_SELLER_INFO = "seller_info";
         public static final String COLUMN_CART_TYPE = "cart_type";
         public static final String COLUMN_REG_DT = "reg_dt";
 
@@ -148,7 +148,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 DBOnlineStoreCart.COLUMN_DELIVERY_IF_AMOUNT + " INTEGER, " +
                 DBOnlineStoreCart.COLUMN_DELIVERY_AMOUNT + " INTEGER, " +
                 DBOnlineStoreCart.COLUMN_AVG_DELIVERY_DAYS + " DOUBLE, " +
-                DBOnlineStoreCart.COLUMN_SELLER_URL + " TEXT, " +
+                DBOnlineStoreCart.COLUMN_SELLER_INFO + " TEXT, " +
                 DBOnlineStoreCart.COLUMN_CART_TYPE + " TEXT, " +
                 DBOnlineStoreCart.COLUMN_REG_DT + " datetime, " +
                 "UNIQUE (" + DBOnlineStoreCart.COLUMN_STORE_NAME + ", " + DBOnlineStoreCart.COLUMN_DEAL_URL + ") ON CONFLICT REPLACE " +

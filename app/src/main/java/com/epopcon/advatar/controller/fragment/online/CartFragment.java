@@ -32,10 +32,14 @@ import com.epopcon.extra.online.model.CartDetail;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.w3c.dom.Text;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static com.epopcon.advatar.common.model.OnlineBizType.onlineStoreNameMap;
 
 public class CartFragment extends BaseFragment {
 
@@ -292,7 +296,7 @@ public class CartFragment extends BaseFragment {
             }
 
             CartDetail cartDetail = mListItemData.get(position);
-            String storeName = cartDetail.getStoreName();
+            String storeName = onlineStoreNameMap.get(cartDetail.getStoreName());
 
             holder.storeName.setText(storeName);
 
@@ -363,6 +367,9 @@ public class CartFragment extends BaseFragment {
             }
             holder.cartType.setText(cartType);
             holder.title.setText(cartDetail.getTitle());
+            if (TextUtils.isEmpty(cartDetail.getOptions())) {
+                holder.options.setVisibility(View.GONE);
+            }
             holder.options.setText(cartDetail.getOptions());
             // price
             NumberFormat n = NumberFormat.getNumberInstance(Locale.KOREAN);
@@ -378,10 +385,13 @@ public class CartFragment extends BaseFragment {
                 } else if (cartDetail.getDeliveryPolicy().equals("FREE")) {
                     delivery = "무료배송";
                 } else {
-                    delivery = "유료 배송";
+                    delivery = "유료배송";
                 }
             }
             holder.deliveryPolicy.setText(delivery);
+            if (cartDetail.getAvgDeliveryDays() == 0) {
+                holder.avgDelivery.setVisibility(View.GONE);
+            }
             holder.avgDelivery.setText("평균 배송일 : " + cartDetail.getAvgDeliveryDays());
 
             if ((position + 1) < items.size()) {

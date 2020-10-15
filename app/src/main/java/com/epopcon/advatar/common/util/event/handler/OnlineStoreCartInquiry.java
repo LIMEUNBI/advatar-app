@@ -69,8 +69,10 @@ public class OnlineStoreCartInquiry extends OnlineDeliveryInquiryHandler {
         Log.d(TAG, "onQueryCartDetails -> " + success + ", message : " + exception);
 
         if (success) {
-            for (CartDetail cartDetail : list)
-                MessageDao.getInstance().insertOnlineCart(storeName, cartDetail);
+            if (list != null) {
+                for (CartDetail cartDetail : list)
+                    MessageDao.getInstance().insertOnlineCart(storeName, cartDetail);
+            }
             deferred.onSuccess(constant, OnlineConstant.ACTION_QUERY_CART_DETAILS, list);
         } else {
             deferred.onFailure(exception, constant, OnlineConstant.ACTION_QUERY_CART_DETAILS);

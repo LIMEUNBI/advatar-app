@@ -925,7 +925,7 @@ public class RestAdvatarProtocol {
      * @param deliveryIfAmount 무료배송 조건 금액
      * @param deliveryAmount 배송비
      * @param avgDeliveryDays 평균 배송일
-     * @param sellerUrl 판매자 url
+     * @param sellerInfo 판매자 정보
      * @param cartType 장바구니 타입 (Cart : 장바구니, Recent : 최근 본 상품)
      * @param requestListener
      * @throws Exception
@@ -933,7 +933,7 @@ public class RestAdvatarProtocol {
     public void onlineStoreCartList(String userId, String storeName, String title, String dealUrl, int optionPrice, String promoTitle, String options,
                                     String imgUrl, int selectCount, int discount, int totalAmount, String expectedDeliveryEndDate,
                                     String deliveryPolicy, int deliveryIfAmount, int deliveryAmount, double avgDeliveryDays,
-                                    String sellerUrl, String cartType, final RequestListener requestListener) throws Exception {
+                                    String sellerInfo, String cartType, final RequestListener requestListener) throws Exception {
 
         final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
         if (TextUtils.isEmpty(licenseKey)) {
@@ -961,7 +961,7 @@ public class RestAdvatarProtocol {
             onlineStoreCartParam.deliveryIfAmount = deliveryIfAmount;
             onlineStoreCartParam.deliveryAmount = deliveryAmount;
             onlineStoreCartParam.avgDeliveryDays = avgDeliveryDays;
-            onlineStoreCartParam.sellerUrl = sellerUrl;
+            onlineStoreCartParam.sellerInfo = sellerInfo;
             onlineStoreCartParam.cartType = cartType;
 
             Callback<ResultRepo> callback = new Callback<ResultRepo>() {

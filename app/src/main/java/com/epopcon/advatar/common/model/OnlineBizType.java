@@ -42,6 +42,22 @@ public class OnlineBizType {
         onlineStoreMap.put("WEMAP", 116);
     }
 
+    public static Map<String, String> onlineStoreNameMap = new HashMap<>();
+    static {
+        onlineStoreNameMap.put("GMARKET", "G마켓");
+        onlineStoreNameMap.put("AUCTION", "옥션");
+        onlineStoreNameMap.put("_11ST", "11번가");
+        onlineStoreNameMap.put("NAVER", "네이버쇼핑");
+        onlineStoreNameMap.put("INTERPARK", "인터파크");
+        onlineStoreNameMap.put("LOTTE_COM", "롯데 ON");
+        onlineStoreNameMap.put("SSG", "SSG");
+        onlineStoreNameMap.put("G9", "G9");
+        onlineStoreNameMap.put("AK_MALL", "AK몰");
+        onlineStoreNameMap.put("COUPANG", "쿠팡");
+        onlineStoreNameMap.put("TMON", "티몬");
+        onlineStoreNameMap.put("WEMAP", "위메프");
+    }
+
     private void loadData() {
         String[] array;
 

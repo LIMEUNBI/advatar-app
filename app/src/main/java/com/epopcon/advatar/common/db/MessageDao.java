@@ -422,7 +422,7 @@ public class MessageDao extends Observable {
                 "FROM " +
                 "online_store_cart " +
                 "GROUP BY store_name, deal_url " +
-                "ORDER BY cart_type ASC";
+                "ORDER BY store_name, cart_type ASC";
 
         Cursor cursor = database.rawQuery(query, null);
 
@@ -446,7 +446,7 @@ public class MessageDao extends Observable {
                 int deliveryIfAmount = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_DELIVERY_IF_AMOUNT));
                 int deliveryAmount = cursor.getInt(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_DELIVERY_AMOUNT));
                 double avgDeliveryDays = cursor.getDouble(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_AVG_DELIVERY_DAYS));
-                String sellerUrl = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_SELLER_URL));
+                String sellerInfo = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_SELLER_INFO));
                 String cartType = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_CART_TYPE));
 
                 cartDetail.setStoreName(storeName);
@@ -464,7 +464,7 @@ public class MessageDao extends Observable {
                 cartDetail.setDeliveryIfAmount(deliveryIfAmount);
                 cartDetail.setDeliveryAmount(deliveryAmount);
                 cartDetail.setAvgDeliveryDays(avgDeliveryDays);
-                cartDetail.setSellerUrl(sellerUrl);
+                cartDetail.setSellerInfo(sellerInfo);
                 cartDetail.setCartType(cartType);
 
                 cartDetails.add(cartDetail);
@@ -516,7 +516,7 @@ public class MessageDao extends Observable {
             RestAdvatarProtocol.getInstance().onlineStoreCartList(userId, storeName, cartDetail.getTitle(), cartDetail.getDealUrl(), cartDetail.getOptionPrice(), cartDetail.getPromoTitle(),
                     cartDetail.getOptions(), cartDetail.getImgUrl(), cartDetail.getSelectCount(), cartDetail.getDiscount(), cartDetail.getTotalAmount(),
                     cartDetail.getExpectedDeliveryEndDate(), cartDetail.getDeliveryPolicy(), cartDetail.getDeliveryIfAmount(), cartDetail.getDeliveryAmount(),
-                    cartDetail.getAvgDeliveryDays(), cartDetail.getSellerUrl(), cartDetail.getCartType(), new RequestListener() {
+                    cartDetail.getAvgDeliveryDays(), cartDetail.getSellerInfo(), cartDetail.getCartType(), new RequestListener() {
                         @Override
                         public void onRequestSuccess(int requestCode, Object result) {
 
@@ -547,7 +547,7 @@ public class MessageDao extends Observable {
         values.put(DBHelper.DBOnlineStoreCart.COLUMN_DELIVERY_IF_AMOUNT, cartDetail.getDeliveryIfAmount());
         values.put(DBHelper.DBOnlineStoreCart.COLUMN_DELIVERY_AMOUNT, cartDetail.getDeliveryAmount());
         values.put(DBHelper.DBOnlineStoreCart.COLUMN_AVG_DELIVERY_DAYS, cartDetail.getAvgDeliveryDays());
-        values.put(DBHelper.DBOnlineStoreCart.COLUMN_SELLER_URL, cartDetail.getSellerUrl());
+        values.put(DBHelper.DBOnlineStoreCart.COLUMN_SELLER_INFO, cartDetail.getSellerInfo());
         values.put(DBHelper.DBOnlineStoreCart.COLUMN_CART_TYPE, cartDetail.getCartType());
 
         if (insert) {
@@ -569,8 +569,10 @@ public class MessageDao extends Observable {
 
         String where = DBHelper.DBOnlineStore.COLUMN_STORE_NAME + " = '" + storeName + "'";
         String productWhere = DBHelper.DBOnlineStoreProduct.COLUMN_STORE_NAME + " = '" + storeName + "'";
+        String cartWhere = DBHelper.DBOnlineStoreCart.COLUMN_STORE_NAME + " = '" + storeName + "'";
         database.delete(DBHelper.DBOnlineStoreProduct.TABLE_ONLINE_STORE_PRODUCT, productWhere, null);
         database.delete(DBHelper.DBOnlineStore.TABLE_ONLINE_STORE, where, null);
+        database.delete(DBHelper.DBOnlineStoreCart.TABLE_ONLINE_STORE_CART, cartWhere, null);
         setChanged();
         notifyObservers(null);
     }

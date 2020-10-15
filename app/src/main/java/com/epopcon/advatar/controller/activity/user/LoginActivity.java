@@ -120,6 +120,16 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
+        String userId = SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, "");
+        String userPw = SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_PW, "");
+
+        if (!TextUtils.isEmpty(userId)) {
+            mEditId.setText(userId);
+            if (!TextUtils.isEmpty(userPw)) {
+                mEditPw.setText(userPw);
+            }
+        }
+
         // Naver API 초기화
         mOAuthLoginInstance = OAuthLogin.getInstance();
 

@@ -20,6 +20,6 @@ public class OnlineStoreCartParam extends CommonParam {
     public int deliveryIfAmount;
     public int deliveryAmount;
     public double avgDeliveryDays;
-    public String sellerUrl;
+    public String sellerInfo;
     public String cartType;
 }

@@ -35,6 +35,8 @@
     <string name="settings_online_store_login_valid">아이디와 비밀번호를 입력해 주시기 바랍니다.</string>
     <string name="settings_online_store_login_on_success">로그인에 성공하였습니다.</string>
     <string name="settings_online_store_login_on_fail">로그인에 실패하였습니다.</string>
+    <string name="settings_online_store_login_off_success">로그아웃에 성공하였습니다.</string>
+    <string name="settings_online_store_login_off_fail">로그아웃에 실패하였습니다.</string>
     <string name="dialog_online_login_register_device_title">디바이스 등록 필요</string>
     <string name="dialog_online_login_register_device_content">새로운 디바이스로 로그인 하였습니다.\n디바이스를 등록 하시겠습니까?</string>
     <string name="error_result_save">저장에 실패하였습니다.</string>
