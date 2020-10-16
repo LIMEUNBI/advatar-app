@@ -39,6 +39,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".controller.activity.user.UpdatePwActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".controller.activity.user.UserModifyActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".controller.activity.online.OnlineListActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".controller.activity.online.OnlineLoginActivity"

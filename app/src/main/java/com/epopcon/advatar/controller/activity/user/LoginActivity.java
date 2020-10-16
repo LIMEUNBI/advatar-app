@@ -21,9 +21,11 @@ import androidx.annotation.RequiresApi;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
+import com.epopcon.advatar.common.network.model.repo.user.UserLoginRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.DialogClickListener;
 import com.epopcon.advatar.common.util.DialogUtil;
+import com.epopcon.advatar.common.util.MyBrandUtil;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
 import com.epopcon.advatar.controller.activity.common.BaseActivity;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
@@ -34,6 +36,8 @@ import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
 import org.json.JSONObject;
+
+import java.util.Map;
 
 public class LoginActivity extends BaseActivity {
 
@@ -160,12 +164,21 @@ public class LoginActivity extends BaseActivity {
     private void getLogin() {
         try {
             String fcmToken = SharedPreferenceBase.getPrefString(getApplicationContext(), Config.FCM_TOKEN, "");
-            RestAdvatarProtocol.getInstance().userLogin(mEditId.getText().toString(), mEditPw.getText().toString(), fcmToken, new RequestListener() {
+            RestAdvatarProtocol.getInstance().userLogin(mEditId.getText().toString(), mEditPw.getText().toString(), fcmToken, Build.MODEL, new RequestListener() {
                 @Override
                 public void onRequestSuccess(int requestCode, Object result) {
-                    if (result.toString().equals("SUCCESS")) {
+                    UserLoginRepo userLoginRepo = (UserLoginRepo) result;
+                    if (userLoginRepo.result.equals("SUCCESS")) {
                         SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_ID, mEditId.getText().toString());
                         SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_PW, mEditPw.getText().toString());
+                        SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_NAME, userLoginRepo.userName);
+                        SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_BIRTH, userLoginRepo.userBirth);
+                        SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_PHONE, userLoginRepo.userPhone);
+                        SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_GENDER, userLoginRepo.userGender);
+                        SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_ADDRESS, userLoginRepo.userAddress);
+                        SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_EMAIL, userLoginRepo.userEmail);
+                        MyBrandUtil.putBrandCodeList(userLoginRepo.userBrandCodes);
+                        MyBrandUtil.putBrandNameList(userLoginRepo.userBrandNames);
 
                         Intent intent;
                         if (TextUtils.isEmpty(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.MY_BRAND_NAME, ""))) {
@@ -176,9 +189,9 @@ public class LoginActivity extends BaseActivity {
                         }
                         startActivity(intent);
                         finish();
-                    } else if (result.toString().equals("NO_USER")) {
+                    } else if (userLoginRepo.result.equals("NO_USER")) {
                         Toast.makeText(getApplicationContext(), "등록되지 않은 아이디입니다. 다시 확인해주세요.", Toast.LENGTH_LONG).show();
-                    } else if (result.toString().equals("PASSWORD_ERROR")) {
+                    } else if (userLoginRepo.result.equals("PASSWORD_ERROR")) {
                         Toast.makeText(getApplicationContext(), "잘못된 비밀번호입니다. 비밀번호를 다시 확인해주세요.", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -229,10 +242,21 @@ public class LoginActivity extends BaseActivity {
 
                             // SNS 로그인
                             RestAdvatarProtocol.getInstance().userSNSLogin(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, ""),
-                                    email, name, SharedPreferenceBase.getPrefString(getApplicationContext(), Config.FCM_TOKEN, ""), new RequestListener() {
+                                    email, name, SharedPreferenceBase.getPrefString(getApplicationContext(), Config.FCM_TOKEN, ""), Build.MODEL, new RequestListener() {
                                         @Override
                                         public void onRequestSuccess(int requestCode, Object result) {
-                                            if (result.toString().equals("SUCCESS")) {
+                                            UserLoginRepo userLoginRepo = (UserLoginRepo) result;
+                                            if (userLoginRepo.result.equals("SUCCESS")) {
+                                                SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_ID, mEditId.getText().toString());
+                                                SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_PW, mEditPw.getText().toString());
+                                                SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_NAME, userLoginRepo.userName);
+                                                SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_BIRTH, userLoginRepo.userBirth);
+                                                SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_PHONE, userLoginRepo.userPhone);
+                                                SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_GENDER, userLoginRepo.userGender);
+                                                SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_ADDRESS, userLoginRepo.userAddress);
+                                                SharedPreferenceBase.putPrefString(getApplicationContext(), Config.USER_EMAIL, userLoginRepo.userEmail);
+                                                MyBrandUtil.putBrandCodeList(userLoginRepo.userBrandCodes);
+                                                MyBrandUtil.putBrandNameList(userLoginRepo.userBrandNames);
 
                                                 Intent intent;
                                                 if (TextUtils.isEmpty(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.MY_BRAND_NAME, ""))) {

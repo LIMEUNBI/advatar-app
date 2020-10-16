@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.application.AdvatarApplication;
 import com.epopcon.advatar.common.db.MessageDao;
+import com.epopcon.advatar.common.network.model.repo.brand.BrandRepo;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineLoginActivity;
@@ -16,6 +17,8 @@ import com.epopcon.advatar.controller.activity.user.JoinActivity;
 import com.epopcon.advatar.controller.activity.user.LoginActivity;
 import com.epopcon.advatar.controller.activity.user.UpdatePwActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
+import java.util.ArrayList;
 
 public class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
@@ -28,6 +31,8 @@ public class BaseActivity extends AppCompatActivity {
 
     protected AdvatarApplication mApplication;
     protected DisplayImageOptions mImageLoaderOptions;
+
+    public ArrayList<BrandRepo> mBrandList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +50,6 @@ public class BaseActivity extends AppCompatActivity {
 
         setActivityAnimationType();
         startActivityAnimation();
-
     }
 
     public void startActivityAnimation() {

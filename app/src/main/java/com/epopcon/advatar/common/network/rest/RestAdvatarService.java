@@ -18,6 +18,7 @@ import com.epopcon.advatar.common.network.model.repo.common.ExtraVersionRepo;
 import com.epopcon.advatar.common.network.model.repo.common.OnlineStoreStatusRepo;
 import com.epopcon.advatar.common.network.model.repo.ResultRepo;
 import com.epopcon.advatar.common.network.model.repo.user.UserFindIdRepo;
+import com.epopcon.advatar.common.network.model.repo.user.UserLoginRepo;
 
 import java.util.List;
 
@@ -57,10 +58,13 @@ public class RestAdvatarService extends BaseService {
         Call<ResultRepo> userJoin(@Body UserParam userParam);
 
         @POST("user/userLogin")
-        Call<ResultRepo> userLogin(@Body UserParam userParam);
+        Call<UserLoginRepo> userLogin(@Body UserParam userParam);
 
         @POST("user/userSNSLogin")
         Call<ResultRepo> userSNSLogin(@Body UserParam userParam);
+
+        @POST("user/userInfoModify")
+        Call<ResultRepo> userInfoModify(@Body UserParam userParam);
 
         @POST("user/userFindId")
         Call<UserFindIdRepo> userFindId(@Body UserParam userParam);

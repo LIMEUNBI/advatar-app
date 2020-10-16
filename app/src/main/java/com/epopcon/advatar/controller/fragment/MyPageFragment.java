@@ -14,6 +14,7 @@ import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
 import com.epopcon.advatar.controller.activity.user.LoginActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
+import com.epopcon.advatar.controller.activity.user.UserModifyActivity;
 import com.epopcon.extra.ExtraClassLoader;
 
 public class MyPageFragment extends BaseFragment {
@@ -30,7 +31,8 @@ public class MyPageFragment extends BaseFragment {
     private View mView = null;
 
     private TextView mTxtUserId;
-    private Button mBtnLogout;
+    private TextView mTxtLogout;
+    private TextView mTxtModify;
 
     private Button mBtnOnline;
 
@@ -52,10 +54,11 @@ public class MyPageFragment extends BaseFragment {
 
         mView = inflater.inflate(R.layout.fragment_mypage, container, false);
 
-        mTxtUserId = mView.findViewById(R.id.txt_user_id);
-        mBtnLogout = mView.findViewById(R.id.btn_logout);
-        mBtnOnline = mView.findViewById(R.id.btn_online);
-        mTxtVersion = mView.findViewById(R.id.txt_version_code);
+        mTxtUserId = (TextView) mView.findViewById(R.id.txt_user_id);
+        mTxtLogout = (TextView) mView.findViewById(R.id.txt_logout);
+        mTxtModify = (TextView) mView.findViewById(R.id.txt_modify);
+        mBtnOnline = (Button) mView.findViewById(R.id.btn_online);
+        mTxtVersion = (TextView) mView.findViewById(R.id.txt_version_code);
 
         mTxtUserId.setText(SharedPreferenceBase.getPrefString(getContext(), Config.USER_ID, null));
 
@@ -64,7 +67,7 @@ public class MyPageFragment extends BaseFragment {
 
         mTxtVersion.setText(version + "_" + extraVersion);
 
-        mBtnLogout.setOnClickListener(new View.OnClickListener() {
+        mTxtLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferenceBase.putPrefString(getContext(), Config.USER_ID, null);
@@ -73,6 +76,14 @@ public class MyPageFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();
+            }
+        });
+
+        mTxtModify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), UserModifyActivity.class);
+                startActivity(intent);
             }
         });
 

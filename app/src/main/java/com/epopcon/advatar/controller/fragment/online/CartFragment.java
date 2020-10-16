@@ -83,7 +83,7 @@ public class CartFragment extends BaseFragment {
         mListView.setOnItemClickListener(mListClickListener);
         mListView.addHeaderView(mListHeaderView, null, false);
 
-        rotateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.card_view_sync_rotate);
+        rotateAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.card_view_sync_rotate);
         mSyncImg = (ImageView) mListHeaderView.findViewById(R.id.sync_image);
         mSyncImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,8 +102,6 @@ public class CartFragment extends BaseFragment {
 
         mTxtCartCount = (TextView) mListHeaderView.findViewById(R.id.cart_count);
         mTxtRecentCount = (TextView) mListHeaderView.findViewById(R.id.recent_count);
-
-        setHeaderDate();
 
         mListAdapter = new ListAdapter(mStoreList, mListItemData);
 
@@ -126,7 +124,7 @@ public class CartFragment extends BaseFragment {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(activity, String.format(getContext().getResources().getString(R.string.online_cart_sync_start), NAME), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, String.format(getActivity().getApplicationContext().getResources().getString(R.string.online_cart_sync_start), NAME), Toast.LENGTH_SHORT).show();
                                 }
                             });
                             break;
@@ -145,7 +143,7 @@ public class CartFragment extends BaseFragment {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(activity, String.format(getContext().getResources().getString(R.string.online_cart_sync_end)), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, String.format(getActivity().getApplicationContext().getResources().getString(R.string.online_cart_sync_end)), Toast.LENGTH_SHORT).show();
                                 }
                             });
                             break;
@@ -173,6 +171,7 @@ public class CartFragment extends BaseFragment {
 
     public void refresh() {
 
+        setHeaderDate();
         if (mListAdapter == null) return;
 
         mStoreList.clear();
@@ -224,7 +223,7 @@ public class CartFragment extends BaseFragment {
         ListAdapter(List<String> sections, List<CartDetail> items) {
             this.sections = sections;
             this.items = items;
-            this.inflater = LayoutInflater.from(getContext());
+            this.inflater = LayoutInflater.from(getActivity().getApplicationContext());
         }
 
         @Override

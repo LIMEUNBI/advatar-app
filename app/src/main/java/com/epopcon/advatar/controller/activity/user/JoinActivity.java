@@ -211,9 +211,9 @@ public class JoinActivity extends BaseActivity {
             String fcmToken = SharedPreferenceBase.getPrefString(getApplicationContext(), Config.FCM_TOKEN, "");
             final String name = mEditName.getText().toString();
             final String birth = mEditBirthYear.getText().toString() + "-" + mEditBirthMonth.getText().toString() + "-" + mEditBirthDay.getText().toString();
-            final String phone = mEditPhone1.getText().toString() + mEditPhone2.getText().toString() + mEditPhone3.getText().toString();
+            final String phone = mEditPhone1.getText().toString() + "-" + mEditPhone2.getText().toString() + "-" + mEditPhone3.getText().toString();
             final String email = mEditEmail1.getText().toString()+ "@" + mEditEmail2.getText().toString();
-            final String address = mTxtAddress.getText().toString() + " " + mEditAddress.getText().toString();
+            final String address = mTxtAddress.getText().toString() + "/ " + mEditAddress.getText().toString();
 
             if (pw.length() < 8 || pw2.length() < 8) {
                 Toast.makeText(getApplicationContext(), "비밀번호는 8자 이상 입력해주세요.", Toast.LENGTH_SHORT).show();

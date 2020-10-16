@@ -35,7 +35,6 @@ import com.epopcon.advatar.common.util.SharedPreferenceBase;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import static com.epopcon.advatar.common.util.MyBrandUtil.getBrandCodeList;
 import static com.epopcon.advatar.common.util.MyBrandUtil.getBrandNameList;
@@ -72,15 +71,16 @@ public class BrandChoiceActivity extends BaseActivity {
 
         intent = getIntent();
 
-        mBrandList = new ArrayList<>();
+        mBrandList = intent.getParcelableArrayListExtra("brandList");
         mBrandListCopy = new ArrayList<>();
 
         mImgLoading = (ImageView) findViewById(R.id.img_loading);
         mGridView = (GridView) findViewById(R.id.card_grid_view);
+        mGridView.setVisibility(View.VISIBLE);
+        mImgLoading.setVisibility(View.GONE);
         mBtnChoice = (Button) findViewById(R.id.btn_end);
 
         Glide.with(this).asGif().load(R.raw.loading).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(mImgLoading);
-        mGridView.setVisibility(View.GONE);
 
         mChoiceBrand = (TextView) findViewById(R.id.choice_brand);
         mChoiceBrand.setText(getBrandNameList());
@@ -121,9 +121,11 @@ public class BrandChoiceActivity extends BaseActivity {
                 } else {
 
                     try {
-                        RestAdvatarProtocol.getInstance().userFavoriteBrands(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, ""), getBrandCodeList(), new RequestListener() {
+                        RestAdvatarProtocol.getInstance().userFavoriteBrands(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, ""),
+                                getBrandCodeList(), getBrandNameList(), new RequestListener() {
                             @Override
                             public void onRequestSuccess(int requestCode, Object result) {
+                                finish();
                             }
 
                             @Override
@@ -139,13 +141,13 @@ public class BrandChoiceActivity extends BaseActivity {
                         Intent mainIntent = new Intent(BrandChoiceActivity.this, MainActivity.class);
                         startActivity(mainIntent);
                     }
-                    finish();
                 }
             }
         });
 
         mAdapter = new GridAdapter(getApplicationContext(), R.layout.item_brand_list, mBrandList);
         mGridView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
     private void search(String searchKeyword) {
@@ -170,40 +172,6 @@ public class BrandChoiceActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        refresh();
-    }
-
-    private void refresh() {
-
-        if (mBrandList == null || mBrandList.isEmpty()) {
-            try {
-                RestAdvatarProtocol.getInstance().getBrandList(30, new RequestListener() {
-                    @Override
-                    public void onRequestSuccess(int requestCode, Object result) {
-                        mImgLoading.setVisibility(View.GONE);
-                        mGridView.setVisibility(View.VISIBLE);
-                        mBrandList.addAll((List<BrandRepo>) result);
-
-                        for (int i = 0; i < mBrandList.size(); i++) {
-                            if (getBrandCodeList().contains(mBrandList.get(i).brandCode)) {
-                                mBrandList.get(i).setMyBrandYn(true);
-                            } else {
-                                mBrandList.get(i).setMyBrandYn(false);
-                            }
-                        }
-
-                        Collections.sort(mBrandList, brandComparator);
-                        mAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onRequestFailure(Throwable t) {
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private final static Comparator<BrandRepo> brandComparator = new Comparator<BrandRepo>() {

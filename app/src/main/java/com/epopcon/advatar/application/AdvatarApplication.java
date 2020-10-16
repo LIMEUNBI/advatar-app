@@ -46,5 +46,6 @@ public class AdvatarApplication extends Application {
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .build();
         ImageLoader.getInstance().init(imageLoaderConfig);
+
     }
 }

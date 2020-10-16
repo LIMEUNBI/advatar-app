@@ -16,7 +16,8 @@ public class UserParam extends CommonParam {
     public String userPhone;
     public String userAddress;
     public String userEmail;
-    public String userBrands;
+    public String userBrandCodes;
+    public String userBrandNames;
     public String appVersionName;
     public int appVersionCode;
 

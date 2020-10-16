@@ -111,6 +111,10 @@ public class GoodsFragment extends BaseFragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else {
+            mListAdapter.notifyDataSetChanged();
+            mListView.setVisibility(View.VISIBLE);
+            mImgLoading.setVisibility(View.GONE);
         }
     }
 

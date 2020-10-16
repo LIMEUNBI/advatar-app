@@ -22,6 +22,7 @@ import com.epopcon.advatar.common.network.model.repo.common.ExtraVersionRepo;
 import com.epopcon.advatar.common.network.model.repo.common.OnlineStoreStatusRepo;
 import com.epopcon.advatar.common.network.model.repo.ResultRepo;
 import com.epopcon.advatar.common.network.model.repo.user.UserFindIdRepo;
+import com.epopcon.advatar.common.network.model.repo.user.UserLoginRepo;
 import com.epopcon.advatar.common.util.EncrypterUtil;
 
 import java.util.List;
@@ -39,18 +40,19 @@ public class RestAdvatarProtocol {
     private String host;
     private int timeout;
 
-    public static final int PROTOCOL_GET_APP_VERSION = 0x100;
-    public static final int PROTOCOL_GET_EXTRA_VERSION = 0x101;
+    public static final int PROTOCOL_GET_APP_VERSION = 0x000;
+    public static final int PROTOCOL_GET_EXTRA_VERSION = 0x001;
 
-    public static final int PROTOCOL_USER_DUPLICATE_CHECK = 0x102;
-    public static final int PROTOCOL_USER_JOIN = 0x103;
-    public static final int PROTOCOL_USER_LOGIN = 0x104;
+    public static final int PROTOCOL_USER_DUPLICATE_CHECK = 0x100;
+    public static final int PROTOCOL_USER_JOIN = 0x101;
+    public static final int PROTOCOL_USER_LOGIN = 0x102;
+    public static final int PROTOCOL_USER_SNS_LOGIN = 0x103;
+    public static final int PROTOCOL_USER_INFO_MODIFY = 0x104;
 
-    public static final int PROTOCOL_USER_SNS_LOGIN = 0x105;
-    public static final int PROTOCOL_USER_FIND_ID = 0x106;
-    public static final int PROTOCOL_USER_FIND_PW = 0x107;
-    public static final int PROTOCOL_USER_PW_UPDATE = 0x108;
-    public static final int PROTOCOL_USER_FAVORITE_BRANDS = 0x109;
+    public static final int PROTOCOL_USER_FIND_ID = 0x105;
+    public static final int PROTOCOL_USER_FIND_PW = 0x106;
+    public static final int PROTOCOL_USER_PW_UPDATE = 0x107;
+    public static final int PROTOCOL_USER_FAVORITE_BRANDS = 0x108;
 
     public static final int PROTOCOL_GET_BRAND_LIST = 0x201;
     public static final int PROTOCOL_GET_BRAND_GOODS_LIST = 0x202;
@@ -298,7 +300,8 @@ public class RestAdvatarProtocol {
             userParam.userPhone = userPhone;
             userParam.userAddress = userAddress;
             userParam.userEmail = userEmail;
-            userParam.userBrands = "";
+            userParam.userBrandCodes = "";
+            userParam.userBrandNames = "";
 
             Callback<ResultRepo> callback = new Callback<ResultRepo>() {
                 @Override
@@ -332,10 +335,11 @@ public class RestAdvatarProtocol {
      * @param userId 사용자 아이디
      * @param userPw 사용자 패스워드
      * @param fcmToken FCM 토큰값 (업데이트를 위해 로그인할 때 마다 전송)
+     * @param deviceInfo 단말 정보
      * @param requestListener
      * @throws Exception
      */
-    public void userLogin(String userId, String userPw, String fcmToken, final RequestListener requestListener) throws Exception {
+    public void userLogin(String userId, String userPw, String fcmToken, String deviceInfo, final RequestListener requestListener) throws Exception {
         final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
         if (TextUtils.isEmpty(licenseKey)) {
             return;
@@ -348,25 +352,26 @@ public class RestAdvatarProtocol {
             userParam.userId = userId;
             userParam.userPw = userPw;
             userParam.fcmToken = fcmToken;
+            userParam.deviceInfo = deviceInfo;
 
-            Callback<ResultRepo> callback = new Callback<ResultRepo>() {
+            Callback<UserLoginRepo> callback = new Callback<UserLoginRepo>() {
                 @Override
-                public void onResponse(Call<ResultRepo> call, Response<ResultRepo> response) {
+                public void onResponse(Call<UserLoginRepo> call, Response<UserLoginRepo> response) {
                     if (response != null && response.isSuccessful() && response.body() != null) {
                         if (response.code() != 200) {
                             requestListener.onRequestFailure(new Throwable(response.message()));
                             return;
                         }
 
-                        ResultRepo result = response.body();
-                        requestListener.onRequestSuccess(PROTOCOL_USER_LOGIN, result.result);
+                        UserLoginRepo result = response.body();
+                        requestListener.onRequestSuccess(PROTOCOL_USER_LOGIN, result);
                     } else {
                         requestListener.onRequestFailure(new Throwable());
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResultRepo> call, Throwable t) {
+                public void onFailure(Call<UserLoginRepo> call, Throwable t) {
                     requestListener.onRequestFailure(t);
                 }
             };
@@ -383,10 +388,11 @@ public class RestAdvatarProtocol {
      * @param userEmail 사용자 이메일
      * @param userName 사용자 이름
      * @param fcmToken FCM 토큰값 (업데이트를 위해 로그인할 때 마다 전송)
+     * @param deviceInfo 단말 정보
      * @param requestListener
      * @throws Exception
      */
-    public void userSNSLogin(String userId, String userEmail, String userName, String fcmToken, final RequestListener requestListener) throws Exception {
+    public void userSNSLogin(String userId, String userEmail, String userName, String fcmToken, String deviceInfo, final RequestListener requestListener) throws Exception {
         final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
         if (TextUtils.isEmpty(licenseKey)) {
             return;
@@ -400,6 +406,7 @@ public class RestAdvatarProtocol {
             userParam.userEmail = userEmail;
             userParam.userName = userName;
             userParam.fcmToken = fcmToken;
+            userParam.deviceInfo = deviceInfo;
 
             Callback<ResultRepo> callback = new Callback<ResultRepo>() {
                 @Override
@@ -427,6 +434,52 @@ public class RestAdvatarProtocol {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void userInfoModify(String userId, String userPw, String userBirth, String userPhone,
+                               String userAddress, String userEmail, final RequestListener requestListener) throws Exception {
+        final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
+        if (TextUtils.isEmpty(licenseKey)) {
+            return;
+        }
+
+        try {
+            final UserParam userParam = new UserParam();
+            userParam.affiliateCode = CommonLibrary.getAffiliateCode();
+            userParam.licenseKey = licenseKey;
+            userParam.userId = userId;
+            userParam.userPw = userPw;
+            userParam.userBirth = userBirth;
+            userParam.userPhone = userPhone;
+            userParam.userAddress = userAddress;
+            userParam.userEmail = userEmail;
+
+            Callback<ResultRepo> callback = new Callback<ResultRepo>() {
+                @Override
+                public void onResponse(Call<ResultRepo> call, Response<ResultRepo> response) {
+                    if (response != null && response.isSuccessful() && response.body() != null) {
+                        if (response.code() != 200) {
+                            requestListener.onRequestFailure(new Throwable(response.message()));
+                            return;
+                        }
+
+                        ResultRepo result = response.body();
+                        requestListener.onRequestSuccess(PROTOCOL_USER_INFO_MODIFY, result.result);
+                    } else {
+                        requestListener.onRequestFailure(new Throwable());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultRepo> call, Throwable t) {
+                    requestListener.onRequestFailure(t);
+                }
+            };
+            RestAdvatarService.api(host, timeout).userInfoModify(userParam).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -578,11 +631,12 @@ public class RestAdvatarProtocol {
     /**
      * 사용자가 선호하는 브랜드를 서버에 저장한다.
      * @param userId 사용자 아이디
-     * @param userBrands 선호 브랜드 리스트
+     * @param userBrandCodes 선호 브랜드 코드
+     * @param userBrandNames 선호 브랜드 이름
      * @param requestListener
      * @throws Exception
      */
-    public void userFavoriteBrands(String userId, String userBrands, final RequestListener requestListener) throws Exception {
+    public void userFavoriteBrands(String userId, String userBrandCodes, String userBrandNames, final RequestListener requestListener) throws Exception {
         final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
         if (TextUtils.isEmpty(licenseKey)) {
             return;
@@ -593,7 +647,8 @@ public class RestAdvatarProtocol {
             userParam.affiliateCode = CommonLibrary.getAffiliateCode();
             userParam.licenseKey = licenseKey;
             userParam.userId = userId;
-            userParam.userBrands = userBrands;
+            userParam.userBrandCodes = userBrandCodes;
+            userParam.userBrandNames = userBrandNames;
 
             Callback<ResultRepo> callBack = new Callback<ResultRepo>() {
                 @Override

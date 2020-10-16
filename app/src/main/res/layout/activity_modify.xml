@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".controller.activity.common.MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:background="@color/white"
+        android:theme="@style/Base.Theme.AppCompat.Light"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:contentScrim="@color/white"
+            app:elevation="0dp"
+            app:layout_scrollFlags="enterAlwaysCollapsed">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_centerInParent="true"
+                android:background="@color/main_color"
+                app:contentInsetStart="0dp"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="1dp">
+
+                        <TextView
+                            android:id="@+id/toolbar_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="회원정보 수정"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="16dp" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <RelativeLayout
+                android:id="@+id/line_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/toolbar"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="56dp">
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/line_f2f2f2"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appBarLayout"
+        android:background="@color/line_f2f2f2">
+
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="16dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/edittext_rounded_corner">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" >
+
+                        <TextView
+                            android:id="@+id/txt_id"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:gravity="center"
+                            android:text="아이디" />
+
+                        <TextView
+                            android:id="@+id/txt_user_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:text="사용자 아이디"
+                            android:layout_toRightOf="@+id/txt_id"
+                            android:layout_marginLeft="16dp"
+                            android:gravity="center"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" >
+
+                        <TextView
+                            android:id="@+id/txt_pw"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:gravity="center"
+                            android:text="비밀번호" />
+
+                        <EditText
+                            android:id="@+id/edit_pw1"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_toRightOf="@+id/txt_pw"
+                            android:layout_marginLeft="16dp"
+                            android:inputType="textPassword"
+                            android:singleLine = "true"
+                            android:lines = "1"
+                            android:nextFocusDown="@id/edit_pw2"
+                            android:hint="비밀번호는 8자 이상 입력해주세요."
+                            android:layout_centerVertical="true"
+                            android:textSize="12dp"
+                            android:padding="10dp"
+                            android:background="@drawable/edittext_rounded_corner_blue" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" >
+
+                        <TextView
+                            android:id="@+id/txt_pw2"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:gravity="center"
+                            android:text="비밀번호 확인" />
+
+                        <EditText
+                            android:id="@+id/edit_pw2"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_toRightOf="@+id/txt_pw2"
+                            android:layout_marginLeft="16dp"
+                            android:hint="비밀번호는 8자 이상 입력해주세요."
+                            android:inputType="textPassword"
+                            android:singleLine = "true"
+                            android:lines = "1"
+                            android:nextFocusDown="@id/edit_email1"
+                            android:layout_centerVertical="true"
+                            android:textSize="12dp"
+                            android:padding="10dp"
+                            android:background="@drawable/edittext_rounded_corner_blue" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/edittext_rounded_corner">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" >
+
+                        <TextView
+                            android:id="@+id/txt_email"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:gravity="center"
+                            android:text="이메일" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_toRightOf="@+id/txt_email"
+                            android:layout_marginLeft="16dp"
+                            android:weightSum="2">
+
+                            <EditText
+                                android:id="@+id/edit_email1"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_centerVertical="true"
+                                android:textSize="12dp"
+                                android:layout_marginRight="8dp"
+                                android:singleLine = "true"
+                                android:lines = "1"
+                                android:nextFocusDown="@id/edit_email2"
+                                android:padding="10dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/edittext_rounded_corner_blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="\@" />
+
+                            <EditText
+                                android:id="@+id/edit_email2"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="8dp"
+                                android:singleLine = "true"
+                                android:lines = "1"
+                                android:layout_weight="1"
+                                android:nextFocusDown="@id/edit_phone1"
+                                android:textSize="12dp"
+                                android:padding="10dp"
+                                android:background="@drawable/edittext_rounded_corner_blue" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" >
+
+                        <TextView
+                            android:id="@+id/txt_phone"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:gravity="center"
+                            android:text="전화번호" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_toRightOf="@+id/txt_phone"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="16dp">
+
+                            <EditText
+                                android:id="@+id/edit_phone1"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_centerVertical="true"
+                                android:textSize="12dp"
+                                android:layout_marginRight="5dp"
+                                android:inputType="number"
+                                android:nextFocusDown="@id/edit_phone2"
+                                android:maxLength="4"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/edittext_rounded_corner_blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="-" />
+
+                            <EditText
+                                android:id="@+id/edit_phone2"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:inputType="number"
+                                android:nextFocusDown="@id/edit_phone3"
+                                android:maxLength="4"
+                                android:gravity="center"
+                                android:layout_weight="1"
+                                android:textSize="12dp"
+                                android:padding="10dp"
+                                android:background="@drawable/edittext_rounded_corner_blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="-" />
+
+                            <EditText
+                                android:id="@+id/edit_phone3"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="5dp"
+                                android:inputType="number"
+                                android:nextFocusDown="@id/edit_birth_year"
+                                android:maxLength="4"
+                                android:gravity="center"
+                                android:layout_weight="1"
+                                android:textSize="12dp"
+                                android:padding="10dp"
+                                android:background="@drawable/edittext_rounded_corner_blue" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" >
+
+                        <TextView
+                            android:id="@+id/txt_name"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:text="이름" />
+
+                        <TextView
+                            android:id="@+id/txt_user_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:text="사용자 이름"
+                            android:layout_toRightOf="@+id/txt_name"
+                            android:layout_marginLeft="16dp"
+                            android:gravity="center"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" >
+
+                        <TextView
+                            android:id="@+id/txt_birth"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:gravity="center"
+                            android:text="생년월일" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_toRightOf="@+id/txt_birth"
+                            android:layout_marginLeft="16dp"
+                            android:weightSum="3">
+
+                            <EditText
+                                android:id="@+id/edit_birth_year"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_centerVertical="true"
+                                android:textSize="12dp"
+                                android:inputType="number"
+                                android:maxLength="4"
+                                android:nextFocusDown="@id/edit_birth_month"
+                                android:hint="년(4자)"
+                                android:gravity="center"
+                                android:layout_marginRight="5dp"
+                                android:padding="10dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/edittext_rounded_corner_blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="-" />
+
+                            <EditText
+                                android:id="@+id/edit_birth_month"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:inputType="number"
+                                android:nextFocusDown="@id/edit_birth_day"
+                                android:maxLength="2"
+                                android:hint="월(2자)"
+                                android:gravity="center"
+                                android:layout_weight="1"
+                                android:textSize="12dp"
+                                android:padding="10dp"
+                                android:background="@drawable/edittext_rounded_corner_blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="-" />
+
+                            <EditText
+                                android:id="@+id/edit_birth_day"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="5dp"
+                                android:inputType="number"
+                                android:maxLength="2"
+                                android:hint="일(2자)"
+                                android:gravity="center"
+                                android:layout_weight="1"
+                                android:textSize="12dp"
+                                android:padding="10dp"
+                                android:background="@drawable/edittext_rounded_corner_blue" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" >
+
+                        <TextView
+                            android:id="@+id/txt_gender"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:text="성별" />
+
+                        <CheckBox
+                            android:id="@+id/check_man"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/txt_gender"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="16dp"
+                            android:text="남성"
+                            android:textSize="12dp" />
+
+                        <CheckBox
+                            android:id="@+id/check_woman"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/check_man"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="50dp"
+                            android:text="여성"
+                            android:textSize="12dp" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="16dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/edittext_rounded_corner">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" >
+
+                        <TextView
+                            android:id="@+id/txt_post"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:text="우편번호" />
+
+                        <TextView
+                            android:id="@+id/txt_post_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_toRightOf="@+id/txt_post"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/btn_address_search"
+                            android:layout_marginLeft="16dp"
+                            android:textSize="12dp"
+                            android:padding="10dp"
+                            android:background="@drawable/edittext_rounded_corner_blue" />
+
+                        <Button
+                            android:id="@+id/btn_address_search"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/button_shape_little"
+                            android:text="주소 검색"
+                            style="?android:attr/borderlessButtonStyle"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" >
+
+                        <TextView
+                            android:id="@+id/txt_addr"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:text="주소" />
+
+                        <TextView
+                            android:id="@+id/txt_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_toRightOf="@+id/txt_addr"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="16dp"
+                            android:textSize="12dp"
+                            android:padding="10dp"
+                            android:background="@drawable/edittext_rounded_corner_blue" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" >
+
+                        <TextView
+                            android:id="@+id/txt_address_detail"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:text="상세주소" />
+
+                        <EditText
+                            android:id="@+id/edit_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_toRightOf="@+id/txt_address_detail"
+                            android:layout_centerVertical="true"
+                            android:inputType="text"
+                            android:singleLine = "true"
+                            android:lines = "1"
+                            android:layout_marginLeft="16dp"
+                            android:textSize="12dp"
+                            android:padding="10dp"
+                            android:background="@drawable/edittext_rounded_corner_blue" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/edittext_rounded_corner">
+
+
+                    <Button
+                        android:id="@+id/btn_modify"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/button_shape_little"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:text="수정"
+                        style="?android:attr/borderlessButtonStyle"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</RelativeLayout>
