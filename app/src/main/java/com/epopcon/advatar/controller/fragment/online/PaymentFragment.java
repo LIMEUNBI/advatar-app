@@ -163,7 +163,7 @@ public class PaymentFragment extends BaseFragment {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(activity, String.format(getContext().getResources().getString(R.string.online_payment_sync_start), NAME), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, NAME + "에서 최근 구매한 상품정보 동기화를 시작합니다.", Toast.LENGTH_SHORT).show();
                                     mSyncImg.startAnimation(rotateAnimation);
                                     mSyncImg1.startAnimation(rotateAnimation);
                                 }
@@ -175,10 +175,12 @@ public class PaymentFragment extends BaseFragment {
                                 activity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(activity, String.format(getContext().getResources().getString(R.string.online_payment_sync_end)), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity, "온라인 쇼핑몰 상품정보 동기화를 완료하였습니다.", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
+
+                            EventTrigger.getInstance(activity).triggerService(new Event(Event.Type.IMPORT_ONLINE_STORE_CART));
 
                             if (success) {
                                 activity.runOnUiThread(new Runnable() {
@@ -196,6 +198,50 @@ public class PaymentFragment extends BaseFragment {
                                     Toast.makeText(activity, String.format(getContext().getResources().getString(R.string.online_payment_sync_end)), Toast.LENGTH_SHORT).show();
                                     mSyncImg.clearAnimation();
                                     mSyncImg1.clearAnimation();
+                                }
+                            });
+                            break;
+                    }
+                }
+            }
+        });
+
+        EventTrigger.getInstance(activity).register(this, Event.Type.ON_ONLINE_STORE_UPDATE, new EventHandler() {
+            @Override
+            public void onEvent(Event event) {
+                String driven = event.getObject("driven", Event.Type.IMPORT_ONLINE_STORE_CART.toString());
+
+                if (driven.equals(Event.Type.IMPORT_ONLINE_STORE_CART.toString())) {
+                    boolean success = event.getObject("success", false);
+                    int status = event.getObject("status", 1);
+                    final String NAME = event.getObject("name", "");
+
+                    switch (status) {
+                        case Config.EVENT_STATUS_STEP_START:
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(activity, NAME + "의 장바구니 상품정보 동기화를 시작합니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            break;
+                        case Config.EVENT_STATUS_STEP_PROGRESS:
+                        case Config.EVENT_STATUS_STEP_END:
+                            if (success) {
+                                activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        refresh();
+                                    }
+                                });
+                            }
+                            break;
+                        case Config.EVENT_STATUS_ALL_END:
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    refresh();
+                                    Toast.makeText(activity, "온라인 쇼핑몰 장바구니 상품정보 동기화를 완료하였습니다.", Toast.LENGTH_SHORT).show();
                                 }
                             });
                             break;
@@ -335,18 +381,14 @@ public class PaymentFragment extends BaseFragment {
             try {
                 onlineProductInfo = (OnlineProductInfo) mListAdapter.getItem(position - mListView.getHeaderViewsCount());
             } catch (Exception e) {
-                if (position - mListView.getHeaderViewsCount() > mListAdapter.getCount()) {
-                    onlineProductInfo = mListItemData.get(mListItemData.size()-1);
+                if (position - mListView.getHeaderViewsCount() >= mListAdapter.getCount()) {
+                    onlineProductInfo = (OnlineProductInfo) mListAdapter.getItem(mThisMonthData.size()-1);
                 } else {
                     return;
                 }
             }
 
-            OnlineBizType bizType = new OnlineBizType(activity);
-            String storeName = bizType.name(OnlineConstant.valueOf(onlineProductInfo.getStoreName()));
-
             Intent intent = new Intent(activity, OnlineStoreWebActivity.class);
-            intent.putExtra("title", storeName);
             intent.putExtra("url", onlineProductInfo.getProductUrl());
 
             startActivityForResult(intent, Config.REQ_ONLINE_STORE_WEBPAGE);
@@ -513,7 +555,7 @@ public class PaymentFragment extends BaseFragment {
 
             // shop name
             holder.shop.setText(storeName);
-            // delivery Sttus
+            // delivery Status
             holder.deliveryStatus.setText(onlineProductInfo.getStatus());
             // price
             NumberFormat n = NumberFormat.getNumberInstance(Locale.KOREAN);

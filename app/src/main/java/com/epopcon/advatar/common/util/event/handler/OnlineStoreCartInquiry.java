@@ -70,6 +70,7 @@ public class OnlineStoreCartInquiry extends OnlineDeliveryInquiryHandler {
 
         if (success) {
             if (list != null) {
+                MessageDao.getInstance().deleteOnlineCart(storeName);
                 for (CartDetail cartDetail : list)
                     MessageDao.getInstance().insertOnlineCart(storeName, cartDetail);
             }

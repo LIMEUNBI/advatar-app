@@ -72,6 +72,14 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, BrandChoiceActivity.class);
+                if (getBrandList().isEmpty()) {
+                    getBrandListAPI();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 intent.putParcelableArrayListExtra("brandList", getBrandList());
                 startActivityForResult(intent, 0);
             }

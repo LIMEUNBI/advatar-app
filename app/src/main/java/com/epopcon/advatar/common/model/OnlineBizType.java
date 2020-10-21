@@ -28,34 +28,42 @@ public class OnlineBizType {
 
     public static Map<String, Integer> onlineStoreMap = new HashMap<>();
     static {
-        onlineStoreMap.put("GMARKET", 100);
-        onlineStoreMap.put("AUCTION", 101);
-        onlineStoreMap.put("_11ST", 102);
-        onlineStoreMap.put("NAVER", 103);
-        onlineStoreMap.put("INTERPARK", 104);
-        onlineStoreMap.put("LOTTE_COM", 105);
-        onlineStoreMap.put("SSG", 106);
-        onlineStoreMap.put("G9", 108);
-        onlineStoreMap.put("AK_MALL", 109);
-        onlineStoreMap.put("COUPANG", 114);
-        onlineStoreMap.put("TMON", 115);
-        onlineStoreMap.put("WEMAP", 116);
+        onlineStoreMap.put("COUPANG", 100);
+        onlineStoreMap.put("WEMAP", 101);
+        onlineStoreMap.put("TMON", 102);
+
+        onlineStoreMap.put("GMARKET", 103);
+        onlineStoreMap.put("_11ST", 104);
+        onlineStoreMap.put("AUCTION", 105);
+        onlineStoreMap.put("NAVER", 106);
+        onlineStoreMap.put("INTERPARK", 107);
+        onlineStoreMap.put("LOTTE_COM", 108);
+        onlineStoreMap.put("SSG", 109);
+        onlineStoreMap.put("AK_MALL", 110);
+        onlineStoreMap.put("G9", 111);
+
+        onlineStoreMap.put("GS_SHOP", 112);
+        onlineStoreMap.put("CJ_MALL", 113);
     }
 
     public static Map<String, String> onlineStoreNameMap = new HashMap<>();
     static {
+        onlineStoreNameMap.put("COUPANG", "쿠팡");
+        onlineStoreNameMap.put("WEMAP", "위메프");
+        onlineStoreNameMap.put("TMON", "티몬");
+
         onlineStoreNameMap.put("GMARKET", "G마켓");
-        onlineStoreNameMap.put("AUCTION", "옥션");
         onlineStoreNameMap.put("_11ST", "11번가");
+        onlineStoreNameMap.put("AUCTION", "옥션");
         onlineStoreNameMap.put("NAVER", "네이버쇼핑");
         onlineStoreNameMap.put("INTERPARK", "인터파크");
         onlineStoreNameMap.put("LOTTE_COM", "롯데 ON");
         onlineStoreNameMap.put("SSG", "SSG");
-        onlineStoreNameMap.put("G9", "G9");
         onlineStoreNameMap.put("AK_MALL", "AK몰");
-        onlineStoreNameMap.put("COUPANG", "쿠팡");
-        onlineStoreNameMap.put("TMON", "티몬");
-        onlineStoreNameMap.put("WEMAP", "위메프");
+        onlineStoreNameMap.put("G9", "G9");
+
+        onlineStoreNameMap.put("GS_SHOP", "GS SHOP");
+        onlineStoreNameMap.put("CJ_MALL", "CJ Mall");
     }
 
     private void loadData() {

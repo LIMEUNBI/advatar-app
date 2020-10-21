@@ -21,8 +21,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
@@ -52,7 +50,6 @@ public class BrandChoiceActivity extends BaseActivity {
     private GridView mGridView = null;
     private GridAdapter mAdapter = null;
     private Button mBtnChoice = null;
-    private ImageView mImgLoading;
 
     private Intent intent = null;
 
@@ -74,13 +71,9 @@ public class BrandChoiceActivity extends BaseActivity {
         mBrandList = intent.getParcelableArrayListExtra("brandList");
         mBrandListCopy = new ArrayList<>();
 
-        mImgLoading = (ImageView) findViewById(R.id.img_loading);
         mGridView = (GridView) findViewById(R.id.card_grid_view);
         mGridView.setVisibility(View.VISIBLE);
-        mImgLoading.setVisibility(View.GONE);
         mBtnChoice = (Button) findViewById(R.id.btn_end);
-
-        Glide.with(this).asGif().load(R.raw.loading).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(mImgLoading);
 
         mChoiceBrand = (TextView) findViewById(R.id.choice_brand);
         mChoiceBrand.setText(getBrandNameList());

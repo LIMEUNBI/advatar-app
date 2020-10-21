@@ -28,5 +28,7 @@
     <color name="text_5d5d5d">#5D5D5D</color>
     <color name="text_484848">#484848</color>
 
+    <color name="red">#FF0000</color>
+
     <color name="pink_300">#F06292</color>
 </resources>

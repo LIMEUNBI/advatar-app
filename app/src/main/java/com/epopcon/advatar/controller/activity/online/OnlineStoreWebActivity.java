@@ -27,18 +27,8 @@ public class OnlineStoreWebActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_store_web);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        TextView toolbarMessage = (TextView) findViewById(R.id.toolbar_message);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-
         Intent intent = getIntent();
         String url = intent.getStringExtra("url");
-        String title = intent.getStringExtra("title");
-
-        toolbarMessage.setText(title);
 
         WebView webView = (WebView) findViewById(R.id.store_website);
 
@@ -106,16 +96,6 @@ public class OnlineStoreWebActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

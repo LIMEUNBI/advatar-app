@@ -8,34 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            app:elevation="0dp"
-            android:background="@color/white"
-            android:theme="@style/Base.Theme.AppCompat.Light">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                app:layout_collapseMode="parallax">
-
-                <include
-                    android:id="@+id/include_top_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    layout="@layout/include_shared_toolbar" />
-
-            </RelativeLayout>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/appbar_layout"
             android:background="@color/browser_actions_bg_grey"
             android:fillViewport="true">
 

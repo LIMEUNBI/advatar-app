@@ -9,7 +9,6 @@ public class Event implements Serializable {
     private Type type;
     private Event next;
     private boolean allowConcurrency = false;
-    private boolean logging = false;
 
     private String eventCode = null;
 
@@ -92,14 +91,6 @@ public class Event implements Serializable {
 
     public boolean isAllowConcurrency() {
         return allowConcurrency;
-    }
-
-    public boolean isLogging() {
-        return logging;
-    }
-
-    public void setLogging(boolean logging) {
-        this.logging = logging;
     }
 
     public String getEventCode() {

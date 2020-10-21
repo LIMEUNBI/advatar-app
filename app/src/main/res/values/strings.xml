@@ -69,10 +69,11 @@
         <item>_11ST;02;11번가;11번가;http://m.11st.co.kr/;true</item>
         <item>INTERPARK;02;인터파크;인터파크;http://m.interpark.com/;true</item>
         <item>LOTTE_COM;02;롯데닷컴;롯데닷컴;http://m.lotte.com/;true</item>
-        <item>G9;02;G9;G9;http://m.g9.co.kr/;true</item>
         <item>SSG;02;신세계몰;신세계몰;http://m.shinsegaemall.ssg.com/;true</item>
-        <item>AK_MALL;02;AK몰;AK인터넷쇼핑몰;http://m.akmall.com/;true</item>
+        <item>G9;02;G9;G9;http://m.g9.co.kr/;true</item>
         <item>GS_SHOP;02;GS샵;GS샵;http://m.gsshop.com/index.gs;true</item>
+        <item>AK_MALL;02;AK몰;AK인터넷쇼핑몰;http://m.akmall.com/;true</item>
+        <item>CJ_MALL;02;CJ오쇼핑;CJ오쇼핑;http://mw.cjmall.com/;true</item>
     </string-array>
 
     <string-array name="event_tracker_message">

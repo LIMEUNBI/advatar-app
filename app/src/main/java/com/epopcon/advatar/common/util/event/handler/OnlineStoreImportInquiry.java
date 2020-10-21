@@ -84,7 +84,6 @@ public class OnlineStoreImportInquiry extends OnlineDeliveryInquiryHandler {
                 deferred.onFailure(exception, constant, action);
                 break;
         }
-        unlock();
     }
 
     private boolean skipRemovedOrderDetail(OrderDetail orderDetail) {
@@ -160,7 +159,6 @@ public class OnlineStoreImportInquiry extends OnlineDeliveryInquiryHandler {
 
         } else {
             deferred.onFailure(exception, constant, OnlineConstant.ACTION_QUERY_ORDER_DETAILS, page);
-            unlock();
         }
         return keepGoing;
     }
@@ -176,17 +174,10 @@ public class OnlineStoreImportInquiry extends OnlineDeliveryInquiryHandler {
         } else {
             deferred.onFailure(exception, constant, OnlineConstant.ACTION_QUERY_PAYMENT_DETAILS);
         }
-        unlock();
     }
 
     public void queryOrderDetails(int period) {
         inquiry.queryOrderDetails(period, "", "");
-        lock();
-    }
-
-    public void queryPaymentDetails(List<OrderDetail> orderDetails) {
-        inquiry.queryPaymentDetails(orderDetails);
-        lock();
     }
 
     public void destory() {
@@ -196,7 +187,8 @@ public class OnlineStoreImportInquiry extends OnlineDeliveryInquiryHandler {
     private void lock() {
         synchronized (lock) {
             try {
-                lock.wait();
+                if (lock != null)
+                    lock.wait();
             } catch (InterruptedException e) {
                 Log.e(TAG, e.getMessage(), e);
             }

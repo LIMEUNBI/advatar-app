@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground">
+    
+    <RelativeLayout
+        android:id="@+id/item_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:padding="16dp">
+
+        <RelativeLayout
+            android:id="@+id/usedPlace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/img_product">
+
+            <RelativeLayout
+                android:id="@+id/left_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/right_holder"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true" >
+
+                <TextView
+                    android:id="@+id/product_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:text="상품명"
+                    android:maxLines="2"
+                    android:textColor="@color/black"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/product_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/product_name"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textColor="@color/text_484848"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/product_detail"
+                    android:layout_marginTop="4dp"
+                    android:text="카테고리"
+                    android:textColor="@color/text_484848"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/review_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/category"
+                    android:layout_marginTop="4dp"
+                    android:text="리뷰"
+                    android:textColor="@color/text_484848"
+                    android:textSize="12dp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/right_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="6dp"
+                android:orientation="vertical"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="0원"
+                    android:textColor="@color/black"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/delivery_policy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/amount"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="right"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColor="@color/text_484848"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/purchase_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/delivery_policy"
+                    android:layout_marginTop="4dp"
+                    android:layout_gravity="right"
+                    android:text=""
+                    android:textColor="@color/text_484848"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/seller_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/purchase_count"
+                    android:layout_marginTop="4dp"
+                    android:layout_gravity="right"
+                    android:text=""
+                    android:textColor="@color/text_484848"
+                    android:textSize="10dp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/seller_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/usedPlace"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <RelativeLayout
+                android:id="@+id/seller_layout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_margin="1dp"
+                android:background="@drawable/edittext_rounded_corner"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/seller1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="판매처"
+                    android:textSize="10dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/seller_price1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/seller1"
+                    android:layout_marginTop="4dp"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="10,000원"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/red"/>
+
+                <TextView
+                    android:id="@+id/seller_delivery1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/seller_price1"
+                    android:layout_marginTop="4dp"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="배송비"
+                    android:textSize="10dp"
+                    android:textColor="@color/text_5d5d5d"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/seller_layout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_margin="1dp"
+                android:background="@drawable/edittext_rounded_corner"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/seller2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="판매처"
+                    android:textSize="10dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/seller_price2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/seller2"
+                    android:layout_marginTop="4dp"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="10,000원"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/red"/>
+
+                <TextView
+                    android:id="@+id/seller_delivery2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/seller_price2"
+                    android:layout_marginTop="4dp"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="배송비"
+                    android:textSize="10dp"
+                    android:textColor="@color/text_5d5d5d"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/seller_layout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_margin="1dp"
+                android:background="@drawable/edittext_rounded_corner"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/seller3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="판매처"
+                    android:textSize="10dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/seller_price3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/seller3"
+                    android:layout_marginTop="4dp"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="10,000원"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/red"/>
+
+                <TextView
+                    android:id="@+id/seller_delivery3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/seller_price3"
+                    android:layout_marginTop="4dp"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="배송비"
+                    android:textSize="10dp"
+                    android:textColor="@color/text_5d5d5d"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/seller_layout4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_margin="1dp"
+                android:background="@drawable/edittext_rounded_corner"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/seller4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="판매처"
+                    android:textSize="10dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/seller_price4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/seller4"
+                    android:layout_marginTop="4dp"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="10,000원"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/red"/>
+
+                <TextView
+                    android:id="@+id/seller_delivery4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/seller_price4"
+                    android:layout_marginTop="4dp"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="배송비"
+                    android:textSize="10dp"
+                    android:textColor="@color/text_5d5d5d"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/seller_layout5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_margin="1dp"
+                android:background="@drawable/edittext_rounded_corner"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/seller5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="판매처"
+                    android:textSize="10dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/seller_price5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/seller5"
+                    android:layout_marginTop="4dp"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="10,000원"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/red"/>
+
+                <TextView
+                    android:id="@+id/seller_delivery5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/seller_price5"
+                    android:layout_marginTop="4dp"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="배송비"
+                    android:textSize="10dp"
+                    android:textColor="@color/text_5d5d5d"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/line_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_holder">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dp"
+            android:visibility="visible"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@color/text_bfbfbf"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

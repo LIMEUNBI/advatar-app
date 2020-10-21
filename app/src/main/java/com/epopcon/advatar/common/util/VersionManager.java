@@ -26,9 +26,6 @@ public class VersionManager {
     private Context context;
     private static VersionManager instance = null;
 
-    private String mAppVersionName;
-    private int mAppVersionCode;
-    private String mUpdateType;
     private int mExtraVersion;
     private String mUrl;
     private String mMd5;
@@ -161,14 +158,14 @@ public class VersionManager {
                             return;
                         }
 
-                        if (ExtraClassLoader.getInstance().reload(context, defaultPath)) {
+                        if (ExtraClassLoader.getInstance().reload(context, defaultPath, true)) {
 
                             File newDex = new File(dexDir, String.format("/extra-online-%s.zip", versionCode));
 
                             if (newDex.exists())
                                 newDex.delete();
                             if (com.epopcon.advatar.common.util.Utils.copyFile(defaultPath, newDex) && newDex.exists()) {
-                                SharedPreferenceBase.putPrefInt(context, ExtraClassLoader.EXTRA_VERSION, versionCode);
+                                SharedPreferenceBase.putPrefInt(context, ExtraClassLoader.EXTRA_VERSION, ExtraClassLoader.getInstance().getVersionCode());
 
                                 // 이전 버전 삭제
                                 String[] list = dexDir.list(new FilenameFilter() {

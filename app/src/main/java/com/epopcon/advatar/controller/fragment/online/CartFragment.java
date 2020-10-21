@@ -16,48 +16,77 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.db.MessageDao;
-import com.epopcon.advatar.common.model.OnlineBizType;
+import com.epopcon.advatar.common.model.CartSearchInfo;
+import com.epopcon.advatar.common.model.CartSearchParser;
 import com.epopcon.advatar.common.util.event.Event;
 import com.epopcon.advatar.common.util.event.EventHandler;
 import com.epopcon.advatar.common.util.event.EventTrigger;
+import com.epopcon.advatar.controller.activity.online.CartSearchActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineStoreWebActivity;
 import com.epopcon.advatar.controller.fragment.BaseFragment;
 import com.epopcon.advatar.custom.listview.StickyListHeadersAdapter;
 import com.epopcon.advatar.custom.listview.StickyListHeadersListView;
-import com.epopcon.extra.online.OnlineConstant;
+import com.epopcon.extra.common.utils.ExecutorPool;
 import com.epopcon.extra.online.model.CartDetail;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.w3c.dom.Text;
-
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import static com.epopcon.advatar.common.model.OnlineBizType.onlineStoreNameMap;
+import static com.epopcon.extra.common.ExtraContext.runOnUiThread;
 
 public class CartFragment extends BaseFragment {
 
     private StickyListHeadersListView mListView;
     private RelativeLayout mListHeaderView = null;
     private ListAdapter mListAdapter = null;
-    private List<CartDetail> mListItemData = new ArrayList<>();
+    private List<CartDetails> mListItemData = new ArrayList<>();
     private List<String> mStoreList = new ArrayList<>();
 
     private View mView;
 
     private ImageView mSyncImg;
     private TextView mTxtCartCount;
+
     private TextView mTxtRecentCount;
     private Animation rotateAnimation;
 
     protected DisplayImageOptions mImageLoaderOptions;
     protected MessageDao mMessageDao = MessageDao.getInstance();
+
+    class CartDetails {
+        private CartDetail cartDetail;
+        private int lowestYn = 0;
+
+        public CartDetail getCartDetail() {
+            return cartDetail;
+        }
+
+        public void setCartDetail(CartDetail cartDetail) {
+            this.cartDetail = cartDetail;
+        }
+
+        public int getLowestYn() {
+            return lowestYn;
+        }
+
+        public void setLowestYn(int lowestYn) {
+            this.lowestYn = lowestYn;
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,7 +153,7 @@ public class CartFragment extends BaseFragment {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(activity, String.format(getActivity().getApplicationContext().getResources().getString(R.string.online_cart_sync_start), NAME), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, NAME + "의 장바구니 상품정보 동기화를 시작합니다.", Toast.LENGTH_SHORT).show();
                                 }
                             });
                             break;
@@ -143,7 +172,8 @@ public class CartFragment extends BaseFragment {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(activity, String.format(getActivity().getApplicationContext().getResources().getString(R.string.online_cart_sync_end)), Toast.LENGTH_SHORT).show();
+                                    refresh();
+                                    Toast.makeText(activity, "온라인 쇼핑몰 장바구니 상품정보 동기화를 완료하였습니다.", Toast.LENGTH_SHORT).show();
                                 }
                             });
                             break;
@@ -179,10 +209,12 @@ public class CartFragment extends BaseFragment {
 
         List<CartDetail> listItemData = mMessageDao.getOnlineStoreCartDetails();
         for (CartDetail cartDetail : listItemData) {
+            CartDetails listItems = new CartDetails();
             if (!mStoreList.contains(cartDetail.getStoreName())) {
                 mStoreList.add(cartDetail.getStoreName());
             }
-            mListItemData.add(cartDetail);
+            listItems.setCartDetail(cartDetail);
+            mListItemData.add(listItems);
         }
 
         mListAdapter.notifyDataSetChanged();
@@ -197,17 +229,13 @@ public class CartFragment extends BaseFragment {
                 cartDetail = (CartDetail) mListAdapter.getItem(position - mListView.getHeaderViewsCount());
             } catch (Exception e) {
                 if (position - mListView.getHeaderViewsCount() > mListAdapter.getCount()) {
-                    cartDetail = mListItemData.get(mListItemData.size()-1);
+                    cartDetail = mListItemData.get(mListItemData.size()-1).getCartDetail();
                 } else {
                     return;
                 }
             }
 
-            OnlineBizType bizType = new OnlineBizType(activity);
-            String storeName = bizType.name(OnlineConstant.valueOf(cartDetail.getStoreName()));
-
             Intent intent = new Intent(activity, OnlineStoreWebActivity.class);
-            intent.putExtra("title", storeName);
             intent.putExtra("url", cartDetail.getDealUrl());
 
             startActivityForResult(intent, Config.REQ_ONLINE_STORE_WEBPAGE);
@@ -217,10 +245,10 @@ public class CartFragment extends BaseFragment {
     private class ListAdapter extends BaseAdapter implements StickyListHeadersAdapter, SectionIndexer {
 
         private List<String> sections;
-        private List<CartDetail> items;
+        private List<CartDetails> items;
         private LayoutInflater inflater;
 
-        ListAdapter(List<String> sections, List<CartDetail> items) {
+        ListAdapter(List<String> sections, List<CartDetails> items) {
             this.sections = sections;
             this.items = items;
             this.inflater = LayoutInflater.from(getActivity().getApplicationContext());
@@ -233,7 +261,7 @@ public class CartFragment extends BaseFragment {
 
         @Override
         public long getHeaderId(int position) {
-            return items.get(position).getStoreName().hashCode();
+            return items.get(position).cartDetail.getStoreName().hashCode();
         }
 
         @Override
@@ -243,7 +271,7 @@ public class CartFragment extends BaseFragment {
 
         @Override
         public Object getItem(int position) {
-            return items.get(position);
+            return items.get(position).getCartDetail();
         }
 
         @Override
@@ -263,7 +291,7 @@ public class CartFragment extends BaseFragment {
             String section = sections.get(sectionIndex);
 
             for (int i = 0; i < items.size(); i++) {
-                if (section.equals(items.get(i).getStoreName())) {
+                if (section.equals(items.get(i).cartDetail.getStoreName())) {
                     position = i;
                     break;
                 }
@@ -278,7 +306,7 @@ public class CartFragment extends BaseFragment {
             } else if (position < 0) {
                 position = 0;
             }
-            return sections.indexOf(items.get(position).getStoreName());
+            return sections.indexOf(items.get(position).cartDetail.getStoreName());
         }
 
         @Override
@@ -287,15 +315,15 @@ public class CartFragment extends BaseFragment {
 
             if (convertView == null) {
                 holder = new ListAdapter.HeaderViewHolder();
-                convertView = inflater.inflate(R.layout.item_header_payment_list, parent, false);
-                holder.storeName = (TextView) convertView.findViewById(R.id.date);
+                convertView = inflater.inflate(R.layout.item_header_store_list, parent, false);
+                holder.storeName = (TextView) convertView.findViewById(R.id.store_name);
                 convertView.setTag(holder);
             } else {
                 holder = (ListAdapter.HeaderViewHolder) convertView.getTag();
             }
 
-            CartDetail cartDetail = mListItemData.get(position);
-            String storeName = onlineStoreNameMap.get(cartDetail.getStoreName());
+            final CartDetails cartDetail = mListItemData.get(position);
+            final String storeName = onlineStoreNameMap.get(cartDetail.getCartDetail().getStoreName());
 
             holder.storeName.setText(storeName);
 
@@ -304,7 +332,7 @@ public class CartFragment extends BaseFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
+            final ViewHolder holder;
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.item_online_cart_list, parent, false);
@@ -315,9 +343,11 @@ public class CartFragment extends BaseFragment {
                 holder.title = (TextView) convertView.findViewById(R.id.deal_name);
                 holder.options = (TextView) convertView.findViewById(R.id.option_name);
                 holder.selectCount = (TextView) convertView.findViewById(R.id.select_count);
+                holder.search = (TextView) convertView.findViewById(R.id.txt_search);
+                holder.loading = (ImageView) convertView.findViewById(R.id.img_loading);
+                holder.searchLayout = (RelativeLayout) convertView.findViewById(R.id.search_layout);
                 holder.amount = (TextView) convertView.findViewById(R.id.amount);
                 holder.deliveryPolicy = (TextView) convertView.findViewById(R.id.delivery_policy);
-                holder.avgDelivery = (TextView) convertView.findViewById(R.id.avg_delivery);
                 holder.lineHolder = (RelativeLayout) convertView.findViewById(R.id.line_holder);
 
                 convertView.setTag(holder);
@@ -325,16 +355,18 @@ public class CartFragment extends BaseFragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            final CartDetail cartDetail = items.get(position);
+            final CartDetails cartDetail = items.get(position);
 
             // image
-            ImageLoader.getInstance().displayImage(cartDetail.getImgUrl(), holder.dealImg, mImageLoaderOptions);
+            ImageLoader.getInstance().displayImage(cartDetail.getCartDetail().getImgUrl(), holder.dealImg, mImageLoaderOptions);
+            Glide.with(getContext()).asGif().load(R.raw.loading).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(holder.loading);
+            holder.loading.setVisibility(View.GONE);
 
             RelativeLayout cartTypeHolder = (RelativeLayout) convertView.findViewById(R.id.cart_type_holder);
             RelativeLayout cartTypeLineHolder = (RelativeLayout) convertView.findViewById(R.id.line_cart_type_holder);
             if (position != 0) {
-                String beforeCartType = items.get(position -1 ).getCartType();
-                String currentCartType = items.get(position).getCartType();
+                String beforeCartType = items.get(position -1 ).getCartDetail().getCartType();
+                String currentCartType = items.get(position).getCartDetail().getCartType();
                 if (!TextUtils.isEmpty(beforeCartType)) {
                     if (beforeCartType.equals(currentCartType)) {
                         cartTypeHolder.setVisibility(View.GONE);
@@ -349,52 +381,117 @@ public class CartFragment extends BaseFragment {
                 cartTypeLineHolder.setVisibility(View.VISIBLE);
             }
 
-            String cartType;
-            if (cartDetail.getCartType().equals("Cart")) {
+            final String cartType;
+            if (cartDetail.getCartDetail().getCartType().equals("Cart")) {
                 cartType = "장바구니";
                 holder.selectCount.setVisibility(View.VISIBLE);
-                holder.selectCount.setText("갯수 : " + cartDetail.getSelectCount());
+                holder.selectCount.setText("갯수 : " + cartDetail.getCartDetail().getSelectCount());
                 holder.options.setVisibility(View.VISIBLE);
                 holder.deliveryPolicy.setVisibility(View.VISIBLE);
-                holder.avgDelivery.setVisibility(View.VISIBLE);
             } else {
                 cartType = "최근 본 상품";
                 holder.selectCount.setVisibility(View.GONE);
                 holder.options.setVisibility(View.GONE);
                 holder.deliveryPolicy.setVisibility(View.GONE);
-                holder.avgDelivery.setVisibility(View.GONE);
             }
             holder.cartType.setText(cartType);
-            holder.title.setText(cartDetail.getTitle());
-            if (TextUtils.isEmpty(cartDetail.getOptions())) {
+            holder.title.setText(cartDetail.getCartDetail().getTitle());
+            if (TextUtils.isEmpty(cartDetail.getCartDetail().getOptions())) {
                 holder.options.setVisibility(View.GONE);
             }
-            holder.options.setText(cartDetail.getOptions());
+            holder.options.setText(cartDetail.getCartDetail().getOptions());
             // price
             NumberFormat n = NumberFormat.getNumberInstance(Locale.KOREAN);
             String price;
-            price = n.format(cartDetail.getOptionPrice());
+            price = n.format(cartDetail.getCartDetail().getOptionPrice());
+
+            holder.search.setVisibility(View.VISIBLE);
+            holder.searchLayout.setVisibility(View.VISIBLE);
+            holder.search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.loading.setVisibility(View.VISIBLE);
+                    ExecutorPool.NETWORK.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                String baseSearchUrl = "https://search.shopping.naver.com/search/all?query=";
+
+                                List<CartSearchInfo> cartSearchInfos;
+                                URL url = new URL(baseSearchUrl + cartDetail.getCartDetail().getTitle());
+                                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                                connection.setRequestMethod("GET");
+
+                                int responseCode = connection.getResponseCode();
+                                if (responseCode == 200) {
+                                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                                    String line;
+                                    String content = "";
+                                    while ((line = br.readLine()) != null) {
+                                        content += line;
+                                    }
+                                    cartSearchInfos = CartSearchParser.parseCartSearch(content);
+
+                                    if (cartSearchInfos != null && cartSearchInfos.size() > 0) {
+                                        Intent intent = new Intent(getActivity(), CartSearchActivity.class);
+                                        intent.putExtra("title", cartDetail.getCartDetail().getTitle());
+                                        intent.putExtra("option", cartDetail.getCartDetail().getOptions());
+                                        intent.putExtra("price", cartDetail.getCartDetail().getOptionPrice());
+                                        intent.putExtra("imgUrl", cartDetail.getCartDetail().getImgUrl());
+                                        intent.putExtra("deliveryAmount", cartDetail.getCartDetail().getDeliveryAmount());
+                                        intent.putParcelableArrayListExtra("cartSearchInfoList", (ArrayList<CartSearchInfo>) cartSearchInfos);
+
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                holder.loading.setVisibility(View.GONE);
+                                                cartDetail.setLowestYn(1);
+                                            }
+                                        });
+
+                                        startActivity(intent);
+                                    } else {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getContext(), "최저가 검색 결과가 없는 상품입니다.", Toast.LENGTH_LONG).show();
+                                                holder.searchLayout.setVisibility(View.GONE);
+                                                cartDetail.setLowestYn(0);
+                                            }
+                                        });
+                                    }
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            });
+
+            if (cartDetail.getLowestYn() == 0) {
+                holder.searchLayout.setVisibility(View.VISIBLE);
+            } else {
+                holder.searchLayout.setVisibility(View.GONE);
+            }
 
             holder.amount.setText(price + " 원");
             String delivery = "";
 
-            if (cartDetail.getDeliveryPolicy() != null) {
-                if (cartDetail.getDeliveryPolicy().equals("CONDITION")) {
+            if (cartDetail.getCartDetail().getDeliveryPolicy() != null) {
+                if (cartDetail.getCartDetail().getDeliveryPolicy().equals("CONDITION")) {
                     delivery = "조건부 무료";
-                } else if (cartDetail.getDeliveryPolicy().equals("FREE")) {
+                } else if (cartDetail.getCartDetail().getDeliveryPolicy().equals("FREE")) {
                     delivery = "무료배송";
                 } else {
                     delivery = "유료배송";
                 }
             }
             holder.deliveryPolicy.setText(delivery);
-            if (cartDetail.getAvgDeliveryDays() == 0) {
-                holder.avgDelivery.setVisibility(View.GONE);
-            }
-            holder.avgDelivery.setText("평균 배송일 : " + cartDetail.getAvgDeliveryDays());
 
             if ((position + 1) < items.size()) {
-                if (cartDetail.getStoreName().equals(items.get(position+1).getStoreName()))
+                if (cartDetail.getCartDetail().getStoreName().equals(items.get(position+1).getCartDetail().getStoreName()))
                     holder.lineHolder.setVisibility(View.VISIBLE);
                 else
                     holder.lineHolder.setVisibility(View.GONE);
@@ -412,9 +509,11 @@ public class CartFragment extends BaseFragment {
             TextView title;
             TextView options;
             TextView selectCount;
+            TextView search;
+            ImageView loading;
+            RelativeLayout searchLayout;
             TextView amount;
             TextView deliveryPolicy;
-            TextView avgDelivery;
             RelativeLayout lineHolder;
         }
     }

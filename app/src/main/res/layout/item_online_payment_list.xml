@@ -74,7 +74,7 @@
             android:layout_centerVertical="true"
             android:gravity="center_horizontal"
             android:layout_marginRight="10dp"
-            android:scaleType="centerInside" />
+            android:scaleType="fitXY" />
 
         <RelativeLayout
             android:id="@+id/usedPlace"

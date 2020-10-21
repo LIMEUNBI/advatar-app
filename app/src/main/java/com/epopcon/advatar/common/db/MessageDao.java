@@ -415,6 +415,10 @@ public class MessageDao extends Observable {
         }
     }
 
+    /**
+     * 온라인쇼핑몰 장바구니 상세정보 반환
+     * @return
+     */
     public List<CartDetail> getOnlineStoreCartDetails() {
 
         String query;
@@ -474,6 +478,11 @@ public class MessageDao extends Observable {
         return Collections.EMPTY_LIST;
     }
 
+    /**
+     * 온라인쇼핑몰 장바구니 상세정보 갯수를 반환한다.
+     * @param type 장바구니 타입 (Cart / Recent)
+     * @return
+     */
     public int getOnlineStoreCartCount(String type) {
         int cartCount = 0;
 
@@ -495,6 +504,11 @@ public class MessageDao extends Observable {
         return cartCount;
     }
 
+    /**
+     * 장바구니 데이터를 DB에 저장
+     * @param storeName 온라인스토어 명
+     * @param cartDetail 장바구니 정보
+     */
     public void insertOnlineCart(String storeName, CartDetail cartDetail) {
 
         ContentValues values;
@@ -558,7 +572,38 @@ public class MessageDao extends Observable {
         } else {
             database.update(DBHelper.DBOnlineStoreCart.TABLE_ONLINE_STORE_CART, values, String.format("%s = %s", DBHelper.DBOnlineStore.COLUMN_ID, id), null);
         }
+    }
 
+    /**
+     * 장바구니 데이터 삭제 (저장 하기 전)
+     * @param storeName 온라인 스토어 명
+     */
+    public void deleteOnlineCart(String storeName) {
+        String where = DBHelper.DBOnlineStoreCart.COLUMN_STORE_NAME + " = '" + storeName + "'";
+        database.delete(DBHelper.DBOnlineStoreCart.TABLE_ONLINE_STORE_CART, where, null);
+        setChanged();
+        notifyObservers(null);
+    }
+
+    public List<String> getCartProductNames(String storeName) {
+        String query;
+        query = "SELECT * " +
+                "FROM " +
+                "online_store_cart " +
+                "WHERE store_name = '" + storeName + "'";
+
+        Cursor cursor = database.rawQuery(query, null);
+
+        if (cursor != null) {
+            List<String> productNames = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                String title = cursor.getString(cursor.getColumnIndex(DBHelper.DBOnlineStoreCart.COLUMN_TITLE));
+                productNames.add(title);
+            }
+            return productNames;
+
+        }
+        return Collections.EMPTY_LIST;
     }
 
     /**
