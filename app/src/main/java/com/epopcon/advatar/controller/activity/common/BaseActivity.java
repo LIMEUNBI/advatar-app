@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.application.AdvatarApplication;
 import com.epopcon.advatar.common.db.MessageDao;
+import com.epopcon.advatar.common.network.RequestListener;
 import com.epopcon.advatar.common.network.model.repo.brand.BrandRepo;
+import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineLoginActivity;
@@ -19,6 +21,8 @@ import com.epopcon.advatar.controller.activity.user.UpdatePwActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.util.ArrayList;
+
+import static com.epopcon.advatar.common.util.MyBrandUtil.getBrandCodeList;
 
 public class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
@@ -97,5 +101,40 @@ public class BaseActivity extends AppCompatActivity {
 
             mActivityAnimationType = SLIDE_RIGHT_IN_LEFT_OUT;
         }
+    }
+
+    public void getBrandListAPI() {
+        try {
+            RestAdvatarProtocol.getInstance().getBrandList(50, new RequestListener() {
+                @Override
+                public void onRequestSuccess(int requestCode, Object result) {
+                    mBrandList.addAll((ArrayList<BrandRepo>) result);
+
+                    for (int i = 0; i < mBrandList.size(); i++) {
+                        if (getBrandCodeList().contains(mBrandList.get(i).brandCode)) {
+                            mBrandList.get(i).setMyBrandYn(true);
+                        } else {
+                            mBrandList.get(i).setMyBrandYn(false);
+                        }
+                    }
+
+                    setBrandList(mBrandList);
+                }
+
+                @Override
+                public void onRequestFailure(Throwable t) {
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<BrandRepo> getBrandList() {
+        return mBrandList;
+    }
+
+    public void setBrandList(ArrayList<BrandRepo> brandList) {
+        this.mBrandList = brandList;
     }
 }

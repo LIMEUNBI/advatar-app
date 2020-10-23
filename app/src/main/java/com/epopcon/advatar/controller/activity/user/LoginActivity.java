@@ -37,8 +37,6 @@ import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
 import org.json.JSONObject;
 
-import java.util.Map;
-
 public class LoginActivity extends BaseActivity {
 
     private EditText mEditId;
@@ -159,6 +157,10 @@ public class LoginActivity extends BaseActivity {
                 OAuthLogin.getInstance().startOauthLoginActivity(LoginActivity.this, mOAuthLoginHandler);
             }
         });
+
+        if (getBrandList().isEmpty()) {
+            getBrandListAPI();
+        }
     }
 
     private void getLogin() {
@@ -183,7 +185,11 @@ public class LoginActivity extends BaseActivity {
                         Intent intent;
                         if (TextUtils.isEmpty(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.MY_BRAND_NAME, ""))) {
                             intent = new Intent(LoginActivity.this, BrandChoiceActivity.class);
-                            intent.putExtra("finish", false);
+                            if (getBrandList().isEmpty()) {
+                                getBrandListAPI();
+                            } else {
+                                intent.putParcelableArrayListExtra("brandList", getBrandList());
+                            }
                         } else {
                             intent = new Intent(LoginActivity.this, MainActivity.class);
                         }
@@ -261,6 +267,15 @@ public class LoginActivity extends BaseActivity {
                                                 Intent intent;
                                                 if (TextUtils.isEmpty(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.MY_BRAND_NAME, ""))) {
                                                     intent = new Intent(LoginActivity.this, BrandChoiceActivity.class);
+                                                    if (getBrandList().isEmpty()) {
+                                                        getBrandListAPI();
+                                                        try {
+                                                            Thread.sleep(2000);
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                    intent.putParcelableArrayListExtra("brandList", getBrandList());
                                                 } else {
                                                     intent = new Intent(LoginActivity.this, MainActivity.class);
                                                 }

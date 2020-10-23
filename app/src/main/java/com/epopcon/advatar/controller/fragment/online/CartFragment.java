@@ -484,6 +484,8 @@ public class CartFragment extends BaseFragment {
                     delivery = "조건부 무료";
                 } else if (cartDetail.getCartDetail().getDeliveryPolicy().equals("FREE")) {
                     delivery = "무료배송";
+                } else if (cartDetail.getCartDetail().getDeliveryPolicy().equals("AFTER")) {
+                    delivery = "착불";
                 } else {
                     delivery = "유료배송";
                 }

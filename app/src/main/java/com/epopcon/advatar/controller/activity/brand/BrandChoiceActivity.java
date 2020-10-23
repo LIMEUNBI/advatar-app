@@ -118,7 +118,13 @@ public class BrandChoiceActivity extends BaseActivity {
                                 getBrandCodeList(), getBrandNameList(), new RequestListener() {
                             @Override
                             public void onRequestSuccess(int requestCode, Object result) {
-                                finish();
+                                if (intent.getStringExtra("beforeActivity") != null && intent.getStringExtra("beforeActivity").equals("MainActivity")) {
+                                    finish();
+                                } else {
+                                    Intent mainIntent = new Intent(BrandChoiceActivity.this, MainActivity.class);
+                                    startActivity(mainIntent);
+                                    finish();
+                                }
                             }
 
                             @Override
@@ -129,14 +135,20 @@ public class BrandChoiceActivity extends BaseActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-                    if (!intent.getBooleanExtra("finish", true)) {
-                        Intent mainIntent = new Intent(BrandChoiceActivity.this, MainActivity.class);
-                        startActivity(mainIntent);
-                    }
                 }
             }
         });
+
+        if (mBrandList == null) {
+            getBrandListAPI();
+            try {
+                Thread.sleep(2000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            mBrandList = getBrandList();
+        }
 
         mAdapter = new GridAdapter(getApplicationContext(), R.layout.item_brand_list, mBrandList);
         mGridView.setAdapter(mAdapter);

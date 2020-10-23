@@ -32,6 +32,9 @@ public class IntroActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
+        if (getBrandList().isEmpty()) {
+            getBrandListAPI();
+        }
     }
 
     @Override
@@ -144,6 +147,15 @@ public class IntroActivity extends BaseActivity {
                                         intent = new Intent(IntroActivity.this, MainActivity.class);
                                     } else {
                                         intent = new Intent(IntroActivity.this, BrandChoiceActivity.class);
+                                        if (getBrandList().isEmpty()) {
+                                            getBrandListAPI();
+                                            try {
+                                                Thread.sleep(2000);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                        intent.putParcelableArrayListExtra("brandList", getBrandList());
                                     }
                                 } else {
                                     intent = new Intent(IntroActivity.this, LoginActivity.class);
@@ -191,6 +203,11 @@ public class IntroActivity extends BaseActivity {
                                         intent = new Intent(IntroActivity.this, MainActivity.class);
                                     } else {
                                         intent = new Intent(IntroActivity.this, BrandChoiceActivity.class);
+                                        if (getBrandList().isEmpty()) {
+                                            getBrandListAPI();
+                                        } else {
+                                            intent.putParcelableArrayListExtra("brandList", getBrandList());
+                                        }
                                     }
                                 } else {
                                     intent = new Intent(IntroActivity.this, LoginActivity.class);

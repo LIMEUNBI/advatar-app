@@ -195,7 +195,7 @@ public class PaymentFragment extends BaseFragment {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(activity, String.format(getContext().getResources().getString(R.string.online_payment_sync_end)), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, "온라인 쇼핑몰 상품정보 동기화를 완료하였습니다.", Toast.LENGTH_SHORT).show();
                                     mSyncImg.clearAnimation();
                                     mSyncImg1.clearAnimation();
                                 }
@@ -370,7 +370,7 @@ public class PaymentFragment extends BaseFragment {
 
     private void setHeaderAmount(RelativeLayout headerView) {
         TextView onlineAmount  = (TextView) headerView.findViewById(R.id.amount);
-        onlineAmount.setText(String.format(Locale.KOREAN, getContext().getResources().getString(R.string.amount_integer), mOnlineAmount));
+        onlineAmount.setText(String.format(Locale.KOREAN, "%,d", mOnlineAmount));
     }
 
     AdapterView.OnItemClickListener mListClickListener = new AdapterView.OnItemClickListener() {

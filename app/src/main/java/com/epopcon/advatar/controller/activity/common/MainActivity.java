@@ -22,9 +22,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.epopcon.advatar.R;
-import com.epopcon.advatar.common.network.RequestListener;
-import com.epopcon.advatar.common.network.model.repo.brand.BrandRepo;
-import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
 import com.epopcon.advatar.controller.fragment.ContentsFragment;
@@ -36,9 +33,6 @@ import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-
-import static com.epopcon.advatar.common.util.MyBrandUtil.getBrandCodeList;
 
 public class MainActivity extends BaseActivity {
 
@@ -74,13 +68,9 @@ public class MainActivity extends BaseActivity {
                 Intent intent = new Intent(MainActivity.this, BrandChoiceActivity.class);
                 if (getBrandList().isEmpty()) {
                     getBrandListAPI();
-                    try {
-                        Thread.sleep(2000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 }
                 intent.putParcelableArrayListExtra("brandList", getBrandList());
+                intent.putExtra("beforeActivity", "MainActivity");
                 startActivityForResult(intent, 0);
             }
         });
@@ -114,41 +104,6 @@ public class MainActivity extends BaseActivity {
             getBrandListAPI();
         }
 
-    }
-
-    public void getBrandListAPI() {
-        try {
-            RestAdvatarProtocol.getInstance().getBrandList(50, new RequestListener() {
-                @Override
-                public void onRequestSuccess(int requestCode, Object result) {
-                    mBrandList.addAll((ArrayList<BrandRepo>) result);
-
-                    for (int i = 0; i < mBrandList.size(); i++) {
-                        if (getBrandCodeList().contains(mBrandList.get(i).brandCode)) {
-                            mBrandList.get(i).setMyBrandYn(true);
-                        } else {
-                            mBrandList.get(i).setMyBrandYn(false);
-                        }
-                    }
-
-                    setBrandList(mBrandList);
-                }
-
-                @Override
-                public void onRequestFailure(Throwable t) {
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public ArrayList<BrandRepo> getBrandList() {
-        return mBrandList;
-    }
-
-    public void setBrandList(ArrayList<BrandRepo> brandList) {
-        this.mBrandList = brandList;
     }
 
     private void getHashKey(){
