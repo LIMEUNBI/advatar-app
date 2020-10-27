@@ -26,7 +26,7 @@ import com.epopcon.advatar.common.model.CartSearchParser;
 import com.epopcon.advatar.common.util.event.Event;
 import com.epopcon.advatar.common.util.event.EventHandler;
 import com.epopcon.advatar.common.util.event.EventTrigger;
-import com.epopcon.advatar.controller.activity.online.CartSearchActivity;
+import com.epopcon.advatar.controller.activity.online.OnlineCartSearchActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineStoreWebActivity;
 import com.epopcon.advatar.controller.fragment.BaseFragment;
 import com.epopcon.advatar.custom.listview.StickyListHeadersAdapter;
@@ -433,7 +433,7 @@ public class CartFragment extends BaseFragment {
                                     cartSearchInfos = CartSearchParser.parseCartSearch(content);
 
                                     if (cartSearchInfos != null && cartSearchInfos.size() > 0) {
-                                        Intent intent = new Intent(getActivity(), CartSearchActivity.class);
+                                        Intent intent = new Intent(getActivity(), OnlineCartSearchActivity.class);
                                         intent.putExtra("title", cartDetail.getCartDetail().getTitle());
                                         intent.putExtra("option", cartDetail.getCartDetail().getOptions());
                                         intent.putExtra("price", cartDetail.getCartDetail().getOptionPrice());

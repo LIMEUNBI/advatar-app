@@ -47,7 +47,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".controller.activity.online.OnlineStoreWebActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".controller.activity.online.CartSearchActivity"
+        <activity android:name=".controller.activity.online.OnlineCartSearchActivity"
             android:screenOrientation="portrait" />
 
         <meta-data

@@ -19,15 +19,14 @@ import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.model.CartSearchInfo;
 import com.epopcon.advatar.controller.activity.common.BaseActivity;
-import com.epopcon.extra.online.model.CartDetail;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartSearchActivity extends BaseActivity {
+public class OnlineCartSearchActivity extends BaseActivity {
 
-    private final String TAG = CartSearchActivity.class.getSimpleName();
+    private final String TAG = OnlineCartSearchActivity.class.getSimpleName();
 
     private ImageView mCurrentImg;
     private TextView mCurrentTitle;
@@ -192,7 +191,7 @@ public class CartSearchActivity extends BaseActivity {
                 holder.sellerLayout1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(CartSearchActivity.this, OnlineStoreWebActivity.class);
+                        Intent intent = new Intent(OnlineCartSearchActivity.this, OnlineStoreWebActivity.class);
                         intent.putExtra("url", cartSearchInfo.getSellerUrl1());
                         startActivity(intent);
                     }
@@ -212,7 +211,7 @@ public class CartSearchActivity extends BaseActivity {
                 holder.sellerLayout2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(CartSearchActivity.this, OnlineStoreWebActivity.class);
+                        Intent intent = new Intent(OnlineCartSearchActivity.this, OnlineStoreWebActivity.class);
                         intent.putExtra("url", cartSearchInfo.getSellerUrl2());
                         startActivity(intent);
                     }
@@ -229,7 +228,7 @@ public class CartSearchActivity extends BaseActivity {
                 holder.sellerLayout3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(CartSearchActivity.this, OnlineStoreWebActivity.class);
+                        Intent intent = new Intent(OnlineCartSearchActivity.this, OnlineStoreWebActivity.class);
                         intent.putExtra("url", cartSearchInfo.getSellerUrl3());
                         startActivity(intent);
                     }
@@ -246,7 +245,7 @@ public class CartSearchActivity extends BaseActivity {
                 holder.sellerLayout4.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(CartSearchActivity.this, OnlineStoreWebActivity.class);
+                        Intent intent = new Intent(OnlineCartSearchActivity.this, OnlineStoreWebActivity.class);
                         intent.putExtra("url", cartSearchInfo.getSellerUrl4());
                         startActivity(intent);
                     }
@@ -263,7 +262,7 @@ public class CartSearchActivity extends BaseActivity {
                 holder.sellerLayout5.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(CartSearchActivity.this, OnlineStoreWebActivity.class);
+                        Intent intent = new Intent(OnlineCartSearchActivity.this, OnlineStoreWebActivity.class);
                         intent.putExtra("url", cartSearchInfo.getSellerUrl5());
                         startActivity(intent);
                     }
