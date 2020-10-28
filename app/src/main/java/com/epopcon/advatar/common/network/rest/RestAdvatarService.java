@@ -6,9 +6,11 @@ import com.epopcon.advatar.common.network.model.param.common.AppVersionParam;
 import com.epopcon.advatar.common.network.model.param.brand.BrandGoodsParam;
 import com.epopcon.advatar.common.network.model.param.brand.BrandParam;
 import com.epopcon.advatar.common.network.model.param.CommonParam;
+import com.epopcon.advatar.common.network.model.param.online.OnlineSharedUrlParam;
 import com.epopcon.advatar.common.network.model.param.online.OnlineStoreCartParam;
 import com.epopcon.advatar.common.network.model.param.online.OnlineStoreProductParam;
 import com.epopcon.advatar.common.network.model.param.online.OnlineStorePurchaseParam;
+import com.epopcon.advatar.common.network.model.param.user.AdminParam;
 import com.epopcon.advatar.common.network.model.param.user.UserParam;
 import com.epopcon.advatar.common.network.model.repo.brand.BrandContentsRepo;
 import com.epopcon.advatar.common.network.model.repo.common.AppVersionRepo;
@@ -17,6 +19,7 @@ import com.epopcon.advatar.common.network.model.repo.brand.BrandRepo;
 import com.epopcon.advatar.common.network.model.repo.common.ExtraVersionRepo;
 import com.epopcon.advatar.common.network.model.repo.common.OnlineStoreStatusRepo;
 import com.epopcon.advatar.common.network.model.repo.ResultRepo;
+import com.epopcon.advatar.common.network.model.repo.online.OnlineSharedUrlRepo;
 import com.epopcon.advatar.common.network.model.repo.user.UserFindIdRepo;
 import com.epopcon.advatar.common.network.model.repo.user.UserLoginRepo;
 
@@ -60,6 +63,9 @@ public class RestAdvatarService extends BaseService {
         @POST("user/userLogin")
         Call<UserLoginRepo> userLogin(@Body UserParam userParam);
 
+        @POST("user/adminLogin")
+        Call<ResultRepo> adminLogin(@Body AdminParam adminParam);
+
         @POST("user/userSNSLogin")
         Call<ResultRepo> userSNSLogin(@Body UserParam userParam);
 
@@ -97,5 +103,11 @@ public class RestAdvatarService extends BaseService {
 
         @POST("online/onlineStoreCartList")
         Call<ResultRepo> onlineStoreCartList(@Body OnlineStoreCartParam onlineStoreCartParam);
+
+        @POST("online/onlineSharedUrl")
+        Call<ResultRepo> onlineSharedUrl(@Body OnlineSharedUrlParam onlineSharedUrlParam);
+
+        @POST("online/getOnlineSharedUrlList")
+        Call<List<OnlineSharedUrlRepo>> getOnlineSharedUrlList(@Body OnlineSharedUrlParam onlineSharedUrlParam);
     }
 }

@@ -10,9 +10,11 @@ import com.epopcon.advatar.common.network.model.param.common.AppVersionParam;
 import com.epopcon.advatar.common.network.model.param.brand.BrandGoodsParam;
 import com.epopcon.advatar.common.network.model.param.brand.BrandParam;
 import com.epopcon.advatar.common.network.model.param.CommonParam;
+import com.epopcon.advatar.common.network.model.param.online.OnlineSharedUrlParam;
 import com.epopcon.advatar.common.network.model.param.online.OnlineStoreCartParam;
 import com.epopcon.advatar.common.network.model.param.online.OnlineStoreProductParam;
 import com.epopcon.advatar.common.network.model.param.online.OnlineStorePurchaseParam;
+import com.epopcon.advatar.common.network.model.param.user.AdminParam;
 import com.epopcon.advatar.common.network.model.param.user.UserParam;
 import com.epopcon.advatar.common.network.model.repo.brand.BrandContentsRepo;
 import com.epopcon.advatar.common.network.model.repo.common.AppVersionRepo;
@@ -21,6 +23,7 @@ import com.epopcon.advatar.common.network.model.repo.brand.BrandRepo;
 import com.epopcon.advatar.common.network.model.repo.common.ExtraVersionRepo;
 import com.epopcon.advatar.common.network.model.repo.common.OnlineStoreStatusRepo;
 import com.epopcon.advatar.common.network.model.repo.ResultRepo;
+import com.epopcon.advatar.common.network.model.repo.online.OnlineSharedUrlRepo;
 import com.epopcon.advatar.common.network.model.repo.user.UserFindIdRepo;
 import com.epopcon.advatar.common.network.model.repo.user.UserLoginRepo;
 import com.epopcon.advatar.common.util.EncrypterUtil;
@@ -62,6 +65,8 @@ public class RestAdvatarProtocol {
     public static final int PROTOCOL_ONLINE_STORE_PURCHASE_LIST = 0x301;
     public static final int PROTOCOL_ONLINE_STORE_PRODUCT_LIST = 0x302;
     public static final int PROTOCOL_ONLINE_STORE_CART_LIST = 0x303;
+    public static final int PROTOCOL_ONLINE_SHARED_URL = 0x304;
+    public static final int PROTOCOL_GET_ONLINE_SHARED_URL_LIST = 0x305;
 
     public static synchronized RestAdvatarProtocol getInstance() {
         if (instance == null) {
@@ -377,6 +382,47 @@ public class RestAdvatarProtocol {
             };
 
             RestAdvatarService.api(host, timeout).userLogin(userParam).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void adminLogin(String adminId, String adminPw, final RequestListener requestListener) throws Exception {
+        final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
+        if (TextUtils.isEmpty(licenseKey)) {
+            return;
+        }
+
+        try {
+            final AdminParam adminParam = new AdminParam();
+            adminParam.affiliateCode = CommonLibrary.getAffiliateCode();
+            adminParam.licenseKey = licenseKey;
+            adminParam.adminId = adminId;
+            adminParam.adminPw = adminPw;
+
+            Callback<ResultRepo> callback = new Callback<ResultRepo>() {
+                @Override
+                public void onResponse(Call<ResultRepo> call, Response<ResultRepo> response) {
+                    if (response != null && response.isSuccessful() && response.body() != null) {
+                        if (response.code() != 200) {
+                            requestListener.onRequestFailure(new Throwable(response.message()));
+                            return;
+                        }
+
+                        ResultRepo result = response.body();
+                        requestListener.onRequestSuccess(PROTOCOL_USER_LOGIN, result.result);
+                    } else {
+                        requestListener.onRequestFailure(new Throwable());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultRepo> call, Throwable t) {
+                    requestListener.onRequestFailure(t);
+                }
+            };
+
+            RestAdvatarService.api(host, timeout).adminLogin(adminParam).enqueue(callback);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1039,6 +1085,85 @@ public class RestAdvatarProtocol {
                 }
             };
             RestAdvatarService.api(host, timeout).onlineStoreCartList(onlineStoreCartParam).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 온라인 쇼핑몰에서 링크 공유시 서버로 전달
+     * @param requestListener
+     * @throws Exception
+     */
+    public void onlineSharedUrl(OnlineSharedUrlParam onlineSharedUrlParam, final RequestListener requestListener) throws Exception {
+        final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
+        if (TextUtils.isEmpty(licenseKey)) {
+            return;
+        }
+
+        try {
+            onlineSharedUrlParam.licenseKey = licenseKey;
+            onlineSharedUrlParam.affiliateCode = CommonLibrary.getAffiliateCode();
+
+            Callback<ResultRepo> callback = new Callback<ResultRepo>() {
+                @Override
+                public void onResponse(Call<ResultRepo> call, Response<ResultRepo> response) {
+                    if (response != null && response.isSuccessful() && response.body() != null) {
+                        if (response.code() != 200) {
+                            requestListener.onRequestFailure(new Throwable(response.message()));
+                            return;
+                        }
+
+                        ResultRepo result = response.body();
+                        requestListener.onRequestSuccess(PROTOCOL_ONLINE_SHARED_URL, result.result);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultRepo> call, Throwable t) {
+                    requestListener.onRequestFailure(t);
+                }
+            };
+            RestAdvatarService.api(host, timeout).onlineSharedUrl(onlineSharedUrlParam).enqueue(callback);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getOnlineSharedUrlList(String userId, final RequestListener requestListener) throws Exception {
+        final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
+        if (TextUtils.isEmpty(licenseKey)) {
+            return;
+        }
+
+        try {
+            final OnlineSharedUrlParam onlineSharedUrlParam = new OnlineSharedUrlParam();
+            onlineSharedUrlParam.licenseKey = licenseKey;
+            onlineSharedUrlParam.affiliateCode = CommonLibrary.getAffiliateCode();
+
+            onlineSharedUrlParam.userId = userId;
+
+            Callback<List<OnlineSharedUrlRepo>> callback = new Callback<List<OnlineSharedUrlRepo>>() {
+                @Override
+                public void onResponse(Call<List<OnlineSharedUrlRepo>> call, Response<List<OnlineSharedUrlRepo>> response) {
+                    if (response != null && response.isSuccessful() && response.body() != null) {
+                        if (response.code() != 200) {
+                            requestListener.onRequestFailure(new Throwable(response.message()));
+                            return;
+                        }
+
+                        List<OnlineSharedUrlRepo> sharedUrlList = (List<OnlineSharedUrlRepo>) response.body();
+                        requestListener.onRequestSuccess(PROTOCOL_GET_ONLINE_SHARED_URL_LIST, sharedUrlList);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<OnlineSharedUrlRepo>> call, Throwable t) {
+                    requestListener.onRequestFailure(t);
+                }
+            };
+            RestAdvatarService.api(host, timeout).getOnlineSharedUrlList(onlineSharedUrlParam).enqueue(callback);
         } catch (Exception e) {
             e.printStackTrace();
         }

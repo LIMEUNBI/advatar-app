@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,8 +19,10 @@ import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
 import com.epopcon.advatar.common.network.model.repo.brand.BrandGoodsRepo;
+import com.epopcon.advatar.common.network.model.repo.brand.BrandRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
+import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.NumberFormat;
@@ -43,8 +46,8 @@ public class GoodsFragment extends BaseFragment {
 
     private View mView = null;
 
-    private ListView mListView;
-    private ListAdapter mListAdapter = null;
+    private GridView mGridView;
+    private GridAdapter mGridAdapter = null;
     private List<BrandGoodsRepo> mGoodsList = new ArrayList<>();
 
     private ImageView mImgLoading;
@@ -65,15 +68,15 @@ public class GoodsFragment extends BaseFragment {
 
         mView = inflater.inflate(R.layout.fragment_goods, container, false);
 
-        mListView = mView.findViewById(R.id.list_view);
-        mListView.setVisibility(View.GONE);
+        mGridView = mView.findViewById(R.id.grid_view);
+        mGridView.setVisibility(View.GONE);
 
         mImgLoading = mView.findViewById(R.id.img_loading);
 
         Glide.with(this).asGif().load(R.raw.loading).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(mImgLoading);
 
-        mListAdapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.item_contents_list, mGoodsList);
-        mListView.setAdapter(mListAdapter);
+        mGridAdapter = new GridAdapter(getActivity().getApplicationContext(), R.layout.item_contents_list, mGoodsList);
+        mGridView.setAdapter(mGridAdapter);
 
         return mView;
     }
@@ -98,8 +101,8 @@ public class GoodsFragment extends BaseFragment {
                     @Override
                     public void onRequestSuccess(int requestCode, Object result) {
                         mGoodsList.addAll((List<BrandGoodsRepo>) result);
-                        mListAdapter.notifyDataSetChanged();
-                        mListView.setVisibility(View.VISIBLE);
+                        mGridAdapter.notifyDataSetChanged();
+                        mGridView.setVisibility(View.VISIBLE);
                         mImgLoading.setVisibility(View.GONE);
                     }
 
@@ -112,17 +115,17 @@ public class GoodsFragment extends BaseFragment {
                 e.printStackTrace();
             }
         } else {
-            mListAdapter.notifyDataSetChanged();
-            mListView.setVisibility(View.VISIBLE);
+            mGridAdapter.notifyDataSetChanged();
+            mGridView.setVisibility(View.VISIBLE);
             mImgLoading.setVisibility(View.GONE);
         }
     }
 
-    private class ListAdapter extends ArrayAdapter<BrandGoodsRepo> {
+    private class GridAdapter extends ArrayAdapter<BrandGoodsRepo> {
 
         private List<BrandGoodsRepo> items;
 
-        ListAdapter(Context context, int textViewResourceId, List<BrandGoodsRepo> items) {
+        public GridAdapter(Context context, int textViewResourceId, List<BrandGoodsRepo> items) {
             super(context, textViewResourceId, items);
             this.items = items;
         }

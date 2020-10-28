@@ -4,15 +4,15 @@
     <item
         android:id="@+id/action_one"
         android:icon="@drawable/icon_contents"
-        android:title="컨텐츠" />
+        android:title="베스트셀러" />
     <item
         android:id="@+id/action_two"
         android:icon="@drawable/icon_goods"
-        android:title="상품" />
+        android:title="Pick" />
     <item
         android:id="@+id/action_three"
         android:icon="@drawable/icon_review"
-        android:title="쇼핑몰" />
+        android:title="쇼핑내역" />
     <item
         android:id="@+id/action_four"
         android:icon="@drawable/icon_mypage"

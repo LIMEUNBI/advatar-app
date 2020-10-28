@@ -39,6 +39,9 @@ import org.json.JSONObject;
 
 public class LoginActivity extends BaseActivity {
 
+    private TextView mUserLogin;
+    private TextView mAdminLogin;
+
     private EditText mEditId;
     private EditText mEditPw;
 
@@ -58,10 +61,37 @@ public class LoginActivity extends BaseActivity {
 
     public static OAuthLogin mOAuthLoginInstance;
 
+    private boolean userYn = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mUserLogin = (TextView) findViewById(R.id.user_login);
+        mAdminLogin = (TextView) findViewById(R.id.dash_login);
+
+        mUserLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mUserLogin.setBackground(getResources().getDrawable(R.drawable.edittext_rounded_corner_blue));
+                mAdminLogin.setBackground(getResources().getDrawable(R.drawable.edittext_rounded_corner));
+                mAdminLogin.setTextColor(getResources().getColor(R.color.text_b5b5b5));
+                mUserLogin.setTextColor(getResources().getColor(R.color.black));
+                userYn = true;
+            }
+        });
+
+        mAdminLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAdminLogin.setBackground(getResources().getDrawable(R.drawable.edittext_rounded_corner_blue));
+                mUserLogin.setBackground(getResources().getDrawable(R.drawable.edittext_rounded_corner));
+                mUserLogin.setTextColor(getResources().getColor(R.color.text_b5b5b5));
+                mAdminLogin.setTextColor(getResources().getColor(R.color.black));
+                userYn = false;
+            }
+        });
 
         mEditId = (EditText) findViewById(R.id.edit_id);
         mEditPw = (EditText) findViewById(R.id.edit_pw);
@@ -101,7 +131,11 @@ public class LoginActivity extends BaseActivity {
                 if (TextUtils.isEmpty(mEditId.getText().toString()) || TextUtils.isEmpty(mEditPw.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "아이디와 비밀번호를 입력해주세요.", Toast.LENGTH_LONG).show();
                 } else {
-                    getLogin();
+                    if (userYn) {
+                        getLogin();
+                    } else {
+                        getAdminLogin();
+                    }
                 }
             }
         });
@@ -198,6 +232,42 @@ public class LoginActivity extends BaseActivity {
                     } else if (userLoginRepo.result.equals("NO_USER")) {
                         Toast.makeText(getApplicationContext(), "등록되지 않은 아이디입니다. 다시 확인해주세요.", Toast.LENGTH_LONG).show();
                     } else if (userLoginRepo.result.equals("PASSWORD_ERROR")) {
+                        Toast.makeText(getApplicationContext(), "잘못된 비밀번호입니다. 비밀번호를 다시 확인해주세요.", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onRequestFailure(Throwable t) {
+                    Toast.makeText(getApplicationContext(), "오류가 발생하였습니다. 잠시 후 다시 시도해주세요.", Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getAdminLogin() {
+        try {
+            RestAdvatarProtocol.getInstance().adminLogin(mEditId.getText().toString(), mEditPw.getText().toString(), new RequestListener() {
+                @Override
+                public void onRequestSuccess(int requestCode, Object result) {
+                    Intent intent;
+                    if (result.toString().equals("SUCCESS")) {
+                        if (TextUtils.isEmpty(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.MY_BRAND_NAME, ""))) {
+                            intent = new Intent(LoginActivity.this, BrandChoiceActivity.class);
+                            if (getBrandList().isEmpty()) {
+                                getBrandListAPI();
+                            } else {
+                                intent.putParcelableArrayListExtra("brandList", getBrandList());
+                            }
+                        } else {
+                            intent = new Intent(LoginActivity.this, MainActivity.class);
+                        }
+                        startActivity(intent);
+                        finish();
+                    } else if (result.equals("NO_USER")) {
+                        Toast.makeText(getApplicationContext(), "등록되지 않은 아이디입니다. 다시 확인해주세요.", Toast.LENGTH_LONG).show();
+                    } else if (result.equals("PASSWORD_ERROR")) {
                         Toast.makeText(getApplicationContext(), "잘못된 비밀번호입니다. 비밀번호를 다시 확인해주세요.", Toast.LENGTH_LONG).show();
                     }
                 }

@@ -19,7 +19,6 @@ import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
 import com.epopcon.advatar.common.network.model.repo.brand.BrandContentsRepo;
-import com.epopcon.advatar.common.network.model.repo.brand.BrandGoodsRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;

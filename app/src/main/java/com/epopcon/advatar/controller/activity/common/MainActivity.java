@@ -24,7 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
-import com.epopcon.advatar.controller.fragment.ContentsFragment;
+import com.epopcon.advatar.controller.fragment.FavoriteFragment;
 import com.epopcon.advatar.controller.fragment.GoodsFragment;
 import com.epopcon.advatar.controller.fragment.MyPageFragment;
 import com.epopcon.advatar.controller.fragment.OnlineFragment;
@@ -95,7 +95,14 @@ public class MainActivity extends BaseActivity {
         bottomNavigationView();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, ContentsFragment.getInstance());
+
+        if (getIntent().getStringExtra("Fragment") != null && getIntent().getStringExtra("Fragment").equals("Favorite")) {
+            view = bottomNavigationView.findViewById(R.id.action_two);
+            view.performClick();
+            transaction.replace(R.id.frame_layout, FavoriteFragment.getInstance());
+        } else {
+            transaction.replace(R.id.frame_layout, GoodsFragment.getInstance());
+        }
         transaction.commit();
 
         getHashKey();
@@ -142,15 +149,15 @@ public class MainActivity extends BaseActivity {
                 switch (menuItem.getItemId()) {
 
                     case R.id.action_one:
-                        toolbarTitle.setText("브랜드 컨텐츠");
-                        selectedFragment = ContentsFragment.getInstance();
+                        toolbarTitle.setText("베스트셀러 아이템");
+                        selectedFragment = GoodsFragment.getInstance();
                         imgOption.setVisibility(View.VISIBLE);
                         imgOnlineOption.setVisibility(View.GONE);
                         break;
 
                     case R.id.action_two:
-                        toolbarTitle.setText("브랜드 상품");
-                        selectedFragment = GoodsFragment.getInstance();
+                        toolbarTitle.setText("상품 추적");
+                        selectedFragment = FavoriteFragment.getInstance();
                         imgOption.setVisibility(View.VISIBLE);
                         imgOnlineOption.setVisibility(View.GONE);
                         break;

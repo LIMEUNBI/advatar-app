@@ -3,15 +3,18 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/line_f2f2f2">
 
-    <ListView
-        android:id="@+id/list_view"
+    <GridView
+        android:id="@+id/grid_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/white"
-        android:dividerHeight="0dp"
-        android:fadeScrollbars="false"
+        android:layout_height="fill_parent"
+        android:verticalSpacing="2dp"
+        android:horizontalSpacing="2dp"
+        android:listSelector="@drawable/list_selector"
+        android:scrollbarStyle="outsideOverlay"
+        android:padding="4dp"
+        android:numColumns="2"
         android:nestedScrollingEnabled="true"/>
 
     <ImageView

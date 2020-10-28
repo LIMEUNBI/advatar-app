@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.epopcon.advatar.BuildConfig;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
+import com.epopcon.advatar.common.util.MyBrandUtil;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
 import com.epopcon.advatar.controller.activity.user.LoginActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
@@ -72,6 +73,8 @@ public class MyPageFragment extends BaseFragment {
             public void onClick(View view) {
                 SharedPreferenceBase.putPrefString(getContext(), Config.USER_ID, null);
                 SharedPreferenceBase.putPrefString(getContext(), Config.USER_PW, null);
+                MyBrandUtil.putBrandCodeList(null);
+                MyBrandUtil.putBrandNameList(null);
 
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);

@@ -6,11 +6,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.epopcon.advatar.BuildConfig;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
+import com.epopcon.advatar.common.network.model.param.online.OnlineSharedUrlParam;
 import com.epopcon.advatar.common.network.model.repo.common.AppVersionRepo;
 import com.epopcon.advatar.common.network.model.repo.user.UserLoginRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
@@ -20,12 +23,25 @@ import com.epopcon.advatar.common.util.MyBrandUtil;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
 import com.epopcon.advatar.controller.activity.user.LoginActivity;
+import com.epopcon.extra.common.utils.ExecutorPool;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class IntroActivity extends BaseActivity {
 
     private final String TAG = IntroActivity.class.getSimpleName();
 
     private String mUpdateType;
+    private String mSharedUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +50,16 @@ public class IntroActivity extends BaseActivity {
 
         if (getBrandList().isEmpty()) {
             getBrandListAPI();
+        }
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                mSharedUrl = intent.getStringExtra(Intent.EXTRA_TEXT);
+            }
         }
     }
 
@@ -145,6 +171,18 @@ public class IntroActivity extends BaseActivity {
                                     MyBrandUtil.putBrandNameList(userLoginRepo.userBrandNames);
                                     if (!TextUtils.isEmpty(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.MY_BRAND_NAME, ""))) {
                                         intent = new Intent(IntroActivity.this, MainActivity.class);
+                                        if (!TextUtils.isEmpty(mSharedUrl)) {
+                                            final String storeName = getStoreName(mSharedUrl);
+                                            if (storeName.equals("미지원")) {
+                                                Toast.makeText(getApplicationContext(), "지원하지 않는 쇼핑몰 링크입니다.", Toast.LENGTH_LONG).show();
+                                            }
+                                            ExecutorPool.NETWORK.execute(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    getOnlinePickInfo(storeName, mSharedUrl);
+                                                }
+                                            });
+                                        }
                                     } else {
                                         intent = new Intent(IntroActivity.this, BrandChoiceActivity.class);
                                         if (getBrandList().isEmpty()) {
@@ -201,6 +239,19 @@ public class IntroActivity extends BaseActivity {
                                     MyBrandUtil.putBrandNameList(userLoginRepo.userBrandNames);
                                     if (!TextUtils.isEmpty(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.MY_BRAND_NAME, ""))) {
                                         intent = new Intent(IntroActivity.this, MainActivity.class);
+                                        if (!TextUtils.isEmpty(mSharedUrl)) {
+                                            final String storeName = getStoreName(mSharedUrl);
+                                            intent.putExtra("Fragment", "Favorite");
+                                            if (storeName.equals("미지원")) {
+                                                Toast.makeText(getApplicationContext(), "지원하지 않는 쇼핑몰 링크입니다.", Toast.LENGTH_LONG).show();
+                                            }
+                                            ExecutorPool.NETWORK.execute(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    getOnlinePickInfo(storeName, mSharedUrl);
+                                                }
+                                            });
+                                        }
                                     } else {
                                         intent = new Intent(IntroActivity.this, BrandChoiceActivity.class);
                                         if (getBrandList().isEmpty()) {
@@ -238,6 +289,122 @@ public class IntroActivity extends BaseActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private String getStoreName(String url) {
+        String storeName = null;
+
+        if (url.contains("11st.co.kr")) {
+            storeName = "11번가";
+        } else if (url.contains("gmarket.co.kr")) {
+            storeName = "G마켓";
+        } else if (url.contains("auction.co.kr")) {
+            storeName = "옥션";
+        } else if (url.contains("naver.com")) {
+            storeName = "네이버쇼핑";
+        } else if (url.contains("interpark.com")) {
+            storeName = "인터파크";
+        } else if (url.contains("coupang.com")) {
+            storeName = "쿠팡";
+        } else if (url.contains("tmon.co.kr")) {
+            storeName = "티몬";
+        } else if (url.contains("wemakeprice.com")) {
+            storeName = "위메프";
+        } else if (url.contains("ssg.com")) {
+            storeName = "SSG";
+        } else if (url.contains("lotteon.com")) {
+            storeName = "롯데ON";
+        } else if (url.contains("hyundaihmall.com")) {
+            storeName = "현대H몰";
+        } else if (url.contains("cjmall.com")) {
+            storeName = "CJ몰";
+        } else if (url.contains("akmall.com")) {
+            storeName = "AK몰";
+        } else {
+            storeName = "미지원";
+        }
+
+        return storeName;
+    }
+
+    private void getOnlinePickInfo(final String siteName, final String productUrl) {
+        final OnlineSharedUrlParam onlineSharedUrlParam = new OnlineSharedUrlParam();
+        try {
+            URL url = new URL(productUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == 200) {
+                InputStreamReader in = new InputStreamReader((InputStream) connection.getContent(), "euc-kr");
+                BufferedReader br = new BufferedReader(in);
+                String line;
+                String text = "";
+                while ((line = br.readLine()) != null) {
+                    text += line;
+                }
+
+                if (siteName.equals("11번가")) {
+                    productParser11st(siteName, productUrl, onlineSharedUrlParam, text);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void productParser11st(String siteName, String productUrl, OnlineSharedUrlParam onlineSharedUrlParam, String content) {
+        try {
+            Document doc = Jsoup.parse(content);
+
+            String productName = doc.select("div.dt_title > h1").text();
+            String noSale = doc.select("div.dt_price > p.no_sale").text();
+            if (noSale.equals("현재 판매중인 상품이 아닙니다.")) {
+                return;
+            }
+            int productPrice = Integer.valueOf(doc.select("div.dt_price > div.price > span > b").text().replace(",", ""));
+            String delivery = doc.select("div.d_delivery > a > strong").text();
+            int deliveryAmount;
+            if (delivery.equals("무료배송")) {
+                deliveryAmount = 0;
+            } else {
+                deliveryAmount = Integer.valueOf(doc.select("div.d_delivery > a > strong").text().replace("배송비", "")
+                        .replace(",", "").replace("원", "").trim());
+
+            }
+            String productImg = doc.select("div.zone > ul > li > img").attr("src");
+
+            onlineSharedUrlParam.productName = productName;
+            onlineSharedUrlParam.productPrice = productPrice;
+            onlineSharedUrlParam.deliveryAmount = deliveryAmount;
+            onlineSharedUrlParam.productImg = productImg;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateTime = dateFormat.format(new Date());
+
+            onlineSharedUrlParam.userId = SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, null);
+            onlineSharedUrlParam.siteName = siteName;
+            onlineSharedUrlParam.productUrl = productUrl;
+            onlineSharedUrlParam.dateTime = dateTime;
+
+            try {
+                RestAdvatarProtocol.getInstance().onlineSharedUrl(onlineSharedUrlParam, new RequestListener() {
+                    @Override
+                    public void onRequestSuccess(int requestCode, Object result) {
+
+                    }
+
+                    @Override
+                    public void onRequestFailure(Throwable t) {
+
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
     }
 }
