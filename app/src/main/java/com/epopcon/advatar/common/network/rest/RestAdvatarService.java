@@ -6,7 +6,7 @@ import com.epopcon.advatar.common.network.model.param.common.AppVersionParam;
 import com.epopcon.advatar.common.network.model.param.brand.BrandGoodsParam;
 import com.epopcon.advatar.common.network.model.param.brand.BrandParam;
 import com.epopcon.advatar.common.network.model.param.CommonParam;
-import com.epopcon.advatar.common.network.model.param.online.OnlineSharedUrlParam;
+import com.epopcon.advatar.common.network.model.param.online.OnlinePickProductParam;
 import com.epopcon.advatar.common.network.model.param.online.OnlineStoreCartParam;
 import com.epopcon.advatar.common.network.model.param.online.OnlineStoreProductParam;
 import com.epopcon.advatar.common.network.model.param.online.OnlineStorePurchaseParam;
@@ -19,7 +19,7 @@ import com.epopcon.advatar.common.network.model.repo.brand.BrandRepo;
 import com.epopcon.advatar.common.network.model.repo.common.ExtraVersionRepo;
 import com.epopcon.advatar.common.network.model.repo.common.OnlineStoreStatusRepo;
 import com.epopcon.advatar.common.network.model.repo.ResultRepo;
-import com.epopcon.advatar.common.network.model.repo.online.OnlineSharedUrlRepo;
+import com.epopcon.advatar.common.network.model.repo.online.OnlinePickProductRepo;
 import com.epopcon.advatar.common.network.model.repo.user.UserFindIdRepo;
 import com.epopcon.advatar.common.network.model.repo.user.UserLoginRepo;
 
@@ -104,10 +104,13 @@ public class RestAdvatarService extends BaseService {
         @POST("online/onlineStoreCartList")
         Call<ResultRepo> onlineStoreCartList(@Body OnlineStoreCartParam onlineStoreCartParam);
 
-        @POST("online/onlineSharedUrl")
-        Call<ResultRepo> onlineSharedUrl(@Body OnlineSharedUrlParam onlineSharedUrlParam);
+        @POST("online/onlinePickProduct")
+        Call<ResultRepo> onlinePickProduct(@Body OnlinePickProductParam onlinePickProductParam);
 
-        @POST("online/getOnlineSharedUrlList")
-        Call<List<OnlineSharedUrlRepo>> getOnlineSharedUrlList(@Body OnlineSharedUrlParam onlineSharedUrlParam);
+        @POST("online/onlinePickCancel")
+        Call<ResultRepo> onlinePickCancel(@Body OnlinePickProductParam onlinePickProductParam);
+
+        @POST("online/getOnlinePickProductList")
+        Call<List<OnlinePickProductRepo>> getOnlinePickProductList(@Body OnlinePickProductParam onlinePickProductParam);
     }
 }

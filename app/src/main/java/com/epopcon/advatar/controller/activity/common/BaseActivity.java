@@ -20,6 +20,7 @@ import com.epopcon.advatar.controller.activity.user.LoginActivity;
 import com.epopcon.advatar.controller.activity.user.UpdatePwActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 
 import static com.epopcon.advatar.common.util.MyBrandUtil.getBrandCodeList;
@@ -128,6 +129,28 @@ public class BaseActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String getPasswordEncryption(String userId, String password) {
+        String encrypt = "";
+
+        try{
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest((password + userId).getBytes("UTF-8"));
+            StringBuffer hexString = new StringBuffer();
+
+            for (int i = 0; i < hash.length; i++) {
+                String hex = Integer.toHexString(0xff & hash[i]);
+                if(hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            encrypt = hexString.toString();
+
+        } catch(Exception ex){
+            throw new RuntimeException(ex);
+        }
+
+        return encrypt;
     }
 
     public ArrayList<BrandRepo> getBrandList() {

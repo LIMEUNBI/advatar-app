@@ -2,7 +2,7 @@ package com.epopcon.advatar.common.network.model.repo.online;
 
 import com.google.gson.annotations.SerializedName;
 
-public class OnlineSharedUrlRepo {
+public class OnlinePickProductRepo {
 
     public @SerializedName("siteName")
     String siteName;
@@ -15,6 +15,9 @@ public class OnlineSharedUrlRepo {
 
     public @SerializedName("deliveryAmount")
     int deliveryAmount;
+
+    public @SerializedName("collectionType")
+    String collectionType;
 
     public @SerializedName("productUrl")
     String productUrl;

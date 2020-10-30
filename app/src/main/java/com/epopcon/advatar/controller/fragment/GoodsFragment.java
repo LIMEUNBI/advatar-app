@@ -18,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
+import com.epopcon.advatar.common.network.model.param.online.OnlinePickProductParam;
 import com.epopcon.advatar.common.network.model.repo.brand.BrandGoodsRepo;
 import com.epopcon.advatar.common.network.model.repo.brand.BrandRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
@@ -29,6 +30,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -75,7 +77,7 @@ public class GoodsFragment extends BaseFragment {
 
         Glide.with(this).asGif().load(R.raw.loading).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(mImgLoading);
 
-        mGridAdapter = new GridAdapter(getActivity().getApplicationContext(), R.layout.item_contents_list, mGoodsList);
+        mGridAdapter = new GridAdapter(getActivity().getApplicationContext(), R.layout.item_goods_list, mGoodsList);
         mGridView.setAdapter(mGridAdapter);
 
         return mView;
@@ -132,7 +134,7 @@ public class GoodsFragment extends BaseFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
+            final ViewHolder holder;
 
             if (convertView == null) {
                 holder = new ViewHolder();
@@ -140,6 +142,7 @@ public class GoodsFragment extends BaseFragment {
                 convertView = inflater.inflate(R.layout.item_goods_list, null);
 
                 holder.goodsImg = (ImageView) convertView.findViewById(R.id.img_goods);
+                holder.pickImg = (ImageView) convertView.findViewById(R.id.img_pick);
                 holder.brandName = (TextView) convertView.findViewById(R.id.brand_name);
                 holder.siteName = (TextView) convertView.findViewById(R.id.site_name);
                 holder.goodsCate = (TextView) convertView.findViewById(R.id.goods_cate);
@@ -159,6 +162,70 @@ public class GoodsFragment extends BaseFragment {
             final BrandGoodsRepo brandGoodsRepo = items.get(position);
 
             ImageLoader.getInstance().displayImage(brandGoodsRepo.goodsImg, holder.goodsImg, mImageLoaderOptions);
+
+            if (brandGoodsRepo.pickYn) {
+                holder.pickImg.setImageDrawable(getResources().getDrawable(R.drawable.icon_heart_full));
+            } else {
+                holder.pickImg.setImageDrawable(getResources().getDrawable(R.drawable.icon_heart_empty));
+            }
+
+            holder.pickImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (brandGoodsRepo.pickYn) {
+                        holder.pickImg.setImageDrawable(getResources().getDrawable(R.drawable.icon_heart_empty));
+                        brandGoodsRepo.setPickYn(false);
+                        String userId = SharedPreferenceBase.getPrefString(getContext(), Config.USER_ID, null);
+                        try {
+                            RestAdvatarProtocol.getInstance().onlinePickCancel(userId, brandGoodsRepo.siteName, brandGoodsRepo.url, new RequestListener() {
+                                @Override
+                                public void onRequestSuccess(int requestCode, Object result) {
+
+                                }
+
+                                @Override
+                                public void onRequestFailure(Throwable t) {
+
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        holder.pickImg.setImageDrawable(getResources().getDrawable(R.drawable.icon_heart_full));
+                        brandGoodsRepo.setPickYn(true);
+                        OnlinePickProductParam onlinePickProductParam = new OnlinePickProductParam();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String dateTime = dateFormat.format(new Date());
+
+                        onlinePickProductParam.userId = SharedPreferenceBase.getPrefString(getContext(), Config.USER_ID, null);
+                        onlinePickProductParam.collectionType = "A";
+                        onlinePickProductParam.siteName = brandGoodsRepo.siteName;
+                        onlinePickProductParam.productName = brandGoodsRepo.goodsName;
+                        onlinePickProductParam.productPrice = brandGoodsRepo.goodsPrice;
+                        onlinePickProductParam.deliveryAmount = 0;
+                        onlinePickProductParam.productImg = brandGoodsRepo.goodsImg;
+                        onlinePickProductParam.productUrl = brandGoodsRepo.url;
+                        onlinePickProductParam.dateTime = dateTime;
+                        try {
+                            RestAdvatarProtocol.getInstance().onlinePickProduct(onlinePickProductParam, new RequestListener() {
+                                @Override
+                                public void onRequestSuccess(int requestCode, Object result) {
+
+                                }
+
+                                @Override
+                                public void onRequestFailure(Throwable t) {
+
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+
             NumberFormat n = NumberFormat.getNumberInstance(Locale.KOREAN);
 
             holder.brandName.setText(brandGoodsRepo.brandName);
@@ -190,6 +257,7 @@ public class GoodsFragment extends BaseFragment {
 
         private class ViewHolder {
             public ImageView goodsImg;
+            public ImageView pickImg;
             public TextView brandName;
             public TextView siteName;
             public TextView goodsCate;

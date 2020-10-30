@@ -37,6 +37,8 @@ import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+
 public class LoginActivity extends BaseActivity {
 
     private TextView mUserLogin;
@@ -200,7 +202,8 @@ public class LoginActivity extends BaseActivity {
     private void getLogin() {
         try {
             String fcmToken = SharedPreferenceBase.getPrefString(getApplicationContext(), Config.FCM_TOKEN, "");
-            RestAdvatarProtocol.getInstance().userLogin(mEditId.getText().toString(), mEditPw.getText().toString(), fcmToken, Build.MODEL, new RequestListener() {
+            String userPw = getPasswordEncryption(mEditId.getText().toString(), mEditPw.getText().toString());
+            RestAdvatarProtocol.getInstance().userLogin(mEditId.getText().toString(), userPw, fcmToken, Build.MODEL, new RequestListener() {
                 @Override
                 public void onRequestSuccess(int requestCode, Object result) {
                     UserLoginRepo userLoginRepo = (UserLoginRepo) result;

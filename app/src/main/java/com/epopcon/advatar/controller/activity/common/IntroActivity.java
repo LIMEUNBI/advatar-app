@@ -13,7 +13,7 @@ import com.epopcon.advatar.BuildConfig;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.common.config.Config;
 import com.epopcon.advatar.common.network.RequestListener;
-import com.epopcon.advatar.common.network.model.param.online.OnlineSharedUrlParam;
+import com.epopcon.advatar.common.network.model.param.online.OnlinePickProductParam;
 import com.epopcon.advatar.common.network.model.repo.common.AppVersionRepo;
 import com.epopcon.advatar.common.network.model.repo.user.UserLoginRepo;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
@@ -222,8 +222,9 @@ public class IntroActivity extends BaseActivity {
                             }
                         });
             } else {
-                RestAdvatarProtocol.getInstance().userLogin(userId,
-                        SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_PW, null), fcmToken, Build.MODEL, new RequestListener() {
+                String userPassword = SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_PW, null);
+                String userPw = getPasswordEncryption(userId, userPassword);
+                RestAdvatarProtocol.getInstance().userLogin(userId, userPw, fcmToken, Build.MODEL, new RequestListener() {
                             @Override
                             public void onRequestSuccess(int requestCode, Object result) {
                                 final Intent intent;
@@ -293,34 +294,34 @@ public class IntroActivity extends BaseActivity {
     }
 
     private String getStoreName(String url) {
-        String storeName = null;
+        String storeName;
 
         if (url.contains("11st.co.kr")) {
-            storeName = "11번가";
+            storeName = "top.11st.co.kr";
         } else if (url.contains("gmarket.co.kr")) {
-            storeName = "G마켓";
+            storeName = "top.gmarket.co.kr";
         } else if (url.contains("auction.co.kr")) {
-            storeName = "옥션";
-        } else if (url.contains("naver.com")) {
-            storeName = "네이버쇼핑";
+            storeName = "top.auction.co.kr";
+        } else if (url.contains("shopping.naver.com")) {
+            storeName = "top.naverstore.com";
         } else if (url.contains("interpark.com")) {
-            storeName = "인터파크";
+            storeName = "top.interpark.com";
         } else if (url.contains("coupang.com")) {
-            storeName = "쿠팡";
+            storeName = "top.coupang.com";
         } else if (url.contains("tmon.co.kr")) {
-            storeName = "티몬";
+            storeName = "top.tmon.co.kr";
         } else if (url.contains("wemakeprice.com")) {
-            storeName = "위메프";
+            storeName = "top.wemakeprice.com";
         } else if (url.contains("ssg.com")) {
-            storeName = "SSG";
+            storeName = "top.ssg.com";
         } else if (url.contains("lotteon.com")) {
-            storeName = "롯데ON";
+            storeName = "top.lotteon.com";
         } else if (url.contains("hyundaihmall.com")) {
-            storeName = "현대H몰";
+            storeName = "top.hyundaihmall.com";
         } else if (url.contains("cjmall.com")) {
-            storeName = "CJ몰";
+            storeName = "top.cjmall.com";
         } else if (url.contains("akmall.com")) {
-            storeName = "AK몰";
+            storeName = "top.akmall.com";
         } else {
             storeName = "미지원";
         }
@@ -329,7 +330,7 @@ public class IntroActivity extends BaseActivity {
     }
 
     private void getOnlinePickInfo(final String siteName, final String productUrl) {
-        final OnlineSharedUrlParam onlineSharedUrlParam = new OnlineSharedUrlParam();
+        final OnlinePickProductParam onlinePickProductParam = new OnlinePickProductParam();
         try {
             URL url = new URL(productUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -345,8 +346,10 @@ public class IntroActivity extends BaseActivity {
                     text += line;
                 }
 
-                if (siteName.equals("11번가")) {
-                    productParser11st(siteName, productUrl, onlineSharedUrlParam, text);
+                switch (siteName) {
+                    case "top.11st.co.kr":
+                        productParser11st(siteName, productUrl, onlinePickProductParam, text);
+                        break;
                 }
             }
         } catch (Exception e) {
@@ -354,7 +357,7 @@ public class IntroActivity extends BaseActivity {
         }
     }
 
-    private void productParser11st(String siteName, String productUrl, OnlineSharedUrlParam onlineSharedUrlParam, String content) {
+    private void productParser11st(String siteName, String productUrl, OnlinePickProductParam onlinePickProductParam, String content) {
         try {
             Document doc = Jsoup.parse(content);
 
@@ -375,20 +378,21 @@ public class IntroActivity extends BaseActivity {
             }
             String productImg = doc.select("div.zone > ul > li > img").attr("src");
 
-            onlineSharedUrlParam.productName = productName;
-            onlineSharedUrlParam.productPrice = productPrice;
-            onlineSharedUrlParam.deliveryAmount = deliveryAmount;
-            onlineSharedUrlParam.productImg = productImg;
+            onlinePickProductParam.productName = productName;
+            onlinePickProductParam.productPrice = productPrice;
+            onlinePickProductParam.deliveryAmount = deliveryAmount;
+            onlinePickProductParam.collectionType = "A";
+            onlinePickProductParam.productImg = productImg;
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateTime = dateFormat.format(new Date());
 
-            onlineSharedUrlParam.userId = SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, null);
-            onlineSharedUrlParam.siteName = siteName;
-            onlineSharedUrlParam.productUrl = productUrl;
-            onlineSharedUrlParam.dateTime = dateTime;
+            onlinePickProductParam.userId = SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, null);
+            onlinePickProductParam.siteName = siteName;
+            onlinePickProductParam.productUrl = productUrl;
+            onlinePickProductParam.dateTime = dateTime;
 
             try {
-                RestAdvatarProtocol.getInstance().onlineSharedUrl(onlineSharedUrlParam, new RequestListener() {
+                RestAdvatarProtocol.getInstance().onlinePickProduct(onlinePickProductParam, new RequestListener() {
                     @Override
                     public void onRequestSuccess(int requestCode, Object result) {
 

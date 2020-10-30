@@ -16,6 +16,7 @@ public class BrandGoodsRepo {
     public String avgPoint;
     public int sellAmount;
     public String url;
+    public boolean pickYn;
 
     public long getGoodsId() {
         return goodsId;
@@ -127,5 +128,13 @@ public class BrandGoodsRepo {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public boolean isPickYn() {
+        return pickYn;
+    }
+
+    public void setPickYn(boolean pickYn) {
+        this.pickYn = pickYn;
     }
 }
