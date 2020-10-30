@@ -277,7 +277,8 @@ public class JoinActivity extends BaseActivity {
             }
 
             final String finalGender = gender;
-            RestAdvatarProtocol.getInstance().userJoin(id, pw, Build.MODEL, fcmToken,
+            String userPw = getPasswordEncryption(id, pw);
+            RestAdvatarProtocol.getInstance().userJoin(id, userPw, Build.MODEL, fcmToken,
                     name, birth, gender, phone, address, email, new RequestListener() {
                 @Override
                 public void onRequestSuccess(int requestCode, Object result) {
