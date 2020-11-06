@@ -181,12 +181,17 @@ public class DialogUtil {
             editSharedUrl.setVisibility(View.GONE);
         }
 
-        if (onlinePickProductParam.collectionType.equals("A")) {
+        if (onlinePickProductParam.collectionType != null) {
+            if (onlinePickProductParam.collectionType.equals("A")) {
+                checkCon1.setChecked(true);
+                checkCon2.setChecked(false);
+            } else if (onlinePickProductParam.collectionType.equals("B")) {
+                checkCon1.setChecked(false);
+                checkCon2.setChecked(true);
+            }
+        } else {
             checkCon1.setChecked(true);
             checkCon2.setChecked(false);
-        } else if (onlinePickProductParam.collectionType.equals("B")) {
-            checkCon1.setChecked(false);
-            checkCon2.setChecked(true);
         }
 
         checkCon1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
