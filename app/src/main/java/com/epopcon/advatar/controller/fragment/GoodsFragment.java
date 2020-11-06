@@ -151,9 +151,9 @@ public class GoodsFragment extends BaseFragment {
         mFilterLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!drawer.isDrawerOpen(Gravity.RIGHT)) {
-                    drawer.openDrawer(Gravity.RIGHT);
-                }
+//                if (!drawer.isDrawerOpen(Gravity.RIGHT)) {
+//                    drawer.openDrawer(Gravity.RIGHT);
+//                }
             }
         });
 
