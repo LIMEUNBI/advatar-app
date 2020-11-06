@@ -43,4 +43,7 @@ public class Config {
 
     public static final String ROW_ID = "ROW_ID";
     public static final int REQ_ONLINE_STORE_WEBPAGE = 0x8002;
+
+    public static final String GOODS_ORDER_BY = "GOODS_ORDER_BY";
+    public static final String GOODS_LIST = "GOODS_LIST";
 }

@@ -6,7 +6,6 @@ public class BrandGoodsRepo {
     public String brandName;
     public String goodsName;
     public String optionName;
-    public String siteName;
     public String goodsCate1;
     public String goodsCate2;
     public String goodsCate3;
@@ -15,7 +14,10 @@ public class BrandGoodsRepo {
     public String deliveryInfo;
     public String avgPoint;
     public int sellAmount;
+    public long totalSellPrice;
     public String url;
+    public String collectSite;
+    public String siteName;
     public boolean pickYn;
 
     public long getGoodsId() {
@@ -48,14 +50,6 @@ public class BrandGoodsRepo {
 
     public void setOptionName(String optionName) {
         this.optionName = optionName;
-    }
-
-    public String getSiteName() {
-        return siteName;
-    }
-
-    public void setSiteName(String siteName) {
-        this.siteName = siteName;
     }
 
     public String getGoodsCate1() {
@@ -122,6 +116,14 @@ public class BrandGoodsRepo {
         this.sellAmount = sellAmount;
     }
 
+    public long getTotalSellPrice() {
+        return totalSellPrice;
+    }
+
+    public void setTotalSellPrice(long totalSellPrice) {
+        this.totalSellPrice = totalSellPrice;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -130,7 +132,23 @@ public class BrandGoodsRepo {
         this.url = url;
     }
 
-    public boolean isPickYn() {
+    public String getCollectSite() {
+        return collectSite;
+    }
+
+    public void setCollectSite(String collectSite) {
+        this.collectSite = collectSite;
+    }
+
+    public String getSiteName() {
+        return siteName;
+    }
+
+    public void setSiteName(String siteName) {
+        this.siteName = siteName;
+    }
+
+    public boolean getPickYn() {
         return pickYn;
     }
 

@@ -5,17 +5,100 @@
     android:layout_height="match_parent"
     android:background="@color/line_f2f2f2">
 
-    <GridView
+    <RelativeLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/edittext_rounded_corner"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/sort_layout"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/txt_sort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="판매량순"
+                    android:textSize="12dp"/>
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_toRightOf="@+id/txt_sort"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="4dp"
+                    android:src="@drawable/icon_arrow_updown" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#19000000" />
+
+            <RelativeLayout
+                android:id="@+id/filter_layout"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/txt_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="필터"
+                    android:textSize="12dp"/>
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_toRightOf="@+id/txt_filter"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="4dp"
+                    android:src="@drawable/icon_filter" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/top_layout"
+        android:background="@color/text_acacac" />
+
+    <in.srain.cube.views.GridViewWithHeaderAndFooter
         android:id="@+id/grid_view"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:verticalSpacing="2dp"
+        android:layout_below="@+id/view"
         android:horizontalSpacing="2dp"
         android:listSelector="@drawable/list_selector"
-        android:scrollbarStyle="outsideOverlay"
-        android:padding="4dp"
+        android:nestedScrollingEnabled="true"
         android:numColumns="2"
-        android:nestedScrollingEnabled="true"/>
+        android:padding="4dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:verticalSpacing="2dp" />
 
     <ImageView
         android:id="@+id/img_loading"
@@ -23,5 +106,31 @@
         android:layout_height="80dp"
         android:scaleType="fitXY"
         android:layout_centerInParent="true" />
+
+<!--    <androidx.drawerlayout.widget.DrawerLayout-->
+<!--        android:id="@+id/drawer"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent" >-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="center"-->
+<!--            android:textSize="24dp"-->
+<!--            android:text="필터"-->
+<!--            android:background="@color/white" />-->
+
+<!--        <ListView-->
+<!--            android:id="@+id/drawer_list"-->
+<!--            android:layout_width="200dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="right"-->
+<!--            android:background="@color/white" />-->
+
+<!--    </androidx.drawerlayout.widget.DrawerLayout>-->
 
 </RelativeLayout>

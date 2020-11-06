@@ -19,6 +19,7 @@
                 android:id="@+id/img_goods"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:padding="10dp"
                 android:layout_marginBottom="8dp"/>
 
             <ImageView
@@ -110,8 +111,7 @@
                 android:layout_marginTop="4dp"
                 android:text="판매량"
                 android:textColor="@color/text_5d5d5d"
-                android:textSize="10dp"
-                android:visibility="gone"/>
+                android:textSize="10dp"/>
 
             <TextView
                 android:id="@+id/avgPoint"

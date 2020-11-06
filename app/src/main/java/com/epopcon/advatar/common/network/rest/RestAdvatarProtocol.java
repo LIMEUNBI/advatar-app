@@ -33,6 +33,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.POST;
 
 public class RestAdvatarProtocol {
 
@@ -776,14 +777,61 @@ public class RestAdvatarProtocol {
     }
 
     /**
+     * 추천 상품 목록을 요청한다.
+     * @param userId 사용자 아이디
+     * @param requestListener
+     * @throws Exception
+     */
+    public void getRecommendGoodsList(String userId, final RequestListener requestListener) throws Exception {
+        final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
+        if (TextUtils.isEmpty(licenseKey)) {
+            return;
+        }
+
+        try {
+            final BrandGoodsParam brandGoodsParam = new BrandGoodsParam();
+            brandGoodsParam.licenseKey = licenseKey;
+            brandGoodsParam.affiliateCode = CommonLibrary.getAffiliateCode();
+            brandGoodsParam.userId = userId;
+
+            Callback<List<BrandGoodsRepo>> callback = new Callback<List<BrandGoodsRepo>>() {
+                @Override
+                public void onResponse(Call<List<BrandGoodsRepo>> call, Response<List<BrandGoodsRepo>> response) {
+                    if (response != null && response.isSuccessful() && response.body() != null)
+                    {
+                        if (response.code() != 200) {
+                            requestListener.onRequestFailure(new Throwable(response.message()));
+                            return;
+                        }
+
+                        List<BrandGoodsRepo> goodsList =  (List<BrandGoodsRepo>) response.body();
+                        requestListener.onRequestSuccess(PROTOCOL_GET_BRAND_GOODS_LIST, goodsList);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<BrandGoodsRepo>> call, Throwable t) {
+                    requestListener.onRequestFailure(t);
+                }
+            };
+
+            RestAdvatarService.api(host, timeout).getRecommendGoodsList(brandGoodsParam).enqueue(callback);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 전달한 브랜드들의 상품 목록을 조회한다. (날짜는 D -2일 고정)
+     * @param userId 사용자 아이디
      * @param brandCodes 브랜드 코드 목록
      * @param collectDay 수집날짜 (D-2일)
      * @param maxCount 최대 갯수
      * @param requestListener
      * @throws Exception
      */
-    public void getBrandGoodsList(final List<String> brandCodes, final String collectDay, final int maxCount, final RequestListener requestListener) throws Exception {
+    public void getBrandGoodsList(String userId, final List<String> brandCodes, final String collectDay, final int maxCount, String orderBy, final RequestListener requestListener) throws Exception {
 
         final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
         if (TextUtils.isEmpty(licenseKey)) {
@@ -794,9 +842,11 @@ public class RestAdvatarProtocol {
             final BrandGoodsParam brandGoodsParam = new BrandGoodsParam();
             brandGoodsParam.licenseKey = licenseKey;
             brandGoodsParam.affiliateCode = CommonLibrary.getAffiliateCode();
+            brandGoodsParam.userId = userId;
             brandGoodsParam.brandCodes = brandCodes;
             brandGoodsParam.collectDay = collectDay;
             brandGoodsParam.maxCount = maxCount;
+            brandGoodsParam.orderBy = orderBy;
 
             Callback<List<BrandGoodsRepo>> callback = new Callback<List<BrandGoodsRepo>>() {
                 @Override
