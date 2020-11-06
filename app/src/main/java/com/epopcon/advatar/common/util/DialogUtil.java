@@ -181,7 +181,7 @@ public class DialogUtil {
             editSharedUrl.setVisibility(View.GONE);
         }
 
-        if (onlinePickProductParam.collectionType != null) {
+        if (onlinePickProductParam != null) {
             if (onlinePickProductParam.collectionType.equals("A")) {
                 checkCon1.setChecked(true);
                 checkCon2.setChecked(false);
