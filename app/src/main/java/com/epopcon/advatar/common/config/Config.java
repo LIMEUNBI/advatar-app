@@ -47,4 +47,6 @@ public class Config {
 
     public static final String GOODS_ORDER_BY = "GOODS_ORDER_BY";
     public static final String GOODS_LIST = "GOODS_LIST";
+    public static final String RECOMMEND_LIST = "RECOMMEND_LIST";
+    public static final String SELLER_LIST = "SELLER_LIST";
 }

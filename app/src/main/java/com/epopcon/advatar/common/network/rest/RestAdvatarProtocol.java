@@ -819,7 +819,7 @@ public class RestAdvatarProtocol {
      * @param requestListener
      * @throws Exception
      */
-    public void getRecommendGoodsList(String sellerName, final RequestListener requestListener) throws Exception {
+    public void getRecommendGoodsList(String sellerName, String collectDay, final RequestListener requestListener) throws Exception {
         final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
         if (TextUtils.isEmpty(licenseKey)) {
             return;
@@ -830,6 +830,7 @@ public class RestAdvatarProtocol {
             brandGoodsParam.licenseKey = licenseKey;
             brandGoodsParam.affiliateCode = CommonLibrary.getAffiliateCode();
             brandGoodsParam.userId = sellerName;
+            brandGoodsParam.collectDay = collectDay;
 
             Callback<List<BrandGoodsRepo>> callback = new Callback<List<BrandGoodsRepo>>() {
                 @Override

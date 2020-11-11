@@ -22,6 +22,9 @@ import com.epopcon.advatar.common.network.RequestListener;
 import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
 import com.epopcon.advatar.controller.activity.common.BaseActivity;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +35,6 @@ public class SellerChoiceActivity extends BaseActivity {
     ArrayList<String> mSellerListCopy;
 
     private EditText mEditSearch = null;
-    private TextView mChoiceBrand = null;
 
     private GridView mGridView = null;
     private GridAdapter mAdapter = null;
@@ -55,8 +57,6 @@ public class SellerChoiceActivity extends BaseActivity {
 
         mGridView = (GridView) findViewById(R.id.card_grid_view);
         mGridView.setVisibility(View.VISIBLE);
-
-        mChoiceBrand = (TextView) findViewById(R.id.choice_seller);
 
         mEditSearch = (EditText) findViewById(R.id.edit_search);
         mEditSearch.addTextChangedListener(new TextWatcher() {
@@ -81,13 +81,23 @@ public class SellerChoiceActivity extends BaseActivity {
     }
 
     private void refresh() {
+        if (mSellerList.isEmpty() || mSellerList == null) {
+            if (getSellerList() != null && !getSellerList().isEmpty()) {
+                mSellerList.addAll(getSellerList());
+            } else {
+                getSeller();
+            }
+        }
+    }
 
+    private void getSeller() {
         try {
             RestAdvatarProtocol.getInstance().getSellerList(new RequestListener() {
                 @Override
                 public void onRequestSuccess(int requestCode, Object result) {
                     mSellerList.clear();
                     mSellerList.addAll((List<String>) result);
+                    putSellerList(mSellerList);
                     mAdapter.notifyDataSetChanged();
                 }
 
@@ -99,6 +109,36 @@ public class SellerChoiceActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void putSellerList(List<String> value) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = "";
+        try {
+            jsonString = objectMapper.writeValueAsString(value);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        if (!value.isEmpty()) {
+            SharedPreferenceBase.putPrefString(getApplicationContext(), Config.SELLER_LIST, jsonString);
+        } else {
+            SharedPreferenceBase.putPrefString(getApplicationContext(), Config.SELLER_LIST, null);
+        }
+    }
+
+    private List<String> getSellerList() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<String> goodsList = new ArrayList<>();
+        String goods = SharedPreferenceBase.getPrefString(getApplicationContext(), Config.SELLER_LIST, null);
+        try {
+            goodsList = objectMapper.readValue(goods, new TypeReference<List<String>>(){});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return goodsList;
     }
 
     private void search(String searchKeyword) {

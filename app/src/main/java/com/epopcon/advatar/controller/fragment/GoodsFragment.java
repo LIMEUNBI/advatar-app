@@ -74,6 +74,7 @@ public class GoodsFragment extends BaseFragment {
 
     private LinearLayout mListHeaderView;
     private ImageView mImgSeller;
+    private TextView mTxtSellerName;
 
     private TextView mTxtSort;
 
@@ -110,6 +111,7 @@ public class GoodsFragment extends BaseFragment {
         mGridView.setAdapter(mGridAdapter);
 
         mImgSeller = (ImageView) mListHeaderView.findViewById(R.id.img_seller);
+        mTxtSellerName = (TextView) mListHeaderView.findViewById(R.id.txt_seller_name);
 
         mImgSeller.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,8 +177,8 @@ public class GoodsFragment extends BaseFragment {
     public void refresh() {
 
         if (mGoodsList.isEmpty() || mGoodsList == null) {
-            if (getGoodsList() != null && !getGoodsList().isEmpty()) {
-                mGoodsList.addAll(getGoodsList());
+            if (getGoodsList(Config.GOODS_LIST) != null && !getGoodsList(Config.GOODS_LIST).isEmpty()) {
+                mGoodsList.addAll(getGoodsList(Config.GOODS_LIST));
                 mImgLoading.setVisibility(View.GONE);
                 mGridAdapter.notifyDataSetChanged();
                 mGridView.setVisibility(View.VISIBLE);
@@ -191,17 +193,25 @@ public class GoodsFragment extends BaseFragment {
         }
 
         getRecommendGoodsList();
+
+        String sellerName = SharedPreferenceBase.getPrefString(getContext(), Config.SELLER_NAME, null);
+        mTxtSellerName.setText(sellerName);
     }
 
     private void getRecommendGoodsList() {
 
         String sellerName = SharedPreferenceBase.getPrefString(getContext(), Config.SELLER_NAME, null);
         try {
-            RestAdvatarProtocol.getInstance().getRecommendGoodsList(sellerName, new RequestListener() {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+            Calendar cal = new GregorianCalendar(Locale.KOREA);
+            cal.add(Calendar.DATE, -2);
+            String collectDay = simpleDateFormat.format(cal.getTime());
+            RestAdvatarProtocol.getInstance().getRecommendGoodsList(sellerName, collectDay, new RequestListener() {
                 @Override
                 public void onRequestSuccess(int requestCode, Object result) {
                     mRecommendGoodsList.clear();
                     mRecommendGoodsList.addAll((List<BrandGoodsRepo>) result);
+                    putGoodsList((List<BrandGoodsRepo>) result, Config.RECOMMEND_LIST);
                     mRecommendPager.isCycle();
                     mRecommendPager.setInterval(5000);
                     mRecommendPager.startAutoScroll();
@@ -237,7 +247,7 @@ public class GoodsFragment extends BaseFragment {
                 public void onRequestSuccess(int requestCode, Object result) {
                     mGoodsList.clear();
                     mGoodsList.addAll((List<BrandGoodsRepo>) result);
-                    putGoodsList((List<BrandGoodsRepo>) result);
+                    putGoodsList((List<BrandGoodsRepo>) result, Config.GOODS_LIST);
                     mGridAdapter.notifyDataSetChanged();
                     mGridView.setVisibility(View.VISIBLE);
                     mImgLoading.setVisibility(View.GONE);
@@ -253,7 +263,7 @@ public class GoodsFragment extends BaseFragment {
         }
     }
 
-    private void putGoodsList(List<BrandGoodsRepo> value) {
+    private void putGoodsList(List<BrandGoodsRepo> value, String key) {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = "";
         try {
@@ -264,16 +274,16 @@ public class GoodsFragment extends BaseFragment {
         }
 
         if (!value.isEmpty()) {
-            SharedPreferenceBase.putPrefString(getContext(), Config.GOODS_LIST, jsonString);
+            SharedPreferenceBase.putPrefString(getContext(), key, jsonString);
         } else {
-            SharedPreferenceBase.putPrefString(getContext(), Config.GOODS_LIST, null);
+            SharedPreferenceBase.putPrefString(getContext(), key, null);
         }
     }
 
-    private List<BrandGoodsRepo> getGoodsList() {
+    private List<BrandGoodsRepo> getGoodsList(String key) {
         ObjectMapper objectMapper = new ObjectMapper();
         List<BrandGoodsRepo> goodsList = new ArrayList<>();
-        String goods = SharedPreferenceBase.getPrefString(getContext(), Config.GOODS_LIST, null);
+        String goods = SharedPreferenceBase.getPrefString(getContext(), key, null);
         try {
             goodsList = objectMapper.readValue(goods, new TypeReference<List<BrandGoodsRepo>>(){});
         } catch (Exception e) {
@@ -307,7 +317,7 @@ public class GoodsFragment extends BaseFragment {
             inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.item_online_recommend, null);
 
-            BrandGoodsRepo item = items.get(position);
+            final BrandGoodsRepo item = items.get(position);
 
             ImageView imageView = view.findViewById(R.id.ad_product_image);
 
