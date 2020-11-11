@@ -819,7 +819,7 @@ public class RestAdvatarProtocol {
      * @param requestListener
      * @throws Exception
      */
-    public void getRecommendGoodsList(String sellerName, String collectDay, final RequestListener requestListener) throws Exception {
+    public void getRecommendGoodsList(String sellerName, int collectDay, final RequestListener requestListener) throws Exception {
         final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
         if (TextUtils.isEmpty(licenseKey)) {
             return;
@@ -869,7 +869,7 @@ public class RestAdvatarProtocol {
      * @param requestListener
      * @throws Exception
      */
-    public void getBrandGoodsList(String userId, final List<String> brandCodes, final String collectDay, final int maxCount, String orderBy, final RequestListener requestListener) throws Exception {
+    public void getBrandGoodsList(String userId, final List<String> brandCodes, final int collectDay, final int maxCount, String orderBy, final RequestListener requestListener) throws Exception {
 
         final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
         if (TextUtils.isEmpty(licenseKey)) {

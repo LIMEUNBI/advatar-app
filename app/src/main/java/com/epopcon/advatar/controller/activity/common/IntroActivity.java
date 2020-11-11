@@ -350,6 +350,25 @@ public class IntroActivity extends BaseActivity {
                     case "top.11st.co.kr":
                         productParser11st(siteName, productUrl, onlinePickProductParam, text);
                         break;
+                    default:
+                        onlinePickProductParam.collectionType = "A";
+                        onlinePickProductParam.productUrl = productUrl;
+
+                        try {
+                            RestAdvatarProtocol.getInstance().onlinePickProduct(onlinePickProductParam, new RequestListener() {
+                                @Override
+                                public void onRequestSuccess(int requestCode, Object result) {
+
+                                }
+
+                                @Override
+                                public void onRequestFailure(Throwable t) {
+
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                 }
             }
         } catch (Exception e) {

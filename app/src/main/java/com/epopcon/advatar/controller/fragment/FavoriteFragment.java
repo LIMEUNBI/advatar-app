@@ -126,6 +126,25 @@ public class FavoriteFragment extends BaseFragment {
                             }
                         });
                         break;
+
+                    case 1:
+                        try {
+                            RestAdvatarProtocol.getInstance().onlinePickCancel(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, null),
+                                    mLinkInfoList.get(position).siteName, mLinkInfoList.get(position).productUrl, new RequestListener() {
+                                        @Override
+                                        public void onRequestSuccess(int requestCode, Object result) {
+                                            refresh();
+                                        }
+
+                                        @Override
+                                        public void onRequestFailure(Throwable t) {
+
+                                        }
+                                    });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
                 }
                 return false;
             }
@@ -310,9 +329,16 @@ public class FavoriteFragment extends BaseFragment {
             openItem.setTitle("설정");
             openItem.setTitleSize(12);
             openItem.setTitleColor(Color.BLACK);
+
+            SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
+            deleteItem.setBackground(new ColorDrawable(Color.rgb(245, 245, 245)));
+            deleteItem.setWidth(200);
+            deleteItem.setTitle("삭제");
+            deleteItem.setTitleSize(12);
+            deleteItem.setTitleColor(Color.RED);
+
             menu.addMenuItem(openItem);
+            menu.addMenuItem(deleteItem);
         }
     };
-
-
 }

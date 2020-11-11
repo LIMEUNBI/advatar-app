@@ -8,7 +8,7 @@ public class BrandGoodsParam extends CommonParam {
 
     public String userId;
     public List<String> brandCodes;
-    public String collectDay;
+    public int collectDay;
     public int maxCount;
     public String orderBy;
 }

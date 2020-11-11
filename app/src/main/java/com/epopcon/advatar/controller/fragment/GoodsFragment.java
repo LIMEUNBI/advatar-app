@@ -206,7 +206,7 @@ public class GoodsFragment extends BaseFragment {
             Calendar cal = new GregorianCalendar(Locale.KOREA);
             cal.add(Calendar.DATE, -2);
             String collectDay = simpleDateFormat.format(cal.getTime());
-            RestAdvatarProtocol.getInstance().getRecommendGoodsList(sellerName, collectDay, new RequestListener() {
+            RestAdvatarProtocol.getInstance().getRecommendGoodsList(sellerName, Integer.valueOf(collectDay), new RequestListener() {
                 @Override
                 public void onRequestSuccess(int requestCode, Object result) {
                     mRecommendGoodsList.clear();
@@ -242,7 +242,7 @@ public class GoodsFragment extends BaseFragment {
             }
 
             String userId = SharedPreferenceBase.getPrefString(getContext(), Config.USER_ID, null);
-            RestAdvatarProtocol.getInstance().getBrandGoodsList(userId, brandCodes, today, 100, orderBy, new RequestListener() {
+            RestAdvatarProtocol.getInstance().getBrandGoodsList(userId, brandCodes, Integer.valueOf(today), 100, orderBy, new RequestListener() {
                 @Override
                 public void onRequestSuccess(int requestCode, Object result) {
                     mGoodsList.clear();
