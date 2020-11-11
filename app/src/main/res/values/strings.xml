@@ -51,6 +51,22 @@
     <string name="online_tab_payment">쇼핑 내역</string>
     <string name="online_tab_cart">장바구니</string>
 
+    <string name="online_store_title">온라인 쇼핑 사이트</string>
+
+    <string name="online_11st">11번가</string>
+    <string name="online_gmarket">G마켓</string>
+    <string name="online_auction">옥션</string>
+    <string name="online_naverstore">네이버스토어</string>
+    <string name="online_coupang">쿠팡</string>
+    <string name="online_tmon">티몬</string>
+    <string name="online_wemap">위메프</string>
+    <string name="online_interpark">인터파크</string>
+    <string name="online_ssg">SSG</string>
+    <string name="online_lotte">롯데ON</string>
+    <string name="online_hyundai">현대H몰</string>
+    <string name="online_cjmall">CJ몰</string>
+    <string name="online_akmall">AK몰</string>
+
     <!-- 온라인상점 그룹 유형 -->
     <string-array name="online_store_groups">
         <item>01;소셜커머스</item>
