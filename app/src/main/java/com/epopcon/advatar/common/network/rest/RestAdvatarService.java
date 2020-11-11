@@ -91,7 +91,10 @@ public class RestAdvatarService extends BaseService {
         @POST("brand/getBrandGoodsList")
         Call<List<BrandGoodsRepo>> getBrandGoodsList(@Body BrandGoodsParam brandGoodsParam);
 
-        @POST("brand?getRecommendGoodsList")
+        @POST("brand/getSellerList")
+        Call<List<String>> getSellerList(@Body CommonParam commonParam);
+
+        @POST("brand/getRecommendGoodsList")
         Call<List<BrandGoodsRepo>> getRecommendGoodsList(@Body BrandGoodsParam brandGoodsParam);
 
         @POST("brand/getBrandContentsList")

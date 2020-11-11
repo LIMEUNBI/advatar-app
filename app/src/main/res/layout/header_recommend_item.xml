@@ -16,10 +16,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_centerVertical="true"
             android:text="추천상품"
             android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/img_seller"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_search"
+            android:padding="5dp"
+            android:layout_marginRight="12dp" />
 
     </RelativeLayout>
 

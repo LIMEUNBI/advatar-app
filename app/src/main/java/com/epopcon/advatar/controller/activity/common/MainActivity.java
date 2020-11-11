@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.epopcon.advatar.R;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
+import com.epopcon.advatar.controller.activity.online.OnlineSearchActivity;
 import com.epopcon.advatar.controller.fragment.FavoriteFragment;
 import com.epopcon.advatar.controller.fragment.GoodsFragment;
 import com.epopcon.advatar.controller.fragment.MyPageFragment;
@@ -42,6 +43,7 @@ public class MainActivity extends BaseActivity {
     private TextView toolbarTitle;
     private ImageView imgOption;
     private ImageView imgOnlineOption;
+    private ImageView imgSearch;
 
     private long backPressedTime;
 
@@ -81,6 +83,15 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, OnlineListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        imgSearch = (ImageView) findViewById(R.id.img_search);
+        imgSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, OnlineSearchActivity.class);
                 startActivity(intent);
             }
         });
@@ -153,12 +164,14 @@ public class MainActivity extends BaseActivity {
                         selectedFragment = GoodsFragment.getInstance();
                         imgOption.setVisibility(View.VISIBLE);
                         imgOnlineOption.setVisibility(View.GONE);
+                        imgSearch.setVisibility(View.GONE);
                         break;
 
                     case R.id.action_two:
                         toolbarTitle.setText("상품 추적");
                         selectedFragment = FavoriteFragment.getInstance();
-                        imgOption.setVisibility(View.VISIBLE);
+                        imgOption.setVisibility(View.GONE);
+                        imgSearch.setVisibility(View.VISIBLE);
                         imgOnlineOption.setVisibility(View.GONE);
                         break;
 
@@ -167,6 +180,7 @@ public class MainActivity extends BaseActivity {
                         selectedFragment = OnlineFragment.getInstance();
                         imgOption.setVisibility(View.GONE);
                         imgOnlineOption.setVisibility(View.VISIBLE);
+                        imgSearch.setVisibility(View.GONE);
                         break;
 
                     case R.id.action_four:
@@ -174,6 +188,7 @@ public class MainActivity extends BaseActivity {
                         selectedFragment = MyPageFragment.getInstance();
                         imgOption.setVisibility(View.GONE);
                         imgOnlineOption.setVisibility(View.GONE);
+                        imgSearch.setVisibility(View.GONE);
                         break;
                 }
 

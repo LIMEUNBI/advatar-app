@@ -776,13 +776,50 @@ public class RestAdvatarProtocol {
         }
     }
 
+    public void getSellerList(final RequestListener requestListener) throws Exception {
+        final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
+        if (TextUtils.isEmpty(licenseKey)) {
+            return;
+        }
+
+        try {
+            final CommonParam commonParam = new CommonParam();
+            commonParam.licenseKey = licenseKey;
+            commonParam.affiliateCode = CommonLibrary.getAffiliateCode();
+
+            Callback<List<String>> callback = new Callback<List<String>>() {
+                @Override
+                public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                    if (response != null && response.isSuccessful() && response.body() != null)
+                    {
+                        if (response.code() != 200) {
+                            requestListener.onRequestFailure(new Throwable(response.message()));
+                            return;
+                        }
+
+                        List<String> sellerList =  (List<String>) response.body();
+                        requestListener.onRequestSuccess(PROTOCOL_GET_BRAND_GOODS_LIST, sellerList);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<String>> call, Throwable t) {
+                    requestListener.onRequestFailure(t);
+                }
+            };
+            RestAdvatarService.api(host, timeout).getSellerList(commonParam).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 추천 상품 목록을 요청한다.
-     * @param userId 사용자 아이디
+     * @param sellerName 선택한 셀러명
      * @param requestListener
      * @throws Exception
      */
-    public void getRecommendGoodsList(String userId, final RequestListener requestListener) throws Exception {
+    public void getRecommendGoodsList(String sellerName, final RequestListener requestListener) throws Exception {
         final String licenseKey = EncrypterUtil.getInstance().getLicenseKey();
         if (TextUtils.isEmpty(licenseKey)) {
             return;
@@ -792,7 +829,7 @@ public class RestAdvatarProtocol {
             final BrandGoodsParam brandGoodsParam = new BrandGoodsParam();
             brandGoodsParam.licenseKey = licenseKey;
             brandGoodsParam.affiliateCode = CommonLibrary.getAffiliateCode();
-            brandGoodsParam.userId = userId;
+            brandGoodsParam.userId = sellerName;
 
             Callback<List<BrandGoodsRepo>> callback = new Callback<List<BrandGoodsRepo>>() {
                 @Override

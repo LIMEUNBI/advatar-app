@@ -20,6 +20,7 @@ public class Config {
     public static final String USER_BIRTH = "USER_BIRTH";
     public static final String USER_PHONE = "USER_PHONE";
     public static final String USER_ADDRESS = "USER_ADDRESS";
+    public static final String SELLER_NAME = "SELLER_NAME";
 
     public static final String FCM_TOKEN = "FCM_TOKEN";
 

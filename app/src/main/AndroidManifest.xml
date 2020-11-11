@@ -32,6 +32,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".controller.activity.brand.BrandChoiceActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".controller.activity.brand.SellerChoiceActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".controller.activity.user.JoinActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".controller.activity.user.LoginActivity"

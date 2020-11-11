@@ -47,42 +47,10 @@
                             android:id="@+id/toolbar_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Home"
+                            android:text="셀러 선택"
                             android:textColor="@color/white"
                             android:textStyle="bold"
                             android:textSize="16dp" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="12dp">
-
-                        <ImageView
-                            android:id="@+id/img_option"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:padding="5dp"
-                            android:src="@drawable/ic_settings" />
-
-                        <ImageView
-                            android:id="@+id/img_online_option"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:padding="5dp"
-                            android:src="@drawable/ic_settings"
-                            android:visibility="gone"/>
-
-                        <ImageView
-                            android:id="@+id/img_search"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:padding="5dp"
-                            android:src="@drawable/ic_search"
-                            android:visibility="gone"/>
 
                     </RelativeLayout>
 
@@ -110,48 +78,74 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/appBarLayout">
-
-        <FrameLayout
-            android:id="@+id/frame_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/navigation"
-            android:background="@color/white"
-            android:animateLayoutChanges="true" />
+        android:layout_below="@+id/appBarLayout"
+        android:background="@color/white">
 
         <RelativeLayout
+            android:id="@+id/text_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="56dp">
+            android:padding="15dp"
+            android:background="#FAFAFA">
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:background="@color/line_f2f2f2"
-                android:visibility="visible" />
+            <TextView
+                android:id="@+id/choice_seller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:hint="셀러를 선택하여 상품을 추천합니다." />
 
         </RelativeLayout>
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/navigation"
+        <RelativeLayout
+            android:id="@+id/search_layout"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:background="@color/white"
-            android:fitsSystemWindows="true"
-            app:itemIconTint="@drawable/navicolor"
-            app:itemTextColor="@drawable/navicolor"
-            app:labelVisibilityMode="labeled"
-            app:menu="@menu/navigation" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_layout"
+            android:layout_marginTop="4dp">
+
+            <EditText
+                android:id="@+id/edit_search"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_centerVertical="true"
+                android:hint="셀러를 검색해주세요."
+                android:textColorHint="@color/text_acacac"
+                android:textSize="12dp"
+                android:gravity="center"
+                android:background="@drawable/edittext_rounded_corner"/>
+
+        </RelativeLayout>
+
+        <GridView
+            android:id="@+id/card_grid_view"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/search_layout"
+            android:verticalSpacing="12dp"
+            android:horizontalSpacing="12dp"
+            android:listSelector="@drawable/list_selector"
+            android:scrollbarStyle="outsideOverlay"
+            android:layout_marginTop="4dp"
+            android:paddingTop="16dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:numColumns="2"
+            android:nestedScrollingEnabled="true"/>
+
+        <ImageView
+            android:id="@+id/img_loading"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="fitXY"
+            android:layout_centerInParent="true" />
 
     </RelativeLayout>
-
 
 </RelativeLayout>
