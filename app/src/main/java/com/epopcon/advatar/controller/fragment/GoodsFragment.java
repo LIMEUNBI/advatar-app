@@ -213,7 +213,7 @@ public class GoodsFragment extends BaseFragment {
                     mRecommendGoodsList.addAll((List<BrandGoodsRepo>) result);
                     putGoodsList((List<BrandGoodsRepo>) result, Config.RECOMMEND_LIST);
                     mRecommendPager.isCycle();
-                    mRecommendPager.setInterval(5000);
+                    mRecommendPager.setInterval(3000);
                     mRecommendPager.startAutoScroll();
                     mRecommendAdapter.notifyDataSetChanged();
                 }

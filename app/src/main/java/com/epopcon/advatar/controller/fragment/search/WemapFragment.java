@@ -149,31 +149,25 @@ public class WemapFragment extends Fragment implements OnlineSearchActivity.onFr
             final BrandGoodsRepo productInfo = items.get(position);
 
             ImageLoader.getInstance().displayImage(productInfo.goodsImg, holder.productImg, mImageLoaderOptions);
-            holder.site.setText(productInfo.siteName);
             holder.productName.setText(productInfo.goodsName);
-//            holder.productPrice.setText(decimalFormat.format(productInfo.productPrice) + "원 / 최근판매량 : " + productInfo.sellAmount + "개");
+            holder.deliveryInfo.setText(productInfo.deliveryInfo);
             holder.productPrice.setText(decimalFormat.format(productInfo.goodsPrice) + "원");
-            holder.productCate.setText(productInfo.goodsCate1);
 
             return convertView;
         }
 
         public class ViewHolder {
             ImageView productImg;
-            TextView site;
             TextView productName;
             TextView productPrice;
-            TextView productCate;
-            TextView productUrl;
+            TextView deliveryInfo;
             RelativeLayout layout;
 
             public ViewHolder(View itemView) {
                 productImg = (ImageView) itemView.findViewById(R.id.img_product);
-                site = (TextView) itemView.findViewById(R.id.site);
                 productName = (TextView) itemView.findViewById(R.id.product_name);
                 productPrice = (TextView) itemView.findViewById(R.id.product_price);
-                productCate = (TextView) itemView.findViewById(R.id.product_cate);
-                productUrl = (TextView) itemView.findViewById(R.id.url);
+                deliveryInfo = (TextView) itemView.findViewById(R.id.delivery_info);
                 layout = (RelativeLayout) itemView.findViewById(R.id.list_holder);
             }
         }

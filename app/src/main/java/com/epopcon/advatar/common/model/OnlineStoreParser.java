@@ -1,8 +1,5 @@
 package com.epopcon.advatar.common.model;
 
-import android.app.Activity;
-import android.os.AsyncTask;
-
 import com.epopcon.advatar.common.network.RequestListener;
 import com.epopcon.advatar.common.network.model.repo.brand.BrandGoodsRepo;
 import com.google.gson.JsonArray;
@@ -13,7 +10,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -42,16 +38,18 @@ public class OnlineStoreParser {
     public static void getDataFor11st(String searchKeyword, RequestListener requestListener) throws Exception{
         searchKeyword = URLEncoder.encode(searchKeyword, "UTF-8").replace("+", "").replace("%", "%25");
 
-        String baseUrl = "http://search.11st.co.kr/Search.tmall?redirectYn=Y&ab=B&kwd=" + searchKeyword;
+        String baseUrl = "http://search.11st.co.kr/Search.tmall?kwd=" + searchKeyword;
         List<BrandGoodsRepo> searchItems = new ArrayList<>();
 
         URL url = new URL(baseUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
+        connection.setRequestProperty("Host", "search.11st.co.kr");
+        connection.setRequestProperty("Upgrade-Insecure-Requests", "1");
 
         int responseCode = connection.getResponseCode();
         if (responseCode == 200) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "euc-kr"));
             String line;
             String text = "";
             while ((line = br.readLine()) != null) {
@@ -60,39 +58,39 @@ public class OnlineStoreParser {
 
             Document doc = Jsoup.parse(text);
 
-            Map<String, String> parserTagMap = new HashMap<>();
-            parserTagMap.put("FOCUS_CLICK", "#focusClickPrdArea li");
-            parserTagMap.put("POWER_PRODUCT", ".power_prd li");
-            parserTagMap.put("PLUS_PRODUCT", ".plus_prd li");
-            parserTagMap.put("NORMAL_PRODUCT", ".normal_prd li");
-
             BrandGoodsRepo item = null;
+            Elements elements = doc.select("div.search_content > script");
+            String list = elements.get(0).toString().replace("<script charset=\"UTF-8\">\t\t\t\twindow.searchDataFactory.relatedKeywordsList = ", "")
+                    .replace("};\t\t\t\twindow.searchDataFactory.nrCase = 'none';\t\twindow.searchDataFactory.pagiNation = {\t\t\ttotalPage: 3340,\t\t\tcurPage: 1\t\t}\t\t\t</script>", "");
 
-            for (String key : parserTagMap.keySet()) {
-                Elements elements = doc.select(parserTagMap.get(key));
+            String[] products = list.split("window.searchDataFactory.");
 
-                for (Element element : elements) {
-                    item = new BrandGoodsRepo();
-                    item.siteName = "11st";
-                    item.goodsName = element.id().replace("thisClick_", "");
-                    item.goodsImg = element.select(".lazy").attr("data-original");
+            for (int i = 0 ; i < products.length ; i++) {
+                if (products[i].contains("rcmdPrdList") || products[i].contains("focusPrdList") || products[i].contains("powerPrdList") ||
+                        products[i].contains("plusPrdList") || products[i].contains("commonPrdList")) {
+                    String product = products[i].substring(products[i].indexOf("{")).replace(";", "");
+                    JsonParser jsonParser = new JsonParser();
+                    JsonObject jsonObject = (JsonObject) jsonParser.parse(product);
+                    int count = jsonObject.get("count").getAsInt();
+                    if (count > 0) {
+                        JsonArray items = (JsonArray) jsonObject.get("items");
+                        for (int j = 0 ; j < items.size() ; j++) {
+                            item = new BrandGoodsRepo();
+                            JsonObject prod = (JsonObject) items.get(j);
 
-                    // 2020.01.30 임은비 검색어에 따라 view 형태가 변경되어 이를 위한 분기처리 추가
-                    String itemName;
-                    if (element.select(".info_tit a").html() == null ||
-                            element.select(".info_tit a").html().equals("")) {
-                        itemName = element.select(".pname p").html();
-                    } else {
-                        itemName = element.select(".info_tit a").html();
+                            item.siteName = "11st";
+                            item.goodsImg = prod.get("imageUrl").getAsString();
+                            item.goodsName = prod.get("prdNm").getAsString();
+                            item.goodsPrice = Integer.valueOf(prod.get("finalPrc").getAsString().replace(",", ""));
+                            item.url = prod.get("productDetailUrl").getAsString();
+                            item.deliveryInfo = prod.get("deliveryPriceText").getAsString();
+
+                            searchItems.add(item);
+                        }
                     }
-
-                    item.goodsName = itemName;
-                    item.url = element.select(".info_tit a").attr("href");
-                    item.goodsPrice = Integer.parseInt(element.select(".sale_price").html().replace(",", ""));
-
-                    searchItems.add(item);
                 }
             }
+
             requestListener.onRequestSuccess(0, searchItems);
         } else {
             requestListener.onRequestFailure(new Throwable());

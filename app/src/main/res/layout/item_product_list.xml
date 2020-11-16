@@ -30,18 +30,9 @@
             android:layout_toRightOf="@+id/img_product">
 
             <TextView
-                android:id="@+id/site"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="사이트"
-                android:textSize="12dp" />
-
-            <TextView
                 android:id="@+id/product_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/site"
-                android:layout_marginTop="4dp"
                 android:text="상품명"
                 android:textSize="12dp" />
 
@@ -55,23 +46,13 @@
                 android:textSize="12dp"/>
 
             <TextView
-                android:id="@+id/product_cate"
+                android:id="@+id/delivery_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/product_price"
                 android:layout_marginTop="4dp"
-                android:text="카테고리"
-                android:textSize="12dp" />
-
-            <TextView
-                android:id="@+id/url"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/product_cate"
-                android:layout_marginTop="4dp"
-                android:text="url"
-                android:textSize="12dp"
-                android:visibility="gone"/>
+                android:text="배송 정보"
+                android:textSize="12dp"/>
 
         </RelativeLayout>
 

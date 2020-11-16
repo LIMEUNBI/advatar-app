@@ -282,7 +282,13 @@ public class FavoriteFragment extends BaseFragment {
             }
             holder.siteName.setText(siteName);
             holder.productPrice.setText(String.format(getString(R.string.amount_integer), sharedLinkInfo.productPrice) + "원");
-            holder.optionName.setText(sharedLinkInfo.optionName + " / 판매량 : " + sharedLinkInfo.sellAmount);
+            String option;
+            if (!sharedLinkInfo.optionName.isEmpty() && !sharedLinkInfo.optionName.equals("없음")) {
+                option = sharedLinkInfo.optionName + " / 판매량 : " + sharedLinkInfo.sellAmount;
+            } else {
+                option = "판매량 : " + sharedLinkInfo.sellAmount;
+            }
+            holder.optionName.setText(option);
 
             String type = "";
             if (sharedLinkInfo.collectionType != null) {
