@@ -337,7 +337,7 @@ public class DialogUtil {
 
                 switch (siteName) {
                     case "top.11st.co.kr":
-                        productParser11st(activity, dialog, clickListener, siteName, productUrl, type, onlinePickProductParam, text);
+                        productParser11st(activity, dialog, clickListener, siteName, productUrl, type, onlinePickProductParam);
                         break;
                 }
             }
@@ -347,39 +347,12 @@ public class DialogUtil {
     }
 
     private static void productParser11st(Activity activity, final AlertDialog dialog, final DialogClickListener clickListener, String siteName,
-                                          String productUrl, String type, OnlinePickProductParam onlinePickProductParam, String content) {
+                                          String productUrl, String type, OnlinePickProductParam onlinePickProductParam) {
         try {
-            Document doc = Jsoup.parse(content);
-
-            String productName = doc.select("div.dt_title > h1").text();
-            String noSale = doc.select("div.dt_price > p.no_sale").text();
-            if (noSale.equals("현재 판매중인 상품이 아닙니다.")) {
-                return;
-            }
-            int productPrice = Integer.valueOf(doc.select("div.dt_price > div.price > span > b").text().replace(",", ""));
-            String delivery = doc.select("div.d_delivery > a > strong").text();
-            int deliveryAmount;
-            if (delivery.equals("무료배송")) {
-                deliveryAmount = 0;
-            } else {
-                deliveryAmount = Integer.valueOf(doc.select("div.d_delivery > a > strong").text().replace("배송비", "")
-                        .replace(",", "").replace("원", "").trim());
-
-            }
-            String productImg = doc.select("div.zone > ul > li > img").attr("src");
-
-            onlinePickProductParam.productName = productName;
-            onlinePickProductParam.productPrice = productPrice;
-            onlinePickProductParam.deliveryAmount = deliveryAmount;
             onlinePickProductParam.collectionType = type;
-            onlinePickProductParam.productImg = productImg;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String dateTime = dateFormat.format(new Date());
-
             onlinePickProductParam.userId = SharedPreferenceBase.getPrefString(activity, Config.USER_ID, null);
             onlinePickProductParam.siteName = siteName;
             onlinePickProductParam.productUrl = productUrl;
-            onlinePickProductParam.dateTime = dateTime;
 
             try {
                 RestAdvatarProtocol.getInstance().onlinePickProduct(onlinePickProductParam, new RequestListener() {

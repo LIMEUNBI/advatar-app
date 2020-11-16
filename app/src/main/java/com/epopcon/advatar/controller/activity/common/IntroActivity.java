@@ -397,18 +397,13 @@ public class IntroActivity extends BaseActivity {
             }
             String productImg = doc.select("div.zone > ul > li > img").attr("src");
 
-            onlinePickProductParam.productName = productName;
-            onlinePickProductParam.productPrice = productPrice;
-            onlinePickProductParam.deliveryAmount = deliveryAmount;
             onlinePickProductParam.collectionType = "A";
-            onlinePickProductParam.productImg = productImg;
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateTime = dateFormat.format(new Date());
 
             onlinePickProductParam.userId = SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, null);
             onlinePickProductParam.siteName = siteName;
             onlinePickProductParam.productUrl = productUrl;
-            onlinePickProductParam.dateTime = dateTime;
 
             try {
                 RestAdvatarProtocol.getInstance().onlinePickProduct(onlinePickProductParam, new RequestListener() {

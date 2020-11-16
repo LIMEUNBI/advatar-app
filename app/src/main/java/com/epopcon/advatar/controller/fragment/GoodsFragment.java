@@ -427,12 +427,7 @@ public class GoodsFragment extends BaseFragment {
                         onlinePickProductParam.userId = SharedPreferenceBase.getPrefString(getContext(), Config.USER_ID, null);
                         onlinePickProductParam.collectionType = "A";
                         onlinePickProductParam.siteName = brandGoodsRepo.collectSite;
-                        onlinePickProductParam.productName = brandGoodsRepo.goodsName;
-                        onlinePickProductParam.productPrice = brandGoodsRepo.goodsPrice;
-                        onlinePickProductParam.deliveryAmount = 0;
-                        onlinePickProductParam.productImg = brandGoodsRepo.goodsImg;
                         onlinePickProductParam.productUrl = brandGoodsRepo.url;
-                        onlinePickProductParam.dateTime = dateTime;
                         try {
                             RestAdvatarProtocol.getInstance().onlinePickProduct(onlinePickProductParam, new RequestListener() {
                                 @Override

@@ -1,14 +1,10 @@
 package com.epopcon.advatar.controller.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,21 +25,10 @@ import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.common.util.DialogClickListener;
 import com.epopcon.advatar.common.util.DialogUtil;
 import com.epopcon.advatar.common.util.SharedPreferenceBase;
-import com.epopcon.extra.common.utils.ExecutorPool;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.epopcon.advatar.common.util.Utils.getApplicationContext;
@@ -109,13 +94,8 @@ public class FavoriteFragment extends BaseFragment {
                         OnlinePickProductParam onlinePickProductParam = new OnlinePickProductParam();
                         onlinePickProductParam.userId = SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, null);
                         onlinePickProductParam.siteName = mLinkInfoList.get(position).siteName;
-                        onlinePickProductParam.productName = mLinkInfoList.get(position).productName;
-                        onlinePickProductParam.productPrice = mLinkInfoList.get(position).productPrice;
-                        onlinePickProductParam.deliveryAmount = mLinkInfoList.get(position).deliveryAmount;
                         onlinePickProductParam.collectionType = mLinkInfoList.get(position).collectionType;
-                        onlinePickProductParam.productImg = mLinkInfoList.get(position).productImg;
                         onlinePickProductParam.productUrl = mLinkInfoList.get(position).productUrl;
-                        onlinePickProductParam.dateTime = mLinkInfoList.get(position).dateTime;
                         DialogUtil.showSharedUrlDialog(getActivity(), mLinkInfoList.get(position).productUrl, onlinePickProductParam, new DialogClickListener() {
                             @Override
                             public void onPositiveClick() {
@@ -283,7 +263,7 @@ public class FavoriteFragment extends BaseFragment {
                 holder.siteName = (TextView) convertView.findViewById(R.id.site_name);
                 holder.collectionType = (TextView) convertView.findViewById(R.id.collection_type);
                 holder.productPrice = (TextView) convertView.findViewById(R.id.product_price);
-                holder.deliveryAmount = (TextView) convertView.findViewById(R.id.delivery_amount);
+                holder.optionName = (TextView) convertView.findViewById(R.id.delivery_amount);
                 holder.line = (View) convertView.findViewById(R.id.view);
 
                 convertView.setTag(holder);
@@ -302,7 +282,7 @@ public class FavoriteFragment extends BaseFragment {
             }
             holder.siteName.setText(siteName);
             holder.productPrice.setText(String.format(getString(R.string.amount_integer), sharedLinkInfo.productPrice) + "원");
-            holder.deliveryAmount.setText("배송비 " + String.format(getString(R.string.amount_integer), sharedLinkInfo.deliveryAmount) + "원");
+            holder.optionName.setText(sharedLinkInfo.optionName + " / 판매량 : " + sharedLinkInfo.sellAmount);
 
             String type = "";
             if (sharedLinkInfo.collectionType != null) {
@@ -330,7 +310,7 @@ public class FavoriteFragment extends BaseFragment {
             public TextView siteName;
             public TextView collectionType;
             public TextView productPrice;
-            public TextView deliveryAmount;
+            public TextView optionName;
             public View line;
         }
     }

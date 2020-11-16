@@ -13,6 +13,7 @@ import com.epopcon.advatar.common.network.rest.RestAdvatarProtocol;
 import com.epopcon.advatar.controller.activity.brand.BrandChoiceActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineListActivity;
 import com.epopcon.advatar.controller.activity.online.OnlineLoginActivity;
+import com.epopcon.advatar.controller.activity.online.OnlineSearchActivity;
 import com.epopcon.advatar.controller.activity.user.FindIdActivity;
 import com.epopcon.advatar.controller.activity.user.FindPwActivity;
 import com.epopcon.advatar.controller.activity.user.JoinActivity;
@@ -98,7 +99,8 @@ public class BaseActivity extends AppCompatActivity {
             this instanceof FindPwActivity ||
             this instanceof JoinActivity ||
             this instanceof LoginActivity ||
-            this instanceof UpdatePwActivity) {
+            this instanceof UpdatePwActivity ||
+            this instanceof OnlineSearchActivity) {
 
             mActivityAnimationType = SLIDE_RIGHT_IN_LEFT_OUT;
         }

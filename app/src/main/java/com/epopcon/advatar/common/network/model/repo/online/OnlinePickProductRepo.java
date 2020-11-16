@@ -13,19 +13,22 @@ public class OnlinePickProductRepo {
     public @SerializedName("productPrice")
     int productPrice;
 
-    public @SerializedName("deliveryAmount")
-    int deliveryAmount;
+    public @SerializedName("optionName")
+    String optionName;
 
     public @SerializedName("collectionType")
     String collectionType;
 
-    public @SerializedName("productUrl")
-    String productUrl;
-
     public @SerializedName("productImg")
     String productImg;
 
+    public @SerializedName("productUrl")
+    String productUrl;
+
     public @SerializedName("dateTime")
     String dateTime;
+
+    public @SerializedName("sellAmount")
+    int sellAmount;
 
 }
