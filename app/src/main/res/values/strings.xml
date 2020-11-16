@@ -47,6 +47,11 @@
     <string name="dialog_app_update_positive_btn">이동</string>
     <string name="dialog_app_update_negative_btn">나중에</string>
 
+    <string name="dialog_pick_cancel_title">상품 추적 취소</string>
+    <string name="dialog_pick_cancel_contents">상품 추적을 중지하시겠습니까?</string>
+    <string name="dialog_pick_cancel_positive_btn">예</string>
+    <string name="dialog_pick_cancel_negative_btn">취소</string>
+
     <string name="online_title">온라인 쇼핑</string>
     <string name="online_tab_payment">쇼핑 내역</string>
     <string name="online_tab_cart">장바구니</string>

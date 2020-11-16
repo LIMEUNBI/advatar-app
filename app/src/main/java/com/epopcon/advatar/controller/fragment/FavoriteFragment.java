@@ -1,9 +1,11 @@
 package com.epopcon.advatar.controller.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -101,7 +103,7 @@ public class FavoriteFragment extends BaseFragment {
 
         mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+            public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
                 switch (index) {
                     case 0:
                         OnlinePickProductParam onlinePickProductParam = new OnlinePickProductParam();
@@ -128,22 +130,35 @@ public class FavoriteFragment extends BaseFragment {
                         break;
 
                     case 1:
-                        try {
-                            RestAdvatarProtocol.getInstance().onlinePickCancel(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, null),
-                                    mLinkInfoList.get(position).siteName, mLinkInfoList.get(position).productUrl, new RequestListener() {
-                                        @Override
-                                        public void onRequestSuccess(int requestCode, Object result) {
-                                            refresh();
-                                        }
+                        DialogUtil.showCommonDialog(getApplicationContext(), getActivity(),
+                                getString(R.string.dialog_pick_cancel_title), getString(R.string.dialog_pick_cancel_contents), true, true,
+                                getString(R.string.dialog_pick_cancel_positive_btn), getString(R.string.dialog_pick_cancel_negative_btn),
+                                new DialogClickListener() {
+                                    @Override
+                                    public void onPositiveClick() {
+                                        try {
+                                            RestAdvatarProtocol.getInstance().onlinePickCancel(SharedPreferenceBase.getPrefString(getApplicationContext(), Config.USER_ID, null),
+                                                    mLinkInfoList.get(position).siteName, mLinkInfoList.get(position).productUrl, new RequestListener() {
+                                                        @Override
+                                                        public void onRequestSuccess(int requestCode, Object result) {
+                                                            refresh();
+                                                        }
 
-                                        @Override
-                                        public void onRequestFailure(Throwable t) {
+                                                        @Override
+                                                        public void onRequestFailure(Throwable t) {
 
+                                                        }
+                                                    });
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
-                                    });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                                    }
+                                    @Override
+                                    public void onNegativeClick() {
+
+                                    }
+                                }
+                        );
                         break;
                 }
                 return false;

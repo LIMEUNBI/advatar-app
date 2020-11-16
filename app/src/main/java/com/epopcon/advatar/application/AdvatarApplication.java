@@ -27,8 +27,8 @@ public class AdvatarApplication extends Application {
         CommonLibrary.setAffiliateCode(Config.AFFILIATE_CODE_ADVATAR);
         SqlBuilder.initialize(this.getApplicationContext());
 
-//        String host = "http://192.168.0.104:18091/";
-        String host = "http://dev.epopcon.com:18091/advatar-server/";
+//        String host = "http://192.168.0.103:18091/";
+        String host = "http://133.186.213.83:18010/advatar-server/";
         int timeout = 15;
 
         RestAdvatarProtocol.getInstance().setConnectionInfo(host, timeout);
